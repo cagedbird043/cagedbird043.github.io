@@ -1,143 +1,143 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  
-  <url>
-    <loc>http://example.com/air-conditioner/index.html</loc>
-    
-    <lastmod>2024-10-07</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/link/index.html</loc>
-    
-    <lastmod>2024-10-07</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/2024/10/06/%E5%9C%A8%E6%89%8B%E6%9C%BA%E4%B8%8A%E6%89%93%E9%80%A0%E9%9A%8F%E8%BA%AB%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%EF%BC%9ATermux%E4%B8%8Ecode-server%E7%9A%84%E5%AE%8C%E7%BE%8E%E7%BB%93%E5%90%88/</loc>
-    
-    <lastmod>2024-10-07</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/about/index.html</loc>
-    
-    <lastmod>2024-10-06</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/categories/index.html</loc>
-    
-    <lastmod>2024-10-06</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/json/music.json</loc>
-    
-    <lastmod>2024-10-06</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/music/index.html</loc>
-    
-    <lastmod>2024-10-06</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/tags/index.html</loc>
-    
-    <lastmod>2024-10-06</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
+	  
+	  <url>
+		      <loc>http://example.com/air-conditioner/index.html</loc>
+		          
+		          <lastmod>2024-10-07</lastmod>
+			      
+			          <changefreq>monthly</changefreq>
+				      <priority>0.6</priority>
+				        </url>
+					  
+	  <url>
+		      <loc>http://example.com/link/index.html</loc>
+		          
+		          <lastmod>2024-10-07</lastmod>
+			      
+			          <changefreq>monthly</changefreq>
+				      <priority>0.6</priority>
+				        </url>
+					  
+	  <url>
+		      <loc>http://example.com/2024/10/06/%E5%9C%A8%E6%89%8B%E6%9C%BA%E4%B8%8A%E6%89%93%E9%80%A0%E9%9A%8F%E8%BA%AB%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%EF%BC%9ATermux%E4%B8%8Ecode-server%E7%9A%84%E5%AE%8C%E7%BE%8E%E7%BB%93%E5%90%88/</loc>
+		          
+		          <lastmod>2024-10-07</lastmod>
+			      
+			          <changefreq>monthly</changefreq>
+				      <priority>0.6</priority>
+				        </url>
+					  
+	  <url>
+		      <loc>http://example.com/about/index.html</loc>
+		          
+		          <lastmod>2024-10-06</lastmod>
+			      
+			          <changefreq>monthly</changefreq>
+				      <priority>0.6</priority>
+				        </url>
+					  
+	  <url>
+		      <loc>http://example.com/json/music.json</loc>
+		          
+		          <lastmod>2024-10-06</lastmod>
+			      
+			          <changefreq>monthly</changefreq>
+				      <priority>0.6</priority>
+				        </url>
+					  
+	  <url>
+		      <loc>http://example.com/music/index.html</loc>
+		          
+		          <lastmod>2024-10-06</lastmod>
+			      
+			          <changefreq>monthly</changefreq>
+				      <priority>0.6</priority>
+				        </url>
+					  
+	  <url>
+		      <loc>http://example.com/categories/index.html</loc>
+		          
+		          <lastmod>2024-10-06</lastmod>
+			      
+			          <changefreq>monthly</changefreq>
+				      <priority>0.6</priority>
+				        </url>
+					  
+	  <url>
+		      <loc>http://example.com/tags/index.html</loc>
+		          
+		          <lastmod>2024-10-06</lastmod>
+			      
+			          <changefreq>monthly</changefreq>
+				      <priority>0.6</priority>
+				        </url>
+					  
 
-  <url>
-    <loc>http://example.com/</loc>
-    <lastmod>2024-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
+					  <url>
+						      <loc>http://example.com/</loc>
+						          <lastmod>2024-10-08</lastmod>
+							      <changefreq>daily</changefreq>
+							          <priority>1.0</priority>
+								    </url>
 
-  
-  <url>
-    <loc>http://example.com/tags/Termux/</loc>
-    <lastmod>2024-10-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/tags/Chroot/</loc>
-    <lastmod>2024-10-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/tags/Ubuntu/</loc>
-    <lastmod>2024-10-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/tags/code-server/</loc>
-    <lastmod>2024-10-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/tags/%E9%9A%8F%E8%BA%ABIDE/</loc>
-    <lastmod>2024-10-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/tags/%E9%9B%86%E6%88%90%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</loc>
-    <lastmod>2024-10-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/tags/%E7%A7%BB%E5%8A%A8%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/</loc>
-    <lastmod>2024-10-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
+								      
+								      <url>
+									          <loc>http://example.com/tags/Termux/</loc>
+										      <lastmod>2024-10-08</lastmod>
+										          <changefreq>weekly</changefreq>
+											      <priority>0.2</priority>
+											        </url>
+												  
+								      <url>
+									          <loc>http://example.com/tags/Chroot/</loc>
+										      <lastmod>2024-10-08</lastmod>
+										          <changefreq>weekly</changefreq>
+											      <priority>0.2</priority>
+											        </url>
+												  
+								      <url>
+									          <loc>http://example.com/tags/Ubuntu/</loc>
+										      <lastmod>2024-10-08</lastmod>
+										          <changefreq>weekly</changefreq>
+											      <priority>0.2</priority>
+											        </url>
+												  
+								      <url>
+									          <loc>http://example.com/tags/code-server/</loc>
+										      <lastmod>2024-10-08</lastmod>
+										          <changefreq>weekly</changefreq>
+											      <priority>0.2</priority>
+											        </url>
+												  
+								      <url>
+									          <loc>http://example.com/tags/%E9%9A%8F%E8%BA%ABIDE/</loc>
+										      <lastmod>2024-10-08</lastmod>
+										          <changefreq>weekly</changefreq>
+											      <priority>0.2</priority>
+											        </url>
+												  
+								      <url>
+									          <loc>http://example.com/tags/%E9%9B%86%E6%88%90%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</loc>
+										      <lastmod>2024-10-08</lastmod>
+										          <changefreq>weekly</changefreq>
+											      <priority>0.2</priority>
+											        </url>
+												  
+								      <url>
+									          <loc>http://example.com/tags/%E7%A7%BB%E5%8A%A8%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/</loc>
+										      <lastmod>2024-10-08</lastmod>
+										          <changefreq>weekly</changefreq>
+											      <priority>0.2</priority>
+											        </url>
+												  
 
-  
-  <url>
-    <loc>http://example.com/categories/%E6%8A%80%E6%9C%AF%E6%95%99%E7%A8%8B/</loc>
-    <lastmod>2024-10-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-</urlset>
+												  
+												  <url>
+													      <loc>http://example.com/categories/%E6%8A%80%E6%9C%AF%E6%95%99%E7%A8%8B/</loc>
+													          <lastmod>2024-10-08</lastmod>
+														      <changefreq>weekly</changefreq>
+														          <priority>0.2</priority>
+															    </url>
+															      
+														    </urlset>
