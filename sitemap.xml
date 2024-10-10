@@ -38,6 +38,15 @@
 				        </url>
 					  
 	  <url>
+		      <loc>https://miceworld.xyz/categories/index.html</loc>
+		          
+		          <lastmod>2024-10-06</lastmod>
+			      
+			          <changefreq>monthly</changefreq>
+				      <priority>0.6</priority>
+				        </url>
+					  
+	  <url>
 		      <loc>https://miceworld.xyz/music/index.html</loc>
 		          
 		          <lastmod>2024-10-06</lastmod>
@@ -64,19 +73,10 @@
 				      <priority>0.6</priority>
 				        </url>
 					  
-	  <url>
-		      <loc>https://miceworld.xyz/categories/index.html</loc>
-		          
-		          <lastmod>2024-10-06</lastmod>
-			      
-			          <changefreq>monthly</changefreq>
-				      <priority>0.6</priority>
-				        </url>
-					  
 
 					  <url>
 						      <loc>https://miceworld.xyz/</loc>
-						          <lastmod>2024-10-09</lastmod>
+						          <lastmod>2024-10-10</lastmod>
 							      <changefreq>daily</changefreq>
 							          <priority>1.0</priority>
 								    </url>
@@ -84,49 +84,49 @@
 								      
 								      <url>
 									          <loc>https://miceworld.xyz/tags/Termux/</loc>
-										      <lastmod>2024-10-09</lastmod>
+										      <lastmod>2024-10-10</lastmod>
 										          <changefreq>weekly</changefreq>
 											      <priority>0.2</priority>
 											        </url>
 												  
 								      <url>
 									          <loc>https://miceworld.xyz/tags/Chroot/</loc>
-										      <lastmod>2024-10-09</lastmod>
+										      <lastmod>2024-10-10</lastmod>
 										          <changefreq>weekly</changefreq>
 											      <priority>0.2</priority>
 											        </url>
 												  
 								      <url>
 									          <loc>https://miceworld.xyz/tags/Ubuntu/</loc>
-										      <lastmod>2024-10-09</lastmod>
+										      <lastmod>2024-10-10</lastmod>
 										          <changefreq>weekly</changefreq>
 											      <priority>0.2</priority>
 											        </url>
 												  
 								      <url>
 									          <loc>https://miceworld.xyz/tags/code-server/</loc>
-										      <lastmod>2024-10-09</lastmod>
+										      <lastmod>2024-10-10</lastmod>
 										          <changefreq>weekly</changefreq>
 											      <priority>0.2</priority>
 											        </url>
 												  
 								      <url>
 									          <loc>https://miceworld.xyz/tags/%E9%9A%8F%E8%BA%ABIDE/</loc>
-										      <lastmod>2024-10-09</lastmod>
+										      <lastmod>2024-10-10</lastmod>
 										          <changefreq>weekly</changefreq>
 											      <priority>0.2</priority>
 											        </url>
 												  
 								      <url>
 									          <loc>https://miceworld.xyz/tags/%E9%9B%86%E6%88%90%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</loc>
-										      <lastmod>2024-10-09</lastmod>
+										      <lastmod>2024-10-10</lastmod>
 										          <changefreq>weekly</changefreq>
 											      <priority>0.2</priority>
 											        </url>
 												  
 								      <url>
 									          <loc>https://miceworld.xyz/tags/%E7%A7%BB%E5%8A%A8%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/</loc>
-										      <lastmod>2024-10-09</lastmod>
+										      <lastmod>2024-10-10</lastmod>
 										          <changefreq>weekly</changefreq>
 											      <priority>0.2</priority>
 											        </url>
@@ -135,7 +135,7 @@
 												  
 												  <url>
 													      <loc>https://miceworld.xyz/categories/%E6%8A%80%E6%9C%AF%E6%95%99%E7%A8%8B/</loc>
-													          <lastmod>2024-10-09</lastmod>
+													          <lastmod>2024-10-10</lastmod>
 														      <changefreq>weekly</changefreq>
 														          <priority>0.2</priority>
 															    </url>
