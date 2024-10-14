@@ -3,8 +3,8 @@ https://miceworld.xyz/link/index.html
 https://miceworld.xyz/2024/10/06/%E5%9C%A8%E6%89%8B%E6%9C%BA%E4%B8%8A%E6%89%93%E9%80%A0%E9%9A%8F%E8%BA%AB%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%EF%BC%9ATermux%E4%B8%8Ecode-server%E7%9A%84%E5%AE%8C%E7%BE%8E%E7%BB%93%E5%90%88/
 https://miceworld.xyz/about/index.html
 https://miceworld.xyz/categories/index.html
-https://miceworld.xyz/music/index.html
 https://miceworld.xyz/json/music.json
+https://miceworld.xyz/music/index.html
 https://miceworld.xyz/tags/index.html
 https://miceworld.xyz/
 https://miceworld.xyz/tags/Termux/
