@@ -5,8 +5,8 @@ https://miceworld.xyz/link/index.html
 https://miceworld.xyz/about/index.html
 https://miceworld.xyz/categories/index.html
 https://miceworld.xyz/json/music.json
-https://miceworld.xyz/tags/index.html
 https://miceworld.xyz/music/index.html
+https://miceworld.xyz/tags/index.html
 https://miceworld.xyz/
 https://miceworld.xyz/tags/Termux/
 https://miceworld.xyz/tags/code-server/
