@@ -11,13 +11,6 @@ https://miceworld.xyz/json/music.json
 https://miceworld.xyz/tags/index.html
 https://miceworld.xyz/music/index.html
 https://miceworld.xyz/
-https://miceworld.xyz/tags/Termux/
-https://miceworld.xyz/tags/code-server/
-https://miceworld.xyz/tags/%E9%9A%8F%E8%BA%ABIDE/
-https://miceworld.xyz/tags/%E9%9B%86%E6%88%90%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/
-https://miceworld.xyz/tags/%E7%A7%BB%E5%8A%A8%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/
-https://miceworld.xyz/tags/Chroot/
-https://miceworld.xyz/tags/Ubuntu/
 https://miceworld.xyz/tags/YOLO/
 https://miceworld.xyz/tags/%E7%8E%89%E7%B1%B3%E7%A9%97%E6%A3%80%E6%B5%8B/
 https://miceworld.xyz/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/
@@ -25,7 +18,14 @@ https://miceworld.xyz/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/
 https://miceworld.xyz/tags/U-Net/
 https://miceworld.xyz/tags/%E5%9B%BE%E5%83%8F%E5%88%86%E5%89%B2/
 https://miceworld.xyz/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/
-https://miceworld.xyz/categories/%E6%8A%80%E6%9C%AF%E6%95%99%E7%A8%8B/
+https://miceworld.xyz/tags/Termux/
+https://miceworld.xyz/tags/code-server/
+https://miceworld.xyz/tags/%E9%9A%8F%E8%BA%ABIDE/
+https://miceworld.xyz/tags/%E9%9B%86%E6%88%90%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/
+https://miceworld.xyz/tags/%E7%A7%BB%E5%8A%A8%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/
+https://miceworld.xyz/tags/Chroot/
+https://miceworld.xyz/tags/Ubuntu/
 https://miceworld.xyz/categories/%E9%9A%8F%E7%AC%94/
 https://miceworld.xyz/categories/%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/
+https://miceworld.xyz/categories/%E6%8A%80%E6%9C%AF%E6%95%99%E7%A8%8B/
 
