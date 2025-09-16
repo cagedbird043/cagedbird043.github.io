@@ -1,20 +1,668 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>2024.11.16随笔 | Mice World</title><meta name="keywords" content="YOLO,玉米穗检测,深度学习,计算机视觉"><meta name="author" content="Mice"><meta name="copyright" content="Mice"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#f7f9fe"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-touch-fullscreen" content="yes"><meta name="apple-mobile-web-app-title" content="2024.11.16随笔"><meta name="application-name" content="2024.11.16随笔"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="#f7f9fe"><meta property="og:type" content="article"><meta property="og:title" content="2024.11.16随笔"><meta property="og:url" content="https://miceworld.top/2024/11/16/2024-11-16随笔/index.html"><meta property="og:site_name" content="Mice World"><meta property="og:description" content="开始的地方：数据集和准备工作最开始，我选择了 MTDC-UAV 数据集，这个数据集包含了许多图像和标注，适合做目标检测和回归任务。我编写了一个脚本，把 800 张有标注的图像按照 7:2:1 的比例随机分配成 Train、Valid、Test 集。重要的是，确保每个集合里的图片都是随机选取的，三个集"><meta property="og:locale" content="zh-CN"><meta property="og:image" content="https://miceworld.top/img/2024/11/16/yolos.png"><meta property="article:author" content="Mice"><meta property="article:tag" content="Mice Blog 博客 生活记录 知识探索 技术分享 计算机技巧 前端开发 数据结构与算法 编程实践 Linux技巧 安卓玩机 个人博客 学习分享 自由探索"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="https://miceworld.top/img/2024/11/16/yolos.png"><meta name="description" content="开始的地方：数据集和准备工作最开始，我选择了 MTDC-UAV 数据集，这个数据集包含了许多图像和标注，适合做目标检测和回归任务。我编写了一个脚本，把 800 张有标注的图像按照 7:2:1 的比例随机分配成 Train、Valid、Test 集。重要的是，确保每个集合里的图片都是随机选取的，三个集"><link rel="shortcut icon" href="https://q1.qlogo.cn/g?b=qq&nk=3249009505&s=640"><link rel="canonical" href="https://miceworld.top/2024/11/16/2024-11-16%E9%9A%8F%E7%AC%94/"><link rel="preconnect" href="//cdn.cbd.int"><meta name="google-site-verification" content="xxx"><meta name="baidu-site-verification" content="code-xxx"><meta name="msvalidate.01" content="xxx"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload='this.media="all"'><link rel="stylesheet" href="https://cdn.cbd.int/@fancyapps/ui@5.0.28/dist/fancybox/fancybox.css" media="print" onload='this.media="all"'><script>let GLOBAL_CONFIG={linkPageTop:{enable:!0,title:"与数百名博主无限进步",addFriendPlaceholder:"昵称（请勿包含博客等字样）：\n网站地址（要求博客地址，请勿提交个人主页）：\n头像图片url（请提供尽可能清晰的图片，我会上传到我自己的图床）：\n描述：\n站点截图（可选）：\n"},peoplecanvas:void 0,postHeadAiDescription:{enable:!0,gptName:"AnZhiYu",mode:"local",switchBtn:!1,btnLink:"https://afdian.net/item/886a79d4db6711eda42a52540025c377",randomNum:3,basicWordCount:1e3,key:"xxxx",Referer:"https://xx.xx/"},diytitle:{enable:!0,leaveTitle:"w(ﾟДﾟ)w 不要走！再看看嘛！",backTitle:"♪(^∇^*)欢迎肥来！"},LA51:void 0,greetingBox:{enable:!0,default:"晚上好👋",list:[{greeting:"晚安😴",startTime:0,endTime:5},{greeting:"早上好鸭👋, 祝你一天好心情！",startTime:6,endTime:9},{greeting:"上午好👋, 状态很好，鼓励一下～",startTime:10,endTime:10},{greeting:"11点多啦, 在坚持一下就吃饭啦～",startTime:11,endTime:11},{greeting:"午安👋, 宝贝",startTime:12,endTime:14},{greeting:"🌈充实的一天辛苦啦！",startTime:14,endTime:18},{greeting:"19点喽, 奖励一顿丰盛的大餐吧🍔。",startTime:19,endTime:19},{greeting:"晚上好👋, 在属于自己的时间好好放松😌~",startTime:20,endTime:24}]},twikooEnvId:"",commentBarrageConfig:{enable:!0,maxBarrage:1,barrageTime:4e3,accessToken:"",mailMd5:""},root:"/",preloader:{source:2},friends_vue_info:void 0,navMusic:!0,mainTone:void 0,authorStatus:{skills:["📱 技术探索爱好者","🔍 分享与热心帮助","📚 持续学习提升中","🛠️ 工具使用小能手","✍️ 传递知识经验者","🤝 热心合作与交流","📈 探讨新技术趋势","🗣️ 分享观点与见解"]},algolia:void 0,localSearch:{path:"/search.xml",preload:!0,languages:{hits_empty:"找不到您查询的内容：${query}"}},translate:{defaultEncoding:2,translateDelay:0,msgToTraditionalChinese:"繁",msgToSimplifiedChinese:"简",rightMenuMsgToTraditionalChinese:"转为繁体",rightMenuMsgToSimplifiedChinese:"转为简体"},noticeOutdate:{limitDay:365,position:"top",messagePrev:"It has been",messageNext:"days since the last update, the content of the article may be outdated."},highlight:{plugin:"highlight.js",highlightCopy:!0,highlightLang:!0,highlightHeightLimit:330},copy:{success:"复制成功",error:"复制错误",noSupport:"浏览器不支持"},relativeDate:{homepage:!1,simplehomepage:!0,post:!1},runtime:"天",date_suffix:{just:"刚刚",min:"分钟前",hour:"小时前",day:"天前",month:"个月前"},copyright:{copy:!0,copyrightEbable:!1,limitCount:50,languages:{author:"作者: Mice",link:"链接: ",source:"来源: Mice World",info:"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。",copySuccess:"复制成功，复制和转载请标注本文地址"}},lightbox:"fancybox",Snackbar:{chs_to_cht:"你已切换为繁体",cht_to_chs:"你已切换为简体",day_to_night:"你已切换为深色模式",night_to_day:"你已切换为浅色模式",bgLight:"#425AEF",bgDark:"#1f1f1f",position:"top-center"},source:{justifiedGallery:{js:"https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.min.js",css:"https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.css"}},isPhotoFigcaption:!1,islazyload:!0,isAnchor:!1,shortcutKey:void 0,autoDarkmode:!0}</script><script id="config-diff">var GLOBAL_CONFIG_SITE={configTitle:"Mice World",title:"2024.11.16随笔",postAI:"",pageFillDescription:"开始的地方数据集和准备工作最开始我选择了数据集这个数据集包含了许多图像和标注适合做目标检测和回归任务我编写了一个脚本把张有标注的图像按照的比例随机分配成集重要的是确保每个集合里的图片都是随机选取的三个集合之间没有重复并且每张图像都能找到对应的标注文件的初步实验尺寸与置信度的探索一开始我决定用来做一些基础实验主要测试不同的训练和预测输入尺寸具体来说就是使用和的组合来看看效果最开始我随便设置了一个置信度值然后再根据结果调整可是后来发现这种方法效率太低了一次次手动调整实在太浪费时间转折点写脚本优化效率意识到这个问题后我写了个脚本可以自动调整值的范围来提高实验效率我先把这个脚本用在了上结果发现效果有了明显提升数据存储与可视化为了方便分析我写了个功能把每次调整的结果存储到中这样我就可以直观地看到每个参数组合下的回归结果接着我又加了一个功能能够根据生成的统计图这样就能清晰地看到哪些配置最优继续实验和接下来我把相同的方法应用到了和上分别对它们进行了同样的实验每个模型的不同配置下的表现都不错我得到了张统计图和个版本的统计表最终的结果条最优组合根据这些实验结果我得出了条最优数据组合这些组合代表了每个模型和配置的最佳表现可以通过下表查看总结在回归计数任务中的表现非常出色尤其是当我通过调整值后性能提升显著这些实验结果表明不仅在目标检测中表现出色在回归任务中也能大展拳脚尤其是在密集计数或小物体检测场景下",isPost:!0,isHome:!1,isHighlightShrink:!1,isToc:!1,postUpdate:"2024-11-16 18:49:18",postMainColor:""}</script><noscript><style>#nav{opacity:1}.justified-gallery img{opacity:1}#post-meta time,#recent-posts time{display:inline!important}</style></noscript><script>(e=>{e.saveToLocal={set:(e,t,a)=>{var o;0!==a&&(o=Date.now(),localStorage.setItem(e,JSON.stringify({value:t,expiry:o+864e5*a})))},get:e=>{var t=localStorage.getItem(e);if(t){t=JSON.parse(t);if(!(Date.now()>t.expiry))return t.value;localStorage.removeItem(e)}}},e.getScript=(o,c={})=>new Promise((t,e)=>{let a=document.createElement("script");a.src=o,a.async=!0,a.onerror=e,a.onload=a.onreadystatechange=function(){var e=this.readyState;e&&"loaded"!==e&&"complete"!==e||(a.onload=a.onreadystatechange=null,t())},Object.keys(c).forEach(e=>{a.setAttribute(e,c[e])}),document.head.appendChild(a)}),e.getCSS=(o,c=!1)=>new Promise((t,e)=>{let a=document.createElement("link");a.rel="stylesheet",a.href=o,c&&(a.id=c),a.onerror=e,a.onload=a.onreadystatechange=function(){var e=this.readyState;e&&"loaded"!==e&&"complete"!==e||(a.onload=a.onreadystatechange=null,t())},document.head.appendChild(a)}),e.activateDarkMode=()=>{document.documentElement.setAttribute("data-theme","dark"),null!==document.querySelector('meta[name="theme-color"]')&&document.querySelector('meta[name="theme-color"]').setAttribute("content","#18171d")},e.activateLightMode=()=>{document.documentElement.setAttribute("data-theme","light"),null!==document.querySelector('meta[name="theme-color"]')&&document.querySelector('meta[name="theme-color"]').setAttribute("content","#f7f9fe")};var e=saveToLocal.get("theme"),t=window.matchMedia("(prefers-color-scheme: dark)").matches,a=window.matchMedia("(prefers-color-scheme: light)").matches,o=window.matchMedia("(prefers-color-scheme: no-preference)").matches,c=!t&&!a&&!o,t=(void 0===e?(a?activateLightMode():t?activateDarkMode():(o||c)&&((a=(new Date).getHours())<=6||18<=a?activateDarkMode:activateLightMode)(),window.matchMedia("(prefers-color-scheme: dark)").addListener(e=>{void 0===saveToLocal.get("theme")&&(e.matches?activateDarkMode:activateLightMode)()})):("light"===e?activateLightMode:activateDarkMode)(),saveToLocal.get("aside-status"));void 0!==t&&("hide"===t?document.documentElement.classList.add("hide-aside"):document.documentElement.classList.remove("hide-aside"));/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)&&document.documentElement.classList.add("apple")})(window)</script><meta name="generator" content="Hexo 7.3.0"></head><body data-type="anzhiyu"><div id="web_bg"></div><div id="an_music_bg"></div><link rel="stylesheet" href="/css/corner-indicator.css"><script async src="https://cdn.cbd.int/pace-js@1.2.4/pace.min.js" data-pace-options="{ &quot;restartOnRequestAfter&quot;:false,&quot;eventLag&quot;:false}"></script><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><div id="nav-group"><span id="blog_name"><div class="back-home-button"><i class="anzhiyufont anzhiyu-icon-grip-vertical"></i><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">网页</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://blog.miceworld.top/" title="Mice的博客"><img class="back-menu-item-icon" src="https://q1.qlogo.cn/g?b=qq&amp;nk=3249009505&amp;s=640" alt="Mice的博客"><span class="back-menu-item-text">Mice的博客</span></a></div></div><div class="back-menu-list-group"><div class="back-menu-list-title">项目</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://image.anheyu.com/" title="安知鱼图床"><img class="back-menu-item-icon" src="https://image.anheyu.com/favicon.ico" alt="安知鱼图床"><span class="back-menu-item-text">安知鱼图床</span></a></div></div></div></div><a id="site-name" href="/" accesskey="h"><div class="title">Mice World</div><i class="anzhiyufont anzhiyu-icon-house-chimney"></i></a></span><div class="mask-name-container"><div id="name-container"><a id="page-name" href="javascript:anzhiyu.scrollToDest(0, 500)">PAGE_NAME</a></div></div><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>文章</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size:.9em"></i><span> 分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size:.9em"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>友链</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/link/"><i class="anzhiyufont anzhiyu-icon-link faa-tada" style="font-size:.9em"></i><span> 友人帐</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/comments/"><i class="anzhiyufont anzhiyu-icon-envelope faa-tada" style="font-size:.9em"></i><span> 留言板</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>我的</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/music/?id=7612575934&amp;server=netease"><i class="anzhiyufont anzhiyu-icon-music faa-tada" style="font-size:.9em"></i><span> 音乐馆</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/air-conditioner/"><i class="anzhiyufont anzhiyu-icon-fan faa-tada" style="font-size:.9em"></i><span> 小空调</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size:.9em"></i><span> 关于本人</span></a></li><li><a class="site-page child faa-parent animated-hover" href="javascript:toRandomPost()"><i class="anzhiyufont anzhiyu-icon-shoe-prints1 faa-tada" style="font-size:.9em"></i><span> 随便逛逛</span></a></li></ul></div></div></div><div id="nav-right"><div class="nav-button only-home" id="travellings_button" title="随机前往一个开往项目网站"><a class="site-page" onclick="anzhiyu.totraveling()" title="随机前往一个开往项目网站" href="javascript:void(0);" rel="external nofollow" data-pjax-state="external"><i class="anzhiyufont anzhiyu-icon-train"></i></a></div><div class="nav-button" id="randomPost_button"><a class="site-page" onclick="toRandomPost()" title="随机前往一个文章" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-dice"></i></a></div><div class="nav-button" id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" title="搜索🔍" accesskey="s"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span> 搜索</span></a></div><input id="center-console" type="checkbox"><label class="widget" for="center-console" title="中控台" onclick="anzhiyu.switchConsole()"><i class="left"></i><i class="widget center"></i><i class="widget right"></i></label><div id="console"><div class="console-card-group-reward"><ul class="reward-all console-card"><li class="reward-item"><a href="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-weichat.png" target="_blank"><img class="post-qr-code-img" alt="微信" src="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-weichat.png"></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-alipay.png" target="_blank"><img class="post-qr-code-img" alt="支付宝" src="https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/qrcode-alipay.png"></a><div class="post-qr-code-desc">支付宝</div></li></ul></div><div class="console-card-group"><div class="console-card-group-left"><div class="console-card" id="card-newest-comments"><div class="card-content"><div class="author-content-item-tips">互动</div><span class="author-content-item-title">最新评论</span></div><div class="aside-list"><span>正在加载中...</span></div></div></div><div class="console-card-group-right"><div class="console-card tags"><div class="card-content"><div class="author-content-item-tips">兴趣点</div><span class="author-content-item-title">寻找你感兴趣的领域</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/Chroot/" style="font-size:1.05rem">Chroot<sup>1</sup></a><a href="/tags/Termux/" style="font-size:1.05rem">Termux<sup>2</sup></a><a href="/tags/U-Net/" style="font-size:1.05rem">U-Net<sup>1</sup></a><a href="/tags/Ubuntu/" style="font-size:1.05rem">Ubuntu<sup>1</sup></a><a href="/tags/YOLO/" style="font-size:1.05rem">YOLO<sup>2</sup></a><a href="/tags/code-server/" style="font-size:1.05rem">code-server<sup>2</sup></a><a href="/tags/%E5%9B%BE%E5%83%8F%E5%88%86%E5%89%B2/" style="font-size:1.05rem">图像分割<sup>1</sup></a><a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" style="font-size:1.05rem">深度学习<sup>3</sup></a><a href="/tags/%E7%8E%89%E7%B1%B3%E7%A9%97%E6%A3%80%E6%B5%8B/" style="font-size:1.05rem">玉米穗检测<sup>2</sup></a><a href="/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" style="font-size:1.05rem">神经网络<sup>1</sup></a><a href="/tags/%E7%A7%BB%E5%8A%A8%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/" style="font-size:1.05rem">移动开发工具<sup>2</sup></a><a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/" style="font-size:1.05rem">计算机视觉<sup>2</sup></a><a href="/tags/%E9%9A%8F%E8%BA%ABIDE/" style="font-size:1.05rem">随身IDE<sup>2</sup></a><a href="/tags/%E9%9B%86%E6%88%90%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" style="font-size:1.05rem">集成开发环境<sup>2</sup></a></div></div><hr></div></div><div class="console-card history"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-box-archiv"></i><span>文章</span></div><div class="card-archives"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/11/"><span class="card-archive-list-date">十一月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">3</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/10/"><span class="card-archive-list-date">十月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">2</span><span>篇</span></div></a></li></ul></div><hr></div></div></div><div class="button-group"><div class="console-btn-item"><a class="darkmode_switchbutton" title="显示模式切换" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-moon"></i></a></div><div class="console-btn-item" id="consoleHideAside" onclick="anzhiyu.hideAsideBtn()" title="边栏显示控制"><a class="asideSwitch"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></a></div><div class="console-btn-item on" id="consoleCommentBarrage" onclick="anzhiyu.switchCommentBarrage()" title="热评开关"><a class="commentBarrage"><i class="anzhiyufont anzhiyu-icon-message"></i></a></div><div class="console-btn-item" id="consoleMusic" onclick="anzhiyu.musicToggle()" title="音乐开关"><a class="music-switch"><i class="anzhiyufont anzhiyu-icon-music"></i></a></div></div><div class="console-mask" onclick="anzhiyu.hideConsole()" href="javascript:void(0);"></div></div><div class="nav-button" id="nav-totop"><a class="totopbtn" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i><span id="percent" onclick="anzhiyu.scrollToDest(0,500)">0</span></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" title="切换"><i class="anzhiyufont anzhiyu-icon-bars"></i></a></div></div></div></nav><div id="post-info"><div id="post-firstinfo"><div class="meta-firstline"><a class="post-meta-original">原创</a><span class="post-meta-categories"><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-inbox post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%9A%8F%E7%AC%94/" itemprop="url">随笔</a></span><span class="article-meta tags"><a class="article-meta__tags" href="/tags/YOLO/" tabindex="-1" itemprop="url"> <span><i class="anzhiyufont anzhiyu-icon-hashtag"></i>YOLO</span></a><a class="article-meta__tags" href="/tags/%E7%8E%89%E7%B1%B3%E7%A9%97%E6%A3%80%E6%B5%8B/" tabindex="-1" itemprop="url"> <span><i class="anzhiyufont anzhiyu-icon-hashtag"></i>玉米穗检测</span></a><a class="article-meta__tags" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" tabindex="-1" itemprop="url"> <span><i class="anzhiyufont anzhiyu-icon-hashtag"></i>深度学习</span></a><a class="article-meta__tags" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/" tabindex="-1" itemprop="url"> <span><i class="anzhiyufont anzhiyu-icon-hashtag"></i>计算机视觉</span></a></span></div></div><h1 class="post-title" itemprop="name headline">2024.11.16随笔</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" itemprop="dateCreated datePublished" datetime="2024-11-16T10:35:33.000Z" title="发表于 2024-11-16 18:35:33">2024-11-16</time><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-history post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" itemprop="dateCreated datePublished" datetime="2024-11-16T10:49:18.000Z" title="更新于 2024-11-16 18:49:18">2024-11-16</time></span></div><div class="meta-secondline"><span class="post-meta-separator"></span><span class="post-meta-wordcount"><i class="anzhiyufont anzhiyu-icon-file-word post-meta-icon" title="文章字数"></i><span class="post-meta-label" title="文章字数">字数总计:</span><span class="word-count" title="文章字数">772</span><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-clock post-meta-icon" title="阅读时长"></i><span class="post-meta-label" title="阅读时长">阅读时长:</span><span>2分钟</span></span><span class="post-meta-separator"></span><span class="post-meta-pv-cv" data-flag-title="2024.11.16随笔"><i class="anzhiyufont anzhiyu-icon-fw-eye post-meta-icon"></i><span class="post-meta-label" title="阅读量">阅读量:</span><span id="busuanzi_value_page_pv"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></span></span><span class="post-meta-separator"> </span><span class="post-meta-position" title="作者IP属地为哈尔滨"><i class="anzhiyufont anzhiyu-icon-location-dot"></i>哈尔滨</span></div></div></div><section class="main-hero-waves-area waves-area"><svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M -160 44 c 30 0 58 -18 88 -18 s 58 18 88 18 s 58 -18 88 -18 s 58 18 88 18 v 44 h -352 Z"></path></defs><g class="parallax"><use href="#gentle-wave" x="48" y="0"></use><use href="#gentle-wave" x="48" y="3"></use><use href="#gentle-wave" x="48" y="5"></use><use href="#gentle-wave" x="48" y="7"></use></g></svg></section><div id="post-top-cover"><img class="nolazyload" id="post-top-bg" src="/img/2024/11/16/yolos.png"></div></header><main id="blog-container"><div class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container" itemscope itemtype="https://miceworld.top/2024/11/16/2024-11-16%E9%9A%8F%E7%AC%94/"><header><a class="post-meta-categories" href="/categories/%E9%9A%8F%E7%AC%94/" itemprop="url">随笔</a><a href="/tags/YOLO/" tabindex="-1" itemprop="url">YOLO</a><a href="/tags/%E7%8E%89%E7%B1%B3%E7%A9%97%E6%A3%80%E6%B5%8B/" tabindex="-1" itemprop="url">玉米穗检测</a><a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" tabindex="-1" itemprop="url">深度学习</a><a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/" tabindex="-1" itemprop="url">计算机视觉</a><h1 id="CrawlerTitle" itemprop="name headline">2024.11.16随笔</h1><span itemprop="author" itemscope itemtype="http://schema.org/Person">Mice</span><time itemprop="dateCreated datePublished" datetime="2024-11-16T10:35:33.000Z" title="发表于 2024-11-16 18:35:33">2024-11-16</time><time itemprop="dateCreated datePublished" datetime="2024-11-16T10:49:18.000Z" title="更新于 2024-11-16 18:49:18">2024-11-16</time></header><p>开始的地方：数据集和准备工作<br>最开始，我选择了 MTDC-UAV 数据集，这个数据集包含了许多图像和标注，适合做目标检测和回归任务。我编写了一个脚本，把 800 张有标注的图像按照 7:2:1 的比例随机分配成 Train、Valid、Test 集。重要的是，确保每个集合里的图片都是随机选取的，三个集合之间没有重复，并且每张图像都能找到对应的标注文件。</p><p>YOLOv5的初步实验：尺寸与置信度的探索<br>一开始，我决定用 YOLOv5 来做一些基础实验，主要测试不同的训练和预测输入尺寸。具体来说，就是使用 640 和 1280 的组合来看看效果。最开始我随便设置了一个置信度（conf）值，然后再根据结果调整。可是后来发现这种方法效率太低了，一次次手动调整实在太浪费时间。</p><p>转折点：写脚本优化效率<br>意识到这个问题后，我写了个脚本，可以自动调整 conf 值的范围，来提高实验效率。我先把这个脚本用在了 YOLOv5 上，结果发现效果有了明显提升。</p><p>数据存储与可视化<br>为了方便分析，我写了个功能，把每次调整的结果存储到 Excel 中。这样我就可以直观地看到每个参数组合下的回归结果。接着，我又加了一个功能，能够根据 Excel 生成 MAE、RMSE、R² 的统计图，这样就能清晰地看到哪些配置最优。</p><p>继续实验：YOLOv8和YOLO11<br>接下来，我把相同的方法应用到了 YOLOv8 和 YOLO11 上，分别对它们进行了同样的实验。每个模型的不同配置下的表现都不错，我得到了 36 张统计图 和 3 个版本的统计表。</p><p>最终的结果：12条最优组合<br>根据这些实验结果，我得出了 12条最优数据组合。这些组合代表了每个模型和配置的最佳表现，可以通过下表查看。</p><table border="1"><thead><tr style="background-color:green"><th>YOLO Ver.</th><th>Train Img</th><th>Test Img</th><th>SOpt. Conf.</th><th>MAE</th><th>RMSE</th><th>R²</th></tr></thead><tbody><tr><td>yolov5n</td><td>640</td><td>640</td><td>0.31</td><td>5.9375</td><td>7.8509554</td><td>0.9541248</td></tr><tr><td>yolov5n</td><td>640</td><td>1280</td><td>0.47</td><td>6.2125</td><td>8.1693023</td><td>0.950329</td></tr><tr><td>yolov5n</td><td>1280</td><td>640</td><td>0.18</td><td>6.7375</td><td>9.1917082</td><td>0.9371181</td></tr><tr><td>yolov5n</td><td>1280</td><td>1280</td><td>0.33</td><td>5.4</td><td>7.0816665</td><td>0.9626746</td></tr><tr><td>yolov8n</td><td>640</td><td>640</td><td>0.29</td><td>6.2625</td><td>7.9348913</td><td>0.9531386</td></tr><tr><td>yolov8n</td><td>640</td><td>1280</td><td>0.39</td><td>6.275</td><td>8.4926439</td><td>0.9463192</td></tr><tr><td>yolov8n</td><td>1280</td><td>640</td><td>0.29</td><td>6.2625</td><td>7.9348913</td><td>0.9531386</td></tr><tr><td>yolov8n</td><td>1280</td><td>1280</td><td>0.39</td><td>6.275</td><td>8.4926439</td><td>0.9463192</td></tr><tr><td>yolo11n</td><td>640</td><td>640</td><td>0.35</td><td>6</td><td>7.930952</td><td>0.9531851</td></tr><tr><td>yolo11n</td><td>640</td><td>1280</td><td>0.51</td><td>7.0875</td><td>9.2472969</td><td>0.9363552</td></tr><tr><td>yolo11n</td><td>1280</td><td>640</td><td>0.23</td><td>7.0125</td><td>9.3828301</td><td>0.9344759</td></tr><tr><td>yolo11n</td><td>1280</td><td>1280</td><td>0.32</td><td>5.1875</td><td>7.1388024</td><td>0.9620699</td></tr></tbody></table><p>总结<br>YOLO在回归计数任务中的表现非常出色，尤其是当我通过调整 conf 值后，性能提升显著。这些实验结果表明，YOLO不仅在目标检测中表现出色，在回归任务中也能大展拳脚，尤其是在密集计数或小物体检测场景下。</p></article><div class="post-copyright"><div class="copyright-cc-box"><i class="anzhiyufont anzhiyu-icon-copyright"></i></div><div class="post-copyright__author_box"><a class="post-copyright__author_img" href="/" title="头像"><img class="post-copyright__author_img_back" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;img/404.jpg&quot;" data-lazy-src="https://q1.qlogo.cn/g?b=qq&amp;nk=3249009505&amp;s=640" title="头像" alt="头像"><img class="post-copyright__author_img_front" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;img/404.jpg&quot;" data-lazy-src="https://q1.qlogo.cn/g?b=qq&amp;nk=3249009505&amp;s=640" title="头像" alt="头像"></a><div class="post-copyright__author_name">Mice</div><div class="post-copyright__author_desc">记录点滴 探索无限</div></div><div class="post-copyright__post__info"><a class="post-copyright__original" title="该文章为原创文章，注意版权协议" href="https://miceworld.top/2024/11/16/2024-11-16%E9%9A%8F%E7%AC%94/">原创</a><a class="post-copyright-title"><span onclick='rm.copyPageUrl("https://miceworld.top/2024/11/16/2024-11-16随笔/")'>2024.11.16随笔</span></a></div><div class="post-tools" id="post-tools"><div class="post-tools-left"><div class="rewardLeftButton"></div><div class="shareRight"><div class="share-link mobile"><div class="share-qrcode"><div class="share-button" title="使用手机访问这篇文章"><i class="anzhiyufont anzhiyu-icon-qrcode"></i></div><div class="share-main"><div class="share-main-all"><div id="qrcode" title="https://miceworld.top/2024/11/16/2024-11-16%E9%9A%8F%E7%AC%94/"></div><div class="reward-dec">使用手机访问这篇文章</div></div></div></div></div><div class="share-link weibo"><a class="share-button" target="_blank" href="https://service.weibo.com/share/share.php?title=2024.11.16随笔&amp;url=https://miceworld.top/2024/11/16/2024-11-16%E9%9A%8F%E7%AC%94/&amp;pic=/img/2024/11/16/yolos.png" rel="external nofollow noreferrer noopener"><i class="anzhiyufont anzhiyu-icon-weibo"></i></a></div><script>function copyCurrentPageUrl(){var e=window.location.href,t=document.createElement("input");t.setAttribute("value",e),document.body.appendChild(t),t.select(),t.setSelectionRange(0,99999),document.execCommand("copy"),document.body.removeChild(t)}</script><div class="share-link copyurl"><div class="share-button" id="post-share-url" title="复制链接" onclick="copyCurrentPageUrl()"><i class="anzhiyufont anzhiyu-icon-link"></i></div></div></div></div></div><div class="post-copyright__notice"><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://miceworld.top" target="_blank">Mice World</a>！</span></div></div><div class="post-tools-right"><div class="tag_share"><div class="post-meta__box"><div class="post-meta__box__category-list"><a class="post-meta__box__categoryes" href="/categories/%E9%9A%8F%E7%AC%94/"><span class="categoryes-punctuation"><i class="anzhiyufont anzhiyu-icon-inbox"></i></span>随笔<span class="categoryesPageCount">2</span></a></div><div class="post-meta__box__tag-list"><a class="post-meta__box__tags" href="/tags/YOLO/"><span class="tags-punctuation"><i class="anzhiyufont anzhiyu-icon-tag"></i></span>YOLO<span class="tagsPageCount">2</span></a><a class="post-meta__box__tags" href="/tags/%E7%8E%89%E7%B1%B3%E7%A9%97%E6%A3%80%E6%B5%8B/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>玉米穗检测<span class="tagsPageCount">2</span></a><a class="post-meta__box__tags" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>深度学习<span class="tagsPageCount">3</span></a><a class="post-meta__box__tags" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>计算机视觉<span class="tagsPageCount">2</span></a></div></div></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/11/12/2024-11-12%E9%9A%8F%E7%AC%94/"><img class="prev-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;img/404.jpg&quot;" data-lazy-src="/img/2024/11/12/MTDC-UAV.png" onerror='onerror=null,src="/img/404.jpg"' alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">2024.11.12随笔</div></div></a></div><div class="next-post pull-right"><a href="/2024/11/16/U-Net-%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/"><img class="next-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;img/404.jpg&quot;" data-lazy-src="/img/2024/11/16/U-Net.png" onerror='onerror=null,src="/img/404.jpg"' alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">U-Net 学习总结</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="anzhiyufont anzhiyu-icon-thumbs-up fa-fw" style="font-size:1.5rem;margin-right:4px"></i><span>喜欢这篇文章的人也看了</span></div><div class="relatedPosts-list"><div><a href="/2024/11/12/2024-11-12%E9%9A%8F%E7%AC%94/" title="2024.11.12随笔"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;img/404.jpg&quot;" data-lazy-src="/img/2024/11/12/MTDC-UAV.png" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2024-11-12</div><div class="title">2024.11.12随笔</div></div></a></div><div><a href="/2024/11/16/U-Net-%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/" title="U-Net 学习总结"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;img/404.jpg&quot;" data-lazy-src="/img/2024/11/16/U-Net.png" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2024-11-16</div><div class="title">U-Net 学习总结</div></div></a></div></div></div><hr><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="anzhiyufont anzhiyu-icon-comments"></i><span> 评论</span></div><div class="comment-randomInfo"><a onclick="anzhiyu.addRandomCommentInfo()" href="javascript:void(0)">匿名评论</a><a href="/privacy" style="margin-left:4px">隐私政策</a></div><div class="comment-tips" id="comment-tips"><span>✅ 你无需删除空行，直接评论以获取最佳展示效果</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div><div class="comment-barrage"></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-content"><div class="author-info__sayhi" id="author-info__sayhi" onclick="anzhiyu.changeSayHelloText()"></div><div class="author-info-avatar"><img class="avatar-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;img/404.jpg&quot;" data-lazy-src="https://q1.qlogo.cn/g?b=qq&amp;nk=3249009505&amp;s=640" onerror='this.onerror=null,this.src="/img/friend_404.gif"' alt="avatar"></div><div class="author-info__description"><div style="line-height:1.5;margin:.6rem 0;text-align:justify;color:rgba(255,255,255,.8)">欢迎来到我的博客！这里记录了我对<b style="color:#fff">技术</b>、<b style="color:#fff">生活</b>和<b style="color:#fff">探索</b>的见解与分享。</div><div style="line-height:1.5;margin:.6rem 0;text-align:justify;color:rgba(255,255,255,.8)">希望能在这里与你一起成长，收获<b style="color:#fff">知识</b>与<b style="color:#fff">灵感</b>。</div></div><div class="author-info__bottom-group"><a class="author-info__bottom-group-left" href="/"><h1 class="author-info__name">Mice</h1><div class="author-info__desc">记录点滴 探索无限</div></a><div class="card-info-social-icons is-center"><a class="social-icon faa-parent animated-hover" href="https://github.com/cagedbird043" target="_blank" title="Github"><i class="anzhiyufont anzhiyu-icon-github"></i></a></div></div></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-bullhorn anzhiyu-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来看我的博客鸭~</div></div><div class="sticky_layout"></div></div></div></main><footer id="footer"><div id="footer-wrap"><div id="workboard"><div id="runtimeTextTip"></div></div><p id="ghbdages"><a class="github-badge" target="_blank" href="https://hexo.io/" style="margin-inline:5px" data-title="博客框架为Hexo_v5.4.0" title="博客框架为Hexo_v5.4.0"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;img/404.jpg&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.1.5/img/badge/Frame-Hexo.svg" alt="博客框架为Hexo_v5.4.0"></a><a class="github-badge" target="_blank" href="https://blog.anheyu.com/" style="margin-inline:5px" data-title="本站使用AnZhiYu主题" title="本站使用AnZhiYu主题"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;img/404.jpg&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.9/img/Theme-AnZhiYu-2E67D3.svg" alt="本站使用AnZhiYu主题"></a></p></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div id="footer-bar-tips"><div class="copyright">&copy;2024 - 2025 By <a class="footer-bar-link" href="/" title="Mice" target="_blank">Mice</a></div></div><div id="footer-type-tips"></div><div class="js-pjax"><script>function subtitleType(){getScript("https://sdk.jinrishici.com/v2/browser/jinrishici.js").then(()=>{jinrishici.load(t=>{var e=[],t=t.data.content;e.unshift(t),window.typed=new Typed("#footer-type-tips",{strings:e,startDelay:300,typeSpeed:150,loop:!0,backSpeed:50})})})}"function"==typeof Typed?subtitleType():getScript("https://cdn.cbd.int/typed.js@2.1.0/dist/typed.umd.js").then(subtitleType)</script></div></div><div class="footer-bar-right"><a class="footer-bar-link" target="_blank" rel="noopener" href="https://github.com/anzhiyu-c/hexo-theme-anzhiyu" title="主题">主题</a></div></div></div></footer></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="sidebar-site-data site-data is-center"><a href="/archives/" title="archive"><div class="headline">文章</div><div class="length-num">5</div></a><a href="/tags/" title="tag"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/" title="category"><div class="headline">分类</div><div class="length-num">3</div></a></div><span class="sidebar-menu-item-title">功能</span><div class="sidebar-menu-item"><a class="darkmode_switchbutton menu-child" href="javascript:void(0);" title="显示模式"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span>显示模式</span></a></div><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">网页</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://blog.miceworld.top/" title="Mice的博客"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;img/404.jpg&quot;" data-lazy-src="https://q1.qlogo.cn/g?b=qq&amp;nk=3249009505&amp;s=640" alt="Mice的博客"><span class="back-menu-item-text">Mice的博客</span></a></div></div><div class="back-menu-list-group"><div class="back-menu-list-title">项目</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://image.anheyu.com/" title="安知鱼图床"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;img/404.jpg&quot;" data-lazy-src="https://image.anheyu.com/favicon.ico" alt="安知鱼图床"><span class="back-menu-item-text">安知鱼图床</span></a></div></div></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>文章</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size:.9em"></i><span> 分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size:.9em"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>友链</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/link/"><i class="anzhiyufont anzhiyu-icon-link faa-tada" style="font-size:.9em"></i><span> 友人帐</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/comments/"><i class="anzhiyufont anzhiyu-icon-envelope faa-tada" style="font-size:.9em"></i><span> 留言板</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>我的</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/music/?id=7612575934&amp;server=netease"><i class="anzhiyufont anzhiyu-icon-music faa-tada" style="font-size:.9em"></i><span> 音乐馆</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/air-conditioner/"><i class="anzhiyufont anzhiyu-icon-fan faa-tada" style="font-size:.9em"></i><span> 小空调</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size:.9em"></i><span> 关于本人</span></a></li><li><a class="site-page child faa-parent animated-hover" href="javascript:toRandomPost()"><i class="anzhiyufont anzhiyu-icon-shoe-prints1 faa-tada" style="font-size:.9em"></i><span> 随便逛逛</span></a></li></ul></div></div><span class="sidebar-menu-item-title">标签</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/Chroot/" style="font-size:.88rem">Chroot<sup>1</sup></a><a href="/tags/Termux/" style="font-size:.88rem">Termux<sup>2</sup></a><a href="/tags/U-Net/" style="font-size:.88rem">U-Net<sup>1</sup></a><a href="/tags/Ubuntu/" style="font-size:.88rem">Ubuntu<sup>1</sup></a><a href="/tags/YOLO/" style="font-size:.88rem">YOLO<sup>2</sup></a><a href="/tags/code-server/" style="font-size:.88rem">code-server<sup>2</sup></a><a href="/tags/%E5%9B%BE%E5%83%8F%E5%88%86%E5%89%B2/" style="font-size:.88rem">图像分割<sup>1</sup></a><a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" style="font-size:.88rem">深度学习<sup>3</sup></a><a href="/tags/%E7%8E%89%E7%B1%B3%E7%A9%97%E6%A3%80%E6%B5%8B/" style="font-size:.88rem">玉米穗检测<sup>2</sup></a><a href="/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" style="font-size:.88rem">神经网络<sup>1</sup></a><a href="/tags/%E7%A7%BB%E5%8A%A8%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/" style="font-size:.88rem">移动开发工具<sup>2</sup></a><a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/" style="font-size:.88rem">计算机视觉<sup>2</sup></a><a href="/tags/%E9%9A%8F%E8%BA%ABIDE/" style="font-size:.88rem">随身IDE<sup>2</sup></a><a href="/tags/%E9%9B%86%E6%88%90%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" style="font-size:.88rem">集成开发环境<sup>2</sup></a></div></div><hr></div></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="anzhiyufont anzhiyu-icon-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="anzhiyufont anzhiyu-icon-gear"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="anzhiyufont anzhiyu-icon-comments"></i></a><a id="switch-commentBarrage" href="javascript:anzhiyu.switchCommentBarrage();" title="开关弹幕"><i class="anzhiyufont anzhiyu-icon-danmu"></i></a><button id="go-up" type="button" title="回到顶部"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div><div id="nav-music"><a id="nav-music-hoverTips" onclick="anzhiyu.musicToggle()" accesskey="m">播放音乐</a><div id="console-music-bg"></div><meting-js id="7612575934" server="netease" type="playlist" mutex="true" preload="none" theme="var(--anzhiyu-main)" data-lrctype="0" order="random" volume="0.7"></meting-js></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="anzhiyufont anzhiyu-icon-xmark"></i></button></nav><div class="is-center" id="loading-database"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-pulse-icon"></i><span> 数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"></div></div><hr><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div id="rightMenu"><div class="rightMenu-group rightMenu-small"><div class="rightMenu-item" id="menu-backward"><i class="anzhiyufont anzhiyu-icon-arrow-left"></i></div><div class="rightMenu-item" id="menu-forward"><i class="anzhiyufont anzhiyu-icon-arrow-right"></i></div><div class="rightMenu-item" id="menu-refresh"><i class="anzhiyufont anzhiyu-icon-arrow-rotate-right" style="font-size:1rem"></i></div><div class="rightMenu-item" id="menu-top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></div></div><div class="rightMenu-group rightMenu-line rightMenuPlugin"><div class="rightMenu-item" id="menu-copytext"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制选中文本</span></div><div class="rightMenu-item" id="menu-pastetext"><i class="anzhiyufont anzhiyu-icon-paste"></i><span>粘贴文本</span></div><a class="rightMenu-item" id="menu-commenttext"><i class="anzhiyufont anzhiyu-icon-comment-medical"></i><span>引用到评论</span></a><div class="rightMenu-item" id="menu-newwindow"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开</span></div><div class="rightMenu-item" id="menu-copylink"><i class="anzhiyufont anzhiyu-icon-link"></i><span>复制链接地址</span></div><div class="rightMenu-item" id="menu-copyimg"><i class="anzhiyufont anzhiyu-icon-images"></i><span>复制此图片</span></div><div class="rightMenu-item" id="menu-downloadimg"><i class="anzhiyufont anzhiyu-icon-download"></i><span>下载此图片</span></div><div class="rightMenu-item" id="menu-newwindowimg"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开图片</span></div><div class="rightMenu-item" id="menu-search"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>站内搜索</span></div><div class="rightMenu-item" id="menu-searchBaidu"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>百度搜索</span></div><div class="rightMenu-item" id="menu-music-toggle"><i class="anzhiyufont anzhiyu-icon-play"></i><span>播放音乐</span></div><div class="rightMenu-item" id="menu-music-back"><i class="anzhiyufont anzhiyu-icon-backward"></i><span>切换到上一首</span></div><div class="rightMenu-item" id="menu-music-forward"><i class="anzhiyufont anzhiyu-icon-forward"></i><span>切换到下一首</span></div><div class="rightMenu-item" id="menu-music-playlist" onclick="window.open(&quot;https://music.163.com/#/playlist?id=7612575934&quot;, &quot;_blank&quot;);" style="display:none"><i class="anzhiyufont anzhiyu-icon-radio"></i><span>查看所有歌曲</span></div><div class="rightMenu-item" id="menu-music-copyMusicName"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制歌名</span></div></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item menu-link" id="menu-randomPost"><i class="anzhiyufont anzhiyu-icon-shuffle"></i><span>随便逛逛</span></a><a class="rightMenu-item menu-link" href="/categories/"><i class="anzhiyufont anzhiyu-icon-cube"></i><span>博客分类</span></a><a class="rightMenu-item menu-link" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags"></i><span>文章标签</span></a></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item" id="menu-copy" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制地址</span></a><a class="rightMenu-item" id="menu-commentBarrage" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-message"></i><span class="menu-commentBarrage-text">关闭热评</span></a><a class="rightMenu-item" id="menu-darkmode" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span class="menu-darkmode-text">深色模式</span></a><a class="rightMenu-item" id="menu-translate" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-language"></i><span>轉為繁體</span></a></div></div><div id="rightmenu-mask"></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.cbd.int/@fancyapps/ui@5.0.28/dist/fancybox/fancybox.umd.js"></script><script src="https://cdn.cbd.int/instant.page@5.2.0/instantpage.js" type="module"></script><script src="https://cdn.cbd.int/vanilla-lazyload@17.8.5/dist/lazyload.iife.min.js"></script><script src="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.js"></script><script>function panguFn(){"object"==typeof pangu?pangu.autoSpacingPage():getScript("https://cdn.cbd.int/pangu@4.0.7/dist/browser/pangu.min.js").then(()=>{pangu.autoSpacingPage()})}function panguInit(){panguFn()}document.addEventListener("DOMContentLoaded",panguInit)</script><script>var meting_api="https://api.injahow.cn/meting/?server=:server&type=:type&id=:id"</script><canvas id="universe"></canvas><script async src="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/dark/dark.js"></script><script>var HoldLog=console.log;console.log=function(){};let now1=new Date;queueMicrotask(()=>{function o(){HoldLog.apply(console,arguments)}var c=new Date("10/01/2024 00:00:00"),c=(now1.setTime(now1.getTime()+250),(now1-c)/1e3/60/60/24),c=["欢迎使用安知鱼!","生活明朗, 万物可爱",`
-        
-       █████╗ ███╗   ██╗███████╗██╗  ██╗██╗██╗   ██╗██╗   ██╗
-      ██╔══██╗████╗  ██║╚══███╔╝██║  ██║██║╚██╗ ██╔╝██║   ██║
-      ███████║██╔██╗ ██║  ███╔╝ ███████║██║ ╚████╔╝ ██║   ██║
-      ██╔══██║██║╚██╗██║ ███╔╝  ██╔══██║██║  ╚██╔╝  ██║   ██║
-      ██║  ██║██║ ╚████║███████╗██║  ██║██║   ██║   ╚██████╔╝
-      ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝   ╚═╝    ╚═════╝
-        
-        `,"已上线",Math.floor(c),"天","©2024 By 安知鱼 V1.6.12"],e=["NCC2-036","调用前置摄像头拍照成功，识别为【小笨蛋】.","Photo captured: ","🤪"];setTimeout(o.bind(console,`
-%c${c[0]} %c ${c[1]} %c ${c[2]} %c${c[3]}%c ${c[4]}%c ${c[5]}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
-%c ${c[6]}
-`,"color:#425AEF","","color:#425AEF","color:#425AEF","","color:#425AEF","")),setTimeout(o.bind(console,`%c ${e[0]} %c ${e[1]} %c 
-${e[2]} %c
-${e[3]}
-`,"color:white; background-color:#4fd953","","",'background:url("https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/tinggge.gif") no-repeat;font-size:450%')),setTimeout(o.bind(console,"%c WELCOME %c 你好，小笨蛋.","color:white; background-color:#4f90d9","")),setTimeout(console.warn.bind(console,"%c ⚡ Powered by 安知鱼 %c 你正在访问 Mice 的博客.","color:white; background-color:#f0ad4e","")),setTimeout(o.bind(console,"%c W23-12 %c 你已打开控制台.","color:white; background-color:#4f90d9","")),setTimeout(console.warn.bind(console,"%c S013-782 %c 你现在正处于监控中.","color:white; background-color:#d9534f",""))})</script><script async src="/anzhiyu/random.js"></script><script async>(()=>{var n,r,o,a,i,e=new Date("10/01/2024 00:00:00"),l=new Date;setInterval(()=>{var t;if(l=new Date,i=l.getHours(),t=(l-e)/1e3/60/60/24,n=Math.floor(t),t=(l-e)/1e3/60/60-24*n,r=Math.floor(t),1==String(r).length&&(r="0"+r),t=(l-e)/1e3/60-1440*n-60*r,o=Math.floor(t),1==String(o).length&&(o="0"+o),t=(l-e)/1e3-86400*n-3600*r-60*o,a=Math.round(t),1==String(a).length&&(a="0"+a),document.getElementById("footer")){let e="";e=(i<18&&9<=i||null!=(t=document.querySelector("#workboard .workSituationImg"))&&(t.src="",t.title="",t.alt=""),`本站居然运行了 ${n} 天<span id='runtime'> ${r} 小时 ${o} 分 ${a} 秒 </span><i class='anzhiyufont anzhiyu-icon-heartbeat' style='color:red'></i>`),document.getElementById("runtimeTextTip")&&(document.getElementById("runtimeTextTip").innerHTML=e)}},1e3)})()</script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>(()=>{let t=()=>{twikoo.init(Object.assign({el:"#twikoo-wrap",envId:"",region:"",onCommentLoaded:()=>{anzhiyu.loadLightbox(document.querySelectorAll("#twikoo .tk-content img:not(.tk-owo-emotion)"))}},null))};var o=()=>{"object"==typeof twikoo?setTimeout(n,0):getScript("https://cdn.cbd.int/twikoo@1.6.25/dist/twikoo.all.min.js").then(n)};let e=()=>{let o=document.getElementById("twikoo-count");o&&twikoo.getCommentsCount({envId:"",region:"",urls:[window.location.pathname],includeReply:!1}).then(t=>{o.textContent=t[0].count}).catch(t=>{console.error(t)})},n=()=>{t(),GLOBAL_CONFIG_SITE.isPost&&e()};anzhiyu.loadComment(document.getElementById("twikoo-wrap"),o)})()</script><input type="hidden" name="page-type" id="page-type" value="post"><script async src="/js/anzhiyu/comment_barrage.js"></script></div><script>window.addEventListener("load",()=>{let t=e=>e=""!==e&&150<(e=(e=(e=(e=e.replace(/<img.*?src="(.*?)"?[^\>]+>/gi,"[图片]")).replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi,"[链接]")).replace(/<pre><code>.*?<\/pre>/gi,"[代码]")).replace(/<[^>]+>/g,"")).length?e.substring(0,150)+"...":e,a=t=>{let a="";if(t.length)for(let e=0;e<t.length;e++)a=(a=(a+="<div class='aside-list-item'>")+`<a href='${t[e].url}' class='thumbnail'><img data-lazy-src='${t[e].avatar}' alt='${t[e].nick}'><div class='name'><span>${t[e].nick} </span></div></a>`)+`<div class='content'>
-        <a class='comment' href='${t[e].url}' title='${t[e].content}'>${t[e].content}</a>
-        <time datetime="${t[e].date}">${anzhiyu.diffDate(t[e].date,!0)}</time></div>
-        </div>`;else a+="没有评论";var e=document.querySelector("#card-newest-comments .aside-list");e&&(e.innerHTML=a),window.lazyLoadInstance&&window.lazyLoadInstance.update(),window.pjax&&window.pjax.refresh(e)};var e=()=>{var e;document.querySelector("#card-newest-comments .aside-list")&&((e=saveToLocal.get("twikoo-newest-comments"))?a(JSON.parse(e)):(e=()=>{twikoo.getRecentComments({envId:"",region:"",pageSize:6,includeReply:!0}).then(function(e){e=e.map(e=>({content:t(e.comment),avatar:e.avatar,nick:e.nick,url:e.url+"#"+e.id,date:new Date(e.created).toISOString()}));saveToLocal.set("twikoo-newest-comments",JSON.stringify(e),10/1440),a(e)}).catch(function(e){document.querySelector("#card-newest-comments .aside-list").textContent="无法获取评论，请确认相关配置是否正确"})},"object"==typeof twikoo?e():getScript("https://cdn.cbd.int/twikoo@1.6.25/dist/twikoo.all.min.js").then(e)))};e(),document.addEventListener("pjax:complete",e)})</script><script async data-pjax src="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.1/bubble/bubble.js"></script><script>var visitorMail=""</script><script async data-pjax src="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/waterfall/waterfall.js"></script><script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/qrcodejs/1.0.0/qrcode.min.js"></script><script src="/js/anzhiyu/right_click_menu.js"></script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.9/icon/ali_iconfont_css.css"><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/aplayer/APlayer.min.css" media="print" onload='this.media="all"'><script src="https://cdn.cbd.int/anzhiyu-blog-static@1.0.1/js/APlayer.min.js"></script><script src="https://cdn.cbd.int/hexo-anzhiyu-music@1.0.1/assets/js/Meting2.min.js"></script><script src="https://cdn.cbd.int/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors=['meta[property="og:image"]','meta[property="og:title"]','meta[property="og:url"]','meta[property="og:type"]','meta[property="og:site_name"]','meta[property="og:description"]',"head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"];var pjax=new Pjax({elements:'a:not([target="_blank"])',selectors:pjaxSelectors,cacheBust:!1,analytics:!1,scrollRestoration:!1});document.addEventListener("pjax:send",function(){if(anzhiyu.removeGlobalFnEvent("pjax"),anzhiyu.removeGlobalFnEvent("themeChange"),document.getElementById("rightside").classList.remove("rightside-show"),window.aplayers)for(let e=0;e<window.aplayers.length;e++)window.aplayers[e].options.fixed||window.aplayers[e].destroy();"object"==typeof typed&&typed.destroy();var e=document.body.classList;e.contains("read-mode")&&e.remove("read-mode")}),document.addEventListener("pjax:complete",function(){window.refreshFn(),document.querySelectorAll("script[data-pjax]").forEach(e=>{let t=document.createElement("script");var a=e.text||e.textContent||e.innerHTML||"";Array.from(e.attributes).forEach(e=>t.setAttribute(e.name,e.value)),t.appendChild(document.createTextNode(a)),e.parentNode.replaceChild(t,e)}),GLOBAL_CONFIG.islazyload&&window.lazyLoadInstance.update(),"function"==typeof panguInit&&panguInit(),"function"==typeof gtag&&gtag("config","",{page_path:window.location.pathname}),"object"==typeof _hmt&&_hmt.push(["_trackPageview",window.location.pathname]),"function"==typeof loadMeting&&document.getElementsByClassName("aplayer").length&&loadMeting(),"object"==typeof Prism&&Prism.highlightAll()}),document.addEventListener("pjax:error",e=>{404===e.request.status&&pjax.loadUrl("/404.html")})</script><script async data-pjax src="https://cn.vercount.one/js"></script></div><div id="popup-window"><div class="popup-window-title">通知</div><div class="popup-window-divider"></div><div class="popup-window-content"><div class="popup-tip">你好呀</div><div class="popup-link"><i class="anzhiyufont anzhiyu-icon-arrow-circle-right"></i></div></div></div></body></html>
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"miceworld.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="开始的地方：数据集和准备工作最开始，我选择了 MTDC-UAV 数据集，这个数据集包含了许多图像和标注，适合做目标检测和回归任务。我编写了一个脚本，把 800 张有标注的图像按照 7:2:1 的比例随机分配成 Train、Valid、Test 集。重要的是，确保每个集合里的图片都是随机选取的，三个集合之间没有重复，并且每张图像都能找到对应的标注文件。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2024.11.16随笔">
+<meta property="og:url" content="https://miceworld.top/2024/11/16/2024-11-16%E9%9A%8F%E7%AC%94/index.html">
+<meta property="og:site_name" content="Mice World">
+<meta property="og:description" content="开始的地方：数据集和准备工作最开始，我选择了 MTDC-UAV 数据集，这个数据集包含了许多图像和标注，适合做目标检测和回归任务。我编写了一个脚本，把 800 张有标注的图像按照 7:2:1 的比例随机分配成 Train、Valid、Test 集。重要的是，确保每个集合里的图片都是随机选取的，三个集合之间没有重复，并且每张图像都能找到对应的标注文件。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-11-16T10:35:33.000Z">
+<meta property="article:modified_time" content="2025-09-09T18:43:47.447Z">
+<meta property="article:author" content="Mice">
+<meta property="article:tag" content="YOLO">
+<meta property="article:tag" content="玉米穗检测">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="计算机视觉">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://miceworld.top/2024/11/16/2024-11-16%E9%9A%8F%E7%AC%94/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>2024.11.16随笔 | Mice World</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Mice World</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">记录点滴 探索无限</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2024/11/16/2024-11-16%E9%9A%8F%E7%AC%94/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mice">
+      <meta itemprop="description" content="Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mice World">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          2024.11.16随笔
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-11-16 18:35:33" itemprop="dateCreated datePublished" datetime="2024-11-16T18:35:33+08:00">2024-11-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-09-10 02:43:47" itemprop="dateModified" datetime="2025-09-10T02:43:47+08:00">2025-09-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%9A%8F%E7%AC%94/" itemprop="url" rel="index"><span itemprop="name">随笔</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>开始的地方：数据集和准备工作<br>最开始，我选择了 MTDC-UAV 数据集，这个数据集包含了许多图像和标注，适合做目标检测和回归任务。我编写了一个脚本，把 800 张有标注的图像按照 7:2:1 的比例随机分配成 Train、Valid、Test 集。重要的是，确保每个集合里的图片都是随机选取的，三个集合之间没有重复，并且每张图像都能找到对应的标注文件。</p>
+<span id="more"></span>
+
+<p>YOLOv5 的初步实验：尺寸与置信度的探索<br>一开始，我决定用 YOLOv5 来做一些基础实验，主要测试不同的训练和预测输入尺寸。具体来说，就是使用 640 和 1280 的组合来看看效果。最开始我随便设置了一个置信度（conf）值，然后再根据结果调整。可是后来发现这种方法效率太低了，一次次手动调整实在太浪费时间。</p>
+<p>转折点：写脚本优化效率<br>意识到这个问题后，我写了个脚本，可以自动调整 conf 值的范围，来提高实验效率。我先把这个脚本用在了 YOLOv5 上，结果发现效果有了明显提升。</p>
+<p>数据存储与可视化<br>为了方便分析，我写了个功能，把每次调整的结果存储到 Excel 中。这样我就可以直观地看到每个参数组合下的回归结果。接着，我又加了一个功能，能够根据 Excel 生成 MAE、RMSE、R² 的统计图，这样就能清晰地看到哪些配置最优。</p>
+<p>继续实验：YOLOv8 和 YOLO11<br>接下来，我把相同的方法应用到了 YOLOv8 和 YOLO11 上，分别对它们进行了同样的实验。每个模型的不同配置下的表现都不错，我得到了 36 张统计图 和 3 个版本的统计表。</p>
+<p>最终的结果：12 条最优组合<br>根据这些实验结果，我得出了 12 条最优数据组合。这些组合代表了每个模型和配置的最佳表现，可以通过下表查看。</p>
+<table border="1">
+  <thead>
+    <tr style="background-color: green;">
+      <th>YOLO Ver.</th>
+      <th>Train Img</th>
+      <th>Test Img</th>
+      <th>SOpt. Conf.</th>
+      <th>MAE</th>
+      <th>RMSE</th>
+      <th>R²</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>yolov5n</td>
+      <td>640</td>
+      <td>640</td>
+      <td>0.31</td>
+      <td>5.9375</td>
+      <td>7.8509554</td>
+      <td>0.9541248</td>
+    </tr>
+    <tr>
+      <td>yolov5n</td>
+      <td>640</td>
+      <td>1280</td>
+      <td>0.47</td>
+      <td>6.2125</td>
+      <td>8.1693023</td>
+      <td>0.950329</td>
+    </tr>
+    <tr>
+      <td>yolov5n</td>
+      <td>1280</td>
+      <td>640</td>
+      <td>0.18</td>
+      <td>6.7375</td>
+      <td>9.1917082</td>
+      <td>0.9371181</td>
+    </tr>
+    <tr>
+      <td>yolov5n</td>
+      <td>1280</td>
+      <td>1280</td>
+      <td>0.33</td>
+      <td>5.4</td>
+      <td>7.0816665</td>
+      <td>0.9626746</td>
+    </tr>
+    <tr>
+      <td>yolov8n</td>
+      <td>640</td>
+      <td>640</td>
+      <td>0.29</td>
+      <td>6.2625</td>
+      <td>7.9348913</td>
+      <td>0.9531386</td>
+    </tr>
+    <tr>
+      <td>yolov8n</td>
+      <td>640</td>
+      <td>1280</td>
+      <td>0.39</td>
+      <td>6.275</td>
+      <td>8.4926439</td>
+      <td>0.9463192</td>
+    </tr>
+    <tr>
+      <td>yolov8n</td>
+      <td>1280</td>
+      <td>640</td>
+      <td>0.29</td>
+      <td>6.2625</td>
+      <td>7.9348913</td>
+      <td>0.9531386</td>
+    </tr>
+    <tr>
+      <td>yolov8n</td>
+      <td>1280</td>
+      <td>1280</td>
+      <td>0.39</td>
+      <td>6.275</td>
+      <td>8.4926439</td>
+      <td>0.9463192</td>
+    </tr>
+    <tr>
+      <td>yolo11n</td>
+      <td>640</td>
+      <td>640</td>
+      <td>0.35</td>
+      <td>6</td>
+      <td>7.930952</td>
+      <td>0.9531851</td>
+    </tr>
+    <tr>
+      <td>yolo11n</td>
+      <td>640</td>
+      <td>1280</td>
+      <td>0.51</td>
+      <td>7.0875</td>
+      <td>9.2472969</td>
+      <td>0.9363552</td>
+    </tr>
+    <tr>
+      <td>yolo11n</td>
+      <td>1280</td>
+      <td>640</td>
+      <td>0.23</td>
+      <td>7.0125</td>
+      <td>9.3828301</td>
+      <td>0.9344759</td>
+    </tr>
+    <tr>
+      <td>yolo11n</td>
+      <td>1280</td>
+      <td>1280</td>
+      <td>0.32</td>
+      <td>5.1875</td>
+      <td>7.1388024</td>
+      <td>0.9620699</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>总结<br>YOLO 在回归计数任务中的表现非常出色，尤其是当我通过调整 conf 值后，性能提升显著。这些实验结果表明，YOLO 不仅在目标检测中表现出色，在回归任务中也能大展拳脚，尤其是在密集计数或小物体检测场景下。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/YOLO/" rel="tag"># YOLO</a>
+              <a href="/tags/%E7%8E%89%E7%B1%B3%E7%A9%97%E6%A3%80%E6%B5%8B/" rel="tag"># 玉米穗检测</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/" rel="tag"># 计算机视觉</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/11/12/2024-11-12%E9%9A%8F%E7%AC%94/" rel="prev" title="2024.11.12随笔">
+      <i class="fa fa-chevron-left"></i> 2024.11.12随笔
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/11/16/U-Net-%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/" rel="next" title="U-Net 学习总结">
+      U-Net 学习总结 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mice</p>
+  <div class="site-description" itemprop="description">Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mice</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-ribbon@1/canvas-ribbon.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.1.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/three.min.js"></script>
+    <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/three-waves.min.js"></script>
+    <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/canvas_lines.min.js"></script>
+    <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/canvas_sphere.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script data-pjax>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'neutral',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

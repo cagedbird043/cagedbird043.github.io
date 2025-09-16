@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"miceworld.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="好了好了，到了给这个系列收尾的时候了。回头看看，这个叫 rkyolo 的小东西，从一个念头开始，居然真的被我一点点攒成了一个能跑、能看、还能给自己打分的 Rust 推理框架，想想也是挺神奇的。 在这最后一篇，咱不吹牛，就唠点实在的。说说我都捣鼓了啥，还有哪些地方让我挠头，以及以后还能怎么接着玩。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RKYOLO诞生记 (七)：小结与展望——折腾不止，快乐不息">
+<meta property="og:url" content="https://miceworld.top/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E4%B8%83-%EF%BC%9A%E5%B0%8F%E7%BB%93%E4%B8%8E%E5%B1%95%E6%9C%9B%E2%80%94%E2%80%94%E6%8A%98%E8%85%BE%E4%B8%8D%E6%AD%A2%EF%BC%8C%E5%BF%AB%E4%B9%90%E4%B8%8D%E6%81%AF/index.html">
+<meta property="og:site_name" content="Mice World">
+<meta property="og:description" content="好了好了，到了给这个系列收尾的时候了。回头看看，这个叫 rkyolo 的小东西，从一个念头开始，居然真的被我一点点攒成了一个能跑、能看、还能给自己打分的 Rust 推理框架，想想也是挺神奇的。 在这最后一篇，咱不吹牛，就唠点实在的。说说我都捣鼓了啥，还有哪些地方让我挠头，以及以后还能怎么接着玩。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-09-09T23:09:03.000Z">
+<meta property="article:modified_time" content="2025-09-09T23:10:39.276Z">
+<meta property="article:author" content="Mice">
+<meta property="article:tag" content="YOLO">
+<meta property="article:tag" content="Rust">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="嵌入式">
+<meta property="article:tag" content="系统编程">
+<meta property="article:tag" content="开源">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://miceworld.top/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E4%B8%83-%EF%BC%9A%E5%B0%8F%E7%BB%93%E4%B8%8E%E5%B1%95%E6%9C%9B%E2%80%94%E2%80%94%E6%8A%98%E8%85%BE%E4%B8%8D%E6%AD%A2%EF%BC%8C%E5%BF%AB%E4%B9%90%E4%B8%8D%E6%81%AF/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>RKYOLO诞生记 (七)：小结与展望——折腾不止，快乐不息 | Mice World</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Mice World</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">记录点滴 探索无限</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E4%B8%83-%EF%BC%9A%E5%B0%8F%E7%BB%93%E4%B8%8E%E5%B1%95%E6%9C%9B%E2%80%94%E2%80%94%E6%8A%98%E8%85%BE%E4%B8%8D%E6%AD%A2%EF%BC%8C%E5%BF%AB%E4%B9%90%E4%B8%8D%E6%81%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mice">
+      <meta itemprop="description" content="Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mice World">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          RKYOLO诞生记 (七)：小结与展望——折腾不止，快乐不息
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-09-10 07:09:03 / 修改时间：07:10:39" itemprop="dateCreated datePublished" datetime="2025-09-10T07:09:03+08:00">2025-09-10</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>好了好了，到了给这个系列收尾的时候了。回头看看，这个叫 <code>rkyolo</code> 的小东西，从一个念头开始，居然真的被我一点点攒成了一个能跑、能看、还能给自己打分的 Rust 推理框架，想想也是挺神奇的。</p>
+<p>在这最后一篇，咱不吹牛，就唠点实在的。说说我都捣鼓了啥，还有哪些地方让我挠头，以及以后还能怎么接着玩。</p>
+<span id="more"></span>
+
+<h4 id="技术的积累与兑现"><a href="#技术的积累与兑现" class="headerlink" title="技术的积累与兑现"></a><strong>技术的积累与兑现</strong></h4><p>这个项目的推进，很大程度上得益于之前在一些技术领域的持续投入和实践。</p>
+<ul>
+<li>对 <strong>Rust</strong> 的持续学习和使用，让我能相对顺利地处理 FFI 和安全问题；</li>
+<li>对 <strong>YOLO</strong> 模型原理的理解，帮助我在遇到“指鹿为马”或结构崩溃时，能较快地定位到本质；</li>
+<li>之前和 <strong>Linux</strong>、交叉编译打交道的经验，也为整个项目铺平了道路。</li>
+</ul>
+<p>回头看看，技术成长确实离不开积累，很多之前的摸索都在这个项目里用上了。</p>
+<h4 id="哪哪都是可以接着折腾的地方"><a href="#哪哪都是可以接着折腾的地方" class="headerlink" title="哪哪都是可以接着折腾的地方"></a><strong>哪哪都是可以接着折腾的地方</strong></h4><p>写代码最怕的就是觉得自己搞出来的东西完美无缺。我心里门儿清，<code>rkyolo</code> 也就是个“能用”的水平，离“好用”还差得远呢：</p>
+<ol>
+<li><p><strong>一根筋的流程</strong>：现在处理视频是一帧一帧来的，等上一帧全忙活完了才下一帧。要是想同时处理好多路视频，这肯定得卡成 PPT。以后得用上 <code>tokio</code> 这类异步运行时，让它们同时干活，效率才能上去。</p>
+</li>
+<li><p><strong>CPU 老黄牛</strong>：缩放图片、填白边这些杂活全是 CPU 在干。但其实 RK3588 板子上有个叫 <strong>RGA</strong> 的硬件小弟（专门处理 2D 图形），活好还不占 CPU 资源。下次得想办法让它来扛活。</p>
+</li>
+<li><p><strong>还不够灵活</strong>：现在的后处理虽然能自适应不同输出，但基本还是围着 YOLO 转。万一以后想跑个结构完全不一样的模型（比如基于 Transformer 的），可能就歇菜了。我看 Rockchip 的 SDK 里提到了自定义算子的功能，说不定以后可以搞个<strong>插件系统</strong>，让用户自己写处理逻辑，那可就太酷了。</p>
+</li>
+</ol>
+<h4 id="画个未来的大饼"><a href="#画个未来的大饼" class="headerlink" title="画个未来的大饼"></a><strong>画个未来的大饼</strong></h4><p><code>rkyolo</code> 解决了模型在板子上跑起来和评估的问题，但在这之前，还得先把模型转成 RKNN 格式。我之前用 Docker 封装了一个<a target="_blank" rel="noopener" href="https://github.com/cagedbird043/RKNN-Toolkit2">转换工具</a>，一行命令就能转模型：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pt2rknn --pt_model ... --output ... --platform rk3588 --quant_mode i8 --data_yaml ...</span><br></pre></td></tr></table></figure>
+
+<p>我下一个想折腾的，是<strong>把这个转换过程做成个网页服务</strong>。想象一下，以后用户只需要在网页上传个模型文件，点几下按钮，就能下载转换好的模型，是不是方便多了？最后再把模型转换和 <code>rkyolo</code> 部署连起来，搞个一条龙服务，从训练到部署都不叫事儿。</p>
+<h4 id="最后唠点心里话"><a href="#最后唠点心里话" class="headerlink" title="最后唠点心里话"></a><strong>最后唠点心里话</strong></h4><p>捣鼓 <code>rkyolo</code> 的整个过程，让我着迷的其实不光是目标检测本身。</p>
+<p>不管是琢磨怎么让 NPU 多核并行干活，还是死磕怎么把数据直接塞进硬件省掉拷贝，甚至是做个工具来自动找出模型在哪儿犯了蠢……我发现我真正乐在其中的，是<strong>把一个个复杂的系统理顺、调通、然后让它跑得更快更好的这个过程</strong>。</p>
+<p><code>rkyolo</code> 就是我这个想法的一次实践，算是个开始。以后的路还长着呢，肯定还有更多好玩又烧脑的东西在等着。</p>
+<p>我已经等不及想看看下一站又能折腾点啥出来了！</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/YOLO/" rel="tag"># YOLO</a>
+              <a href="/tags/Rust/" rel="tag"># Rust</a>
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/" rel="tag"># 嵌入式</a>
+              <a href="/tags/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/" rel="tag"># 系统编程</a>
+              <a href="/tags/%E5%BC%80%E6%BA%90/" rel="tag"># 开源</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E5%85%AD-%EF%BC%9A%E6%9E%84%E5%BB%BA%E5%AE%8C%E6%95%B4%E8%AF%84%E4%BC%B0%E5%B7%A5%E5%85%B7%E9%93%BE%E2%80%94%E2%80%94rkyolo-eval%E7%9A%84%E5%AE%9E%E8%B7%B5%E4%B8%8E%E6%B4%9E%E5%AF%9F/" rel="prev" title="RKYOLO诞生记 (六)：构建完整评估工具链——rkyolo-eval的实践与洞察">
+      <i class="fa fa-chevron-left"></i> RKYOLO诞生记 (六)：构建完整评估工具链——rkyolo-eval的实践与洞察
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E5%89%8D%E4%BC%A0-%EF%BC%9A%E4%B8%80%E5%88%87%E5%BC%80%E5%A7%8B%E4%B9%8B%E5%89%8D%E2%80%94%E2%80%94%E9%82%A3%E4%B8%89%E4%B8%AA%E5%B0%8F%E6%97%B6%E7%9A%84%E2%80%9C%E7%B3%BB%E7%BB%9F%E6%80%A5%E6%95%91/" rel="next" title="RKYOLO诞生记 (前传)：一切开始之前——那三个小时的“系统急救">
+      RKYOLO诞生记 (前传)：一切开始之前——那三个小时的“系统急救 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E7%9A%84%E7%A7%AF%E7%B4%AF%E4%B8%8E%E5%85%91%E7%8E%B0"><span class="nav-number">1.</span> <span class="nav-text">技术的积累与兑现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%93%AA%E5%93%AA%E9%83%BD%E6%98%AF%E5%8F%AF%E4%BB%A5%E6%8E%A5%E7%9D%80%E6%8A%98%E8%85%BE%E7%9A%84%E5%9C%B0%E6%96%B9"><span class="nav-number">2.</span> <span class="nav-text">哪哪都是可以接着折腾的地方</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%BB%E4%B8%AA%E6%9C%AA%E6%9D%A5%E7%9A%84%E5%A4%A7%E9%A5%BC"><span class="nav-number">3.</span> <span class="nav-text">画个未来的大饼</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%80%E5%90%8E%E5%94%A0%E7%82%B9%E5%BF%83%E9%87%8C%E8%AF%9D"><span class="nav-number">4.</span> <span class="nav-text">最后唠点心里话</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mice</p>
+  <div class="site-description" itemprop="description">Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mice</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-ribbon@1/canvas-ribbon.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.1.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/three.min.js"></script>
+    <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/three-waves.min.js"></script>
+    <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/canvas_lines.min.js"></script>
+    <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/canvas_sphere.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script data-pjax>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'neutral',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
