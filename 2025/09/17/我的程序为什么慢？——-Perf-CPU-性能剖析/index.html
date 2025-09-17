@@ -22,20 +22,22 @@
     var CONFIG = {"hostname":"miceworld.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="perf本次环境为Arch Linux，内核版本6.12.46-3-cachyos-lts，perf版本6.16-3 前言：为什么 perf 让人望而生畏？perf 是 Linux 世界中无可争议的性能分析神器。然而，很多开发者（包括曾经的我）在第一次看到 perf stat 那满屏飞舞的专业术语时，都会感到一丝困惑和畏惧：task-clock, IPC, stalled-cycles-front">
+  <meta name="description" content="本次环境为Arch Linux，内核版本6.12.46-3-cachyos-lts，perf版本6.16-3 前言：为什么 perf 让人望而生畏？perf 是 Linux 世界中无可争议的性能分析神器。然而，很多开发者（包括曾经的我）在第一次看到 perf stat 那满屏飞舞的专业术语时，都会感到一丝困惑和畏惧：task-clock, IPC, stalled-cycles-frontend…">
 <meta property="og:type" content="article">
 <meta property="og:title" content="我的程序为什么慢？—— Perf CPU 性能剖析">
 <meta property="og:url" content="https://miceworld.top/2025/09/17/%E6%88%91%E7%9A%84%E7%A8%8B%E5%BA%8F%E4%B8%BA%E4%BB%80%E4%B9%88%E6%85%A2%EF%BC%9F%E2%80%94%E2%80%94-Perf-CPU-%E6%80%A7%E8%83%BD%E5%89%96%E6%9E%90/index.html">
 <meta property="og:site_name" content="Mice World">
-<meta property="og:description" content="perf本次环境为Arch Linux，内核版本6.12.46-3-cachyos-lts，perf版本6.16-3 前言：为什么 perf 让人望而生畏？perf 是 Linux 世界中无可争议的性能分析神器。然而，很多开发者（包括曾经的我）在第一次看到 perf stat 那满屏飞舞的专业术语时，都会感到一丝困惑和畏惧：task-clock, IPC, stalled-cycles-front">
+<meta property="og:description" content="本次环境为Arch Linux，内核版本6.12.46-3-cachyos-lts，perf版本6.16-3 前言：为什么 perf 让人望而生畏？perf 是 Linux 世界中无可争议的性能分析神器。然而，很多开发者（包括曾经的我）在第一次看到 perf stat 那满屏飞舞的专业术语时，都会感到一丝困惑和畏惧：task-clock, IPC, stalled-cycles-frontend…">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-09-17T06:57:27.000Z">
-<meta property="article:modified_time" content="2025-09-17T09:40:56.792Z">
+<meta property="article:modified_time" content="2025-09-17T09:54:24.316Z">
 <meta property="article:author" content="Mice">
 <meta property="article:tag" content="系统编程">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="性能分析">
 <meta property="article:tag" content="开源工具">
+<meta property="article:tag" content="Linux Perf">
+<meta property="article:tag" content="perf">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="https://miceworld.top/2025/09/17/%E6%88%91%E7%9A%84%E7%A8%8B%E5%BA%8F%E4%B8%BA%E4%BB%80%E4%B9%88%E6%85%A2%EF%BC%9F%E2%80%94%E2%80%94-Perf-CPU-%E6%80%A7%E8%83%BD%E5%89%96%E6%9E%90/">
@@ -196,7 +198,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2025-09-17 14:57:27 / 修改时间：17:40:56" itemprop="dateCreated datePublished" datetime="2025-09-17T14:57:27+08:00">2025-09-17</time>
+              <time title="创建时间：2025-09-17 14:57:27 / 修改时间：17:54:24" itemprop="dateCreated datePublished" datetime="2025-09-17T14:57:27+08:00">2025-09-17</time>
             </span>
 
           
@@ -217,7 +219,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="perf"><a href="#perf" class="headerlink" title="perf"></a>perf</h2><p><code>本次环境为Arch Linux，内核版本6.12.46-3-cachyos-lts，perf版本6.16-3</code></p>
+        <p><code>本次环境为Arch Linux，内核版本6.12.46-3-cachyos-lts，perf版本6.16-3</code></p>
 <h3 id="前言：为什么-perf-让人望而生畏？"><a href="#前言：为什么-perf-让人望而生畏？" class="headerlink" title="前言：为什么 perf 让人望而生畏？"></a>前言：为什么 <code>perf</code> 让人望而生畏？</h3><p><code>perf</code> 是 Linux 世界中无可争议的性能分析神器。然而，很多开发者（包括曾经的我）在第一次看到 <code>perf stat</code> 那满屏飞舞的专业术语时，都会感到一丝困惑和畏惧：<code>task-clock</code>, <code>IPC</code>, <code>stalled-cycles-frontend</code>… 这些到底意味着什么？</p>
 <span id="more"></span>
 
@@ -304,6 +306,8 @@
               <a href="/tags/Linux/" rel="tag"># Linux</a>
               <a href="/tags/%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/" rel="tag"># 性能分析</a>
               <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/" rel="tag"># 开源工具</a>
+              <a href="/tags/Linux-Perf/" rel="tag"># Linux Perf</a>
+              <a href="/tags/perf/" rel="tag"># perf</a>
           </div>
 
         
@@ -315,7 +319,10 @@
     <a href="/2025/09/16/%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%9A%84%E5%82%B2%E6%85%A2%E4%B8%8E%E5%81%8F%E8%A7%81%EF%BC%9A%E6%88%91%E9%82%A3%E4%BB%B7%E5%80%BC2%E5%9D%97%E9%92%B1%E7%9A%84%E9%AD%94%E5%B9%BB%E4%B8%80%E5%B0%8F%E6%97%B6/" rel="prev" title="工程师的傲慢与偏见：我那价值2块钱的魔幻一小时">
       <i class="fa fa-chevron-left"></i> 工程师的傲慢与偏见：我那价值2块钱的魔幻一小时
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2025/09/17/%E6%88%91%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%8D%A1%E5%9C%A8%E5%93%AA%E9%87%8C%EF%BC%9F%E2%80%94%E2%80%94-%E7%94%A8%E7%81%AB%E7%84%B0%E5%9B%BE%E7%B2%BE%E7%A1%AE%E5%AE%9A%E4%BD%8D%E6%80%A7%E8%83%BD%E7%93%B6%E9%A2%88/" rel="next" title="我的程序卡在哪里？—— 用火焰图精确定位性能瓶颈">
+      我的程序卡在哪里？—— 用火焰图精确定位性能瓶颈 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -374,7 +381,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#perf"><span class="nav-number">1.</span> <span class="nav-text">perf</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E8%A8%80%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88-perf-%E8%AE%A9%E4%BA%BA%E6%9C%9B%E8%80%8C%E7%94%9F%E7%95%8F%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">前言：为什么 perf 让人望而生畏？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E6%88%91%E4%BB%AC%E7%9A%84%E2%80%9C%E5%AE%9E%E9%AA%8C%E5%AE%A4%E2%80%9D-%E4%B8%80%E4%B8%AA%E6%9E%81%E7%AE%80%E7%9A%84-ls"><span class="nav-number">1.2.</span> <span class="nav-text">第一步：我们的“实验室” - 一个极简的 ls</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E6%94%B6%E9%9B%86%E8%AF%81%E6%8D%AE-perf-stat-%E7%99%BB%E5%9C%BA"><span class="nav-number">1.3.</span> <span class="nav-text">第二步：收集证据 - perf stat 登场</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E6%A1%88%E4%BB%B6%E5%88%86%E6%9E%90-%E8%A7%A3%E8%AF%BB%E6%95%B0%E6%8D%AE%E7%9A%84%E2%80%9C%E5%BE%AE%E8%A1%A8%E6%83%85%E2%80%9D"><span class="nav-number">1.4.</span> <span class="nav-text">第三步：案件分析 - 解读数据的“微表情”</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%85%E4%BA%8B%E4%B8%BB%E7%BA%BF%EF%BC%9A%E7%94%A8%E6%88%B7-User-%E6%97%B6%E9%97%B4-vs-%E5%86%85%E6%A0%B8-Sys-%E6%97%B6%E9%97%B4"><span class="nav-number">1.4.1.</span> <span class="nav-text">故事主线：用户(User)时间 vs. 内核(Sys)时间</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%8C%87%E6%A0%87-1%EF%BC%9AIPC-%E6%AF%8F%E5%91%A8%E6%9C%9F%E6%8C%87%E4%BB%A4%E6%95%B0-CPU-%E7%9A%84%E6%95%88%E7%8E%87"><span class="nav-number">1.4.2.</span> <span class="nav-text">核心指标 1：IPC (每周期指令数) - CPU 的效率</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%8C%87%E6%A0%87-2%EF%BC%9A%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B-Branch-Misses-%E4%BB%A3%E7%A0%81%E7%9A%84%E2%80%9C%E5%8F%AF%E9%A2%84%E6%B5%8B%E6%80%A7%E2%80%9D"><span class="nav-number">1.4.3.</span> <span class="nav-text">核心指标 2：分支预测 (Branch-Misses) - 代码的“可预测性”</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%8C%87%E6%A0%87-3%EF%BC%9A-%E6%8C%87%E4%BB%A4%E7%BC%93%E5%AD%98%E6%95%88%E7%8E%87-%E5%89%8D%E7%AB%AF%E5%81%9C%E6%BB%9E-Frontend-Cycles-Idle-%E6%8C%87%E4%BB%A4%E2%80%9C%E5%A1%9E%E8%BD%A6%E2%80%9D%E4%BA%86%E5%90%97%EF%BC%9F"><span class="nav-number">1.4.4.</span> <span class="nav-text">核心指标 3：(指令缓存效率)前端停滞 (Frontend Cycles Idle) - 指令“塞车”了吗？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%8C%87%E6%A0%87-4-%E6%8C%87%E4%BB%A4%E6%95%B0-Instructions"><span class="nav-number">1.4.5.</span> <span class="nav-text">核心指标 4: 指令数 (Instructions)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA%EF%BC%9A%E6%88%91%E4%BB%AC%E5%AD%A6%E5%88%B0%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">1.5.</span> <span class="nav-text">结论：我们学到了什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E6%8F%92%E6%9B%B2%EF%BC%9A%E6%B2%A1%E5%8E%BB%E6%8E%89%E8%B0%83%E8%AF%95%E7%AC%A6%E5%8F%B7%EF%BC%8C%E5%85%AC%E5%B9%B3%E5%90%97%EF%BC%9F"><span class="nav-number">1.6.</span> <span class="nav-text">一个插曲：没去掉调试符号，公平吗？</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E8%A8%80%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88-perf-%E8%AE%A9%E4%BA%BA%E6%9C%9B%E8%80%8C%E7%94%9F%E7%95%8F%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">前言：为什么 perf 让人望而生畏？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E6%88%91%E4%BB%AC%E7%9A%84%E2%80%9C%E5%AE%9E%E9%AA%8C%E5%AE%A4%E2%80%9D-%E4%B8%80%E4%B8%AA%E6%9E%81%E7%AE%80%E7%9A%84-ls"><span class="nav-number">2.</span> <span class="nav-text">第一步：我们的“实验室” - 一个极简的 ls</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E6%94%B6%E9%9B%86%E8%AF%81%E6%8D%AE-perf-stat-%E7%99%BB%E5%9C%BA"><span class="nav-number">3.</span> <span class="nav-text">第二步：收集证据 - perf stat 登场</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E6%A1%88%E4%BB%B6%E5%88%86%E6%9E%90-%E8%A7%A3%E8%AF%BB%E6%95%B0%E6%8D%AE%E7%9A%84%E2%80%9C%E5%BE%AE%E8%A1%A8%E6%83%85%E2%80%9D"><span class="nav-number">4.</span> <span class="nav-text">第三步：案件分析 - 解读数据的“微表情”</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%85%E4%BA%8B%E4%B8%BB%E7%BA%BF%EF%BC%9A%E7%94%A8%E6%88%B7-User-%E6%97%B6%E9%97%B4-vs-%E5%86%85%E6%A0%B8-Sys-%E6%97%B6%E9%97%B4"><span class="nav-number">4.1.</span> <span class="nav-text">故事主线：用户(User)时间 vs. 内核(Sys)时间</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%8C%87%E6%A0%87-1%EF%BC%9AIPC-%E6%AF%8F%E5%91%A8%E6%9C%9F%E6%8C%87%E4%BB%A4%E6%95%B0-CPU-%E7%9A%84%E6%95%88%E7%8E%87"><span class="nav-number">4.2.</span> <span class="nav-text">核心指标 1：IPC (每周期指令数) - CPU 的效率</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%8C%87%E6%A0%87-2%EF%BC%9A%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B-Branch-Misses-%E4%BB%A3%E7%A0%81%E7%9A%84%E2%80%9C%E5%8F%AF%E9%A2%84%E6%B5%8B%E6%80%A7%E2%80%9D"><span class="nav-number">4.3.</span> <span class="nav-text">核心指标 2：分支预测 (Branch-Misses) - 代码的“可预测性”</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%8C%87%E6%A0%87-3%EF%BC%9A-%E6%8C%87%E4%BB%A4%E7%BC%93%E5%AD%98%E6%95%88%E7%8E%87-%E5%89%8D%E7%AB%AF%E5%81%9C%E6%BB%9E-Frontend-Cycles-Idle-%E6%8C%87%E4%BB%A4%E2%80%9C%E5%A1%9E%E8%BD%A6%E2%80%9D%E4%BA%86%E5%90%97%EF%BC%9F"><span class="nav-number">4.4.</span> <span class="nav-text">核心指标 3：(指令缓存效率)前端停滞 (Frontend Cycles Idle) - 指令“塞车”了吗？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%8C%87%E6%A0%87-4-%E6%8C%87%E4%BB%A4%E6%95%B0-Instructions"><span class="nav-number">4.5.</span> <span class="nav-text">核心指标 4: 指令数 (Instructions)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA%EF%BC%9A%E6%88%91%E4%BB%AC%E5%AD%A6%E5%88%B0%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">5.</span> <span class="nav-text">结论：我们学到了什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E6%8F%92%E6%9B%B2%EF%BC%9A%E6%B2%A1%E5%8E%BB%E6%8E%89%E8%B0%83%E8%AF%95%E7%AC%A6%E5%8F%B7%EF%BC%8C%E5%85%AC%E5%B9%B3%E5%90%97%EF%BC%9F"><span class="nav-number">6.</span> <span class="nav-text">一个插曲：没去掉调试符号，公平吗？</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -388,7 +395,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -401,7 +408,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-count">35</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
