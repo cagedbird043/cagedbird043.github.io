@@ -1,0 +1,88 @@
+- class_name: 关于页
+  subtitle: 记录点滴，探索无限✨
+  avatarImg: https://q1.qlogo.cn/g?b=qq&nk=3249009505&s=640
+  avatarSkills:
+    left:
+      - 📱 技术探索爱好者
+      - 🔍 分享与热心帮助
+      - 📚 持续学习提升中
+      - 🛠️ 工具使用小能手
+    right:
+      - ✍️ 传递知识经验者
+      - 🤝 热心合作与交流
+      - 📈 探讨新技术趋势
+      - 🗣️ 分享观点与见解
+
+  name: Mice
+  description: 是一名 学生、独立开发者、博主
+  aboutsiteTips:
+    tips: 探索
+    title1: 在于
+    title2: 热爱而去 感受
+    word:
+      - 学习
+      - 生活
+      - 体验
+  helloAbout: Welcome!
+  skillsTips:
+    tips: 技能
+    title: 开启创造力
+  careers:
+    tips: 生涯
+    title: 无限进步
+    list:
+      - desc: EDU,计算机类专业
+        color: "#357ef5"
+    img: img/about_edu.png
+  statistic:
+    link: /archives
+    text: 文章隧道
+    cover: https://bu.dusays.com/2023/05/01/644f4b037b930.jpg
+  map:
+    title: 我现在住在
+    StrengthenTitle: 不告诉你
+    background: /img/about_location.png
+    backgroundDark: /img/about_location.png
+  selfInfo:
+    selfInfoTips1: 生于
+    selfInfoContentYear: 2004
+    selfInfoTips2: 东北农业大学
+    selfInfoContent2: 物联网工程
+    selfInfoTips3: 现在职业
+    selfInfoContent3: 大三学生👨‍🎓
+  personalities:
+    author_name: 提倡者
+    personality_type: INFJ-A
+    photo_url: /img/about_location.png
+    personality_img: /img/about_personality.png
+    name_url: https://www.16personalities.com/ch/infj-%E4%BA%BA%E6%A0%BC
+  maxim:
+    maxim_tips: 座右铭
+    maxim_top: 记录点滴，
+    maxim_bottom: 探索无限。
+  like:
+    like_tips: 关注偏好
+    like_title: 数码科技
+    like_bg: https://bu.dusays.com/2022/12/06/638f5f05ce1f7.jpg
+    like_bottom: 手机、电脑软硬件
+  buff:
+    buff_tips: 爱好
+    buff_top: 代码编写
+    buff_bottom: 与技术探索
+  game:
+    game_tips: 游戏
+    game_title: 暂无游戏记录
+    game_uid: ""
+    game_bg: https://bu.dusays.com/2023/05/01/644f4b037b930.jpg
+  comic:
+    comic_tips: 番剧
+    comic_title: 追番记录
+    comic_list:
+      - name: "暂无追番"
+        href: "#"
+        cover: "https://bu.dusays.com/2023/05/01/644f4b037b930.jpg"
+  music:
+    music_tips: 音乐
+    music_title: 音乐偏好
+    music_link: /music
+    music_bg: https://bu.dusays.com/2023/05/01/644f4b037b930.jpg

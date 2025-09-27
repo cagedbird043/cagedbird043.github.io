@@ -1,0 +1,29 @@
+- class_name: 开启创造力
+  creativity_list:
+    - name: VSCode
+      color: "#FFFFFF"
+      icon: /img/creativity/VSCode.png
+    - name: Docker
+      color: "#57b6e6"
+      icon: /img/creativity/Docker.png
+    - name: Photoshop
+      color: "#4082c3"
+      icon: /img/creativity/Photoshop.png
+    - name: Python
+      color: "#fff"
+      icon: /img/creativity/Python.png
+    - name: Git
+      color: "#df5b40"
+      icon: /img/creativity/Git.webp
+    - name: C++
+      color: "#FFFFFF"
+      icon: /img/creativity/Cpp_logo.png
+    - name: ChatGPT
+      color: "#FFFFFF"
+      icon: /img/creativity/ChatGPT-Logo.png
+    - name: Copilot
+      color: "#FFFFFF"
+      icon: /img/creativity/Copilot-Logo.png
+    - name: Gemini
+      color: "#FFFFFF"
+      icon: /img/creativity/Gemini.png
