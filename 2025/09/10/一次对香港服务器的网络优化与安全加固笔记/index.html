@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"miceworld.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="最近抽了点时间，准备把个人博客 miceworld.top 和一些自托管服务迁移到一台新的香港云服务器上。想着能有更完全的控制权，也方便自己折腾。 服务器的初始化很顺利，Debian 系统，Nginx + Hexo 部署网站，再用 Certbot 跑一下，HTTPS 的小绿锁很快就亮起来了。一切都按部就班。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一次对香港服务器的网络优化与安全加固笔记">
+<meta property="og:url" content="https://miceworld.top/2025/09/10/%E4%B8%80%E6%AC%A1%E5%AF%B9%E9%A6%99%E6%B8%AF%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E7%BD%91%E7%BB%9C%E4%BC%98%E5%8C%96%E4%B8%8E%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="Mice World">
+<meta property="og:description" content="最近抽了点时间，准备把个人博客 miceworld.top 和一些自托管服务迁移到一台新的香港云服务器上。想着能有更完全的控制权，也方便自己折腾。 服务器的初始化很顺利，Debian 系统，Nginx + Hexo 部署网站，再用 Certbot 跑一下，HTTPS 的小绿锁很快就亮起来了。一切都按部就班。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-09-09T18:00:07.000Z">
+<meta property="article:modified_time" content="2025-09-27T09:56:57.631Z">
+<meta property="article:author" content="Mice">
+<meta property="article:tag" content="服务器运维">
+<meta property="article:tag" content="网络优化">
+<meta property="article:tag" content="ZeroTier">
+<meta property="article:tag" content="安全加固">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://miceworld.top/2025/09/10/%E4%B8%80%E6%AC%A1%E5%AF%B9%E9%A6%99%E6%B8%AF%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E7%BD%91%E7%BB%9C%E4%BC%98%E5%8C%96%E4%B8%8E%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA%E7%AC%94%E8%AE%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>一次对香港服务器的网络优化与安全加固笔记 | Mice World</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Mice World</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">记录点滴 探索无限</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/09/10/%E4%B8%80%E6%AC%A1%E5%AF%B9%E9%A6%99%E6%B8%AF%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E7%BD%91%E7%BB%9C%E4%BC%98%E5%8C%96%E4%B8%8E%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mice">
+      <meta itemprop="description" content="Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mice World">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          一次对香港服务器的网络优化与安全加固笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-09-10 02:00:07" itemprop="dateCreated datePublished" datetime="2025-09-10T02:00:07+08:00">2025-09-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-09-27 17:56:57" itemprop="dateModified" datetime="2025-09-27T17:56:57+08:00">2025-09-27</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>最近抽了点时间，准备把个人博客 <code>miceworld.top</code> 和一些自托管服务迁移到一台新的香港云服务器上。想着能有更完全的控制权，也方便自己折腾。</p>
+<p>服务器的初始化很顺利，Debian 系统，Nginx + Hexo 部署网站，再用 Certbot 跑一下，HTTPS 的小绿锁很快就亮起来了。一切都按部就班。</p>
+<span id="more"></span>
+
+<p>麻烦是在日常管理时出现的。</p>
+<p>当我准备通过 SSH 或者 Web 面板管理服务器时，发现直连的延迟非常高，终端的卡顿已经到了影响工作的程度。</p>
+<p>起初，我尝试通过本地的代理软件（sing-box）来优化。为服务器 IP 单独设置直连规则，可以解决 Web 面板的访问问题；再为 SSH 的 22 端口设置一个出口选择器，也能在一定程度上缓解终端的卡顿。虽然能用，但总觉得不够优雅，而且每次 SSH 都需要手动选择节点，还是有些繁琐。</p>
+<p>更重要的是，我内心对安全有种执念。把 SSH 端口直接暴露在公网上，哪怕用了密钥登录，也总让我感觉不踏实。毕竟，服务本身存在，就意味着存在被扫描和被未知漏洞攻击的风险。我的网站既然用了 Cloudflare 保护，源站 IP 就必须隐藏，端口也必须隔离，这才是完整的安全保障。</p>
+<p>于是，我决定采用我过去习惯的一套方案，来从根本上解决这个问题。</p>
+<h3 id="第一次尝试：自建-ZeroTier-Planet"><a href="#第一次尝试：自建-ZeroTier-Planet" class="headerlink" title="第一次尝试：自建 ZeroTier Planet"></a>第一次尝试：自建 ZeroTier Planet</h3><p>我之前的经验是，通过自建 ZeroTier Planet，可以让所有设备脱离官方服务器，进行点对点的内网通信，在国内服务器之间的效果非常好，延迟极低。</p>
+<p>于是我熟练地使用 <code>xubiaolin/docker-zerotier-planet</code> 工具在服务器上部署了私有 Planet，并将配置文件分发到了我的电脑上。</p>
+<p>然而，结果却不尽人意。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">tracepath xxx.xxx.xxx.xxx</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">... (路由绕行，延迟飙升) ...</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">ping xxx.xxx.xxx.xxx</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">... (高达70%的丢包率和3-4秒的延迟) ...</span></span><br></pre></td></tr></table></figure>
+
+<p><code>tracepath</code> 和 <code>ping</code> 的结果很明确地告诉我，这次的情况和国内不同。夜间大陆访问香港的国际出口线路质量非常糟糕，丢包和高延迟是常态。在这样恶劣的物理链路上，ZeroTier 很难建立起稳定的 P2P 连接。</p>
+<p>看来，过去成功的经验，并不能简单地复制到新的网络环境中。</p>
+<h3 id="改变思路：Planet-不行，那就用-Moon"><a href="#改变思路：Planet-不行，那就用-Moon" class="headerlink" title="改变思路：Planet 不行，那就用 Moon"></a>改变思路：Planet 不行，那就用 Moon</h3><p>既然完全独立的 Planet 方案受限于物理线路，我转而尝试了更灵活的 Moon 方案。Moon 作为官方 Planet 的一个自定义补充节点，可以辅助设备进行寻址和中继，增加 P2P 打洞成功的概率。</p>
+<p>我从服务器上提取了 <code>.moon</code> 配置文件，部署到本地客户端的 <code>moons.d</code> 目录下，然后重启了 ZeroTier 服务。</p>
+<p>这一次，网络状况得到了质的改善。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">ping 10.10.52.124</span></span><br><span class="line">--- 10.10.52.124 ping 统计 ---</span><br><span class="line">已发送 19 个包， 已接收 19 个包, 0% packet loss, time 18031ms</span><br><span class="line">rtt min/avg/max/mdev = 57.315/58.608/65.970/1.802 ms</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">tracepath 10.10.52.124</span></span><br><span class="line"> 1?: [本地主机]                   PMTU 2800</span><br><span class="line"> 1:  10.10.52.124                                         58.757 毫秒 到达</span><br><span class="line"> ...</span><br></pre></td></tr></table></figure>
+
+<p><strong>0%丢包，延迟稳定在 58 毫秒，一跳直达。</strong></p>
+<p>这证明，在 Moon 节点的辅助下，ZeroTier 成功地为我找到了一条可以避开骨干网拥堵的 P2P 隧道。管理服务器所需要的稳定连接，现在有了。</p>
+<h3 id="最后一步：彻底“隐形”"><a href="#最后一步：彻底“隐形”" class="headerlink" title="最后一步：彻底“隐形”"></a>最后一步：彻底“隐形”</h3><p>有了可靠的内网通道，我终于可以开始实施我最初的目标——将管理端口从公网上彻底移除。</p>
+<p>我登录了云厂商的防火墙（安全组）控制台，修改了访问策略：</p>
+<ul>
+<li>删除了所有允许公网 (<code>0.0.0.0/0</code>) 访问服务器 TCP <code>22</code> 和 <code>3443</code> 端口的规则。</li>
+<li>新增了一条规则，只允许来自我的 ZeroTier 子网 (<code>10.10.52.0/24</code>) 的 IP 地址访问这些端口。</li>
+</ul>
+<p>至于这个操作在 OSI 模型里算哪一层？</p>
+<blockquote>
+<p>ZeroTier 本身是一个构建在 OSI 第三层（网络层）之上的、为用户提供第二层（数据链路层）服务的虚拟网络解决方案。它像一个虚拟的以太网交换机，将二层数据帧封装在 UDP 包里，通过三层网络进行传输。<br>而我在云防火墙上的操作，是一个在基础设施虚拟化层实现的、作用于网络层和传输层（基于 IP 和 TCP 端口）的访问控制，但其效果，近乎于物理隔离。</p>
+</blockquote>
+<h4 id="图-1：改造前的“门户大开”架构"><a href="#图-1：改造前的“门户大开”架构" class="headerlink" title="图 1：改造前的“门户大开”架构"></a><strong>图 1：改造前的“门户大开”架构</strong></h4><pre class="mermaid">graph TD
+    subgraph "互联网 (公网)"
+        A[我的电脑]
+        B[香港 VPS<br>xxx.xxx.xxx.xxx<br>开放端口: 22, 443, 3443]
+    end
+
+    A -- "高延迟, 70%丢包<br>SSH端口暴露" --> B
+
+    style B fill:#f9f,stroke:#333,stroke-width:2px</pre>
+
+<h4 id="图-2：改造后的“零信任”安全架构"><a href="#图-2：改造后的“零信任”安全架构" class="headerlink" title="图 2：改造后的“零信任”安全架构"></a><strong>图 2：改造后的“零信任”安全架构</strong></h4><pre class="mermaid">graph TD
+    subgraph " "
+        direction LR
+        subgraph "公网访问 (Public Access)"
+            C[全世界访客] --> D{Cloudflare CDN};
+        end
+
+        subgraph "服务器 (Server)"
+            direction LR
+            D --> E[香港 VPS<br><b>源站IP已隐藏</b><br>公网入口: 443];
+        end
+    end
+
+
+    subgraph " "
+        direction LR
+        subgraph "私有管理网络 (Management Network)"
+            F[我的设备<br>ZT: 10.10.52.159]
+            G[香港 VPS<br>ZT: 10.10.52.124<br><b>管理端口仅对内监听</b>]
+
+            F <== "ZeroTier P2P加密隧道<br>稳定58ms延迟" ==> G
+        end
+    end
+
+    style E fill:#9cf,stroke:#333,stroke-width:2px
+    style G fill:#9cf,stroke:#333,stroke-width:2px</pre>
+
+<p>最终，我的服务器实现了“内外分离”：博客网站通过 Cloudflare 面向公网提供服务，源站 IP 被完美隐藏；而所有的管理入口，都“沉入”了仅对我可见的 ZeroTier 虚拟内网中。</p>
+<p>虽然过程有些波折，但最终还是用自己熟悉的方式，解决了一个不大不小的问题。记录一下。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%90%E7%BB%B4/" rel="tag"># 服务器运维</a>
+              <a href="/tags/%E7%BD%91%E7%BB%9C%E4%BC%98%E5%8C%96/" rel="tag"># 网络优化</a>
+              <a href="/tags/ZeroTier/" rel="tag"># ZeroTier</a>
+              <a href="/tags/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/" rel="tag"># 安全加固</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/11/16/U-Net-%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/" rel="prev" title="U-Net 学习总结">
+      <i class="fa fa-chevron-left"></i> U-Net 学习总结
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E4%B8%80-%EF%BC%9A%E5%91%8A%E5%88%ABC-%E2%80%9C%E5%8A%A8%E7%89%A9%E5%9B%AD%E2%80%9D%EF%BC%8C%E4%B8%BA%E4%BD%95%E6%88%91%E9%80%89%E6%8B%A9%E7%94%A8Rust%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%EF%BC%9F/" rel="next" title="RKYOLO诞生记 (一)：告别C++"动物园"，为何我选择用Rust从零开始？">
+      RKYOLO诞生记 (一)：告别C++"动物园"，为何我选择用Rust从零开始？ <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%B0%9D%E8%AF%95%EF%BC%9A%E8%87%AA%E5%BB%BA-ZeroTier-Planet"><span class="nav-number">1.</span> <span class="nav-text">第一次尝试：自建 ZeroTier Planet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B9%E5%8F%98%E6%80%9D%E8%B7%AF%EF%BC%9APlanet-%E4%B8%8D%E8%A1%8C%EF%BC%8C%E9%82%A3%E5%B0%B1%E7%94%A8-Moon"><span class="nav-number">2.</span> <span class="nav-text">改变思路：Planet 不行，那就用 Moon</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%90%8E%E4%B8%80%E6%AD%A5%EF%BC%9A%E5%BD%BB%E5%BA%95%E2%80%9C%E9%9A%90%E5%BD%A2%E2%80%9D"><span class="nav-number">3.</span> <span class="nav-text">最后一步：彻底“隐形”</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%BE-1%EF%BC%9A%E6%94%B9%E9%80%A0%E5%89%8D%E7%9A%84%E2%80%9C%E9%97%A8%E6%88%B7%E5%A4%A7%E5%BC%80%E2%80%9D%E6%9E%B6%E6%9E%84"><span class="nav-number">3.1.</span> <span class="nav-text">图 1：改造前的“门户大开”架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%BE-2%EF%BC%9A%E6%94%B9%E9%80%A0%E5%90%8E%E7%9A%84%E2%80%9C%E9%9B%B6%E4%BF%A1%E4%BB%BB%E2%80%9D%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84"><span class="nav-number">3.2.</span> <span class="nav-text">图 2：改造后的“零信任”安全架构</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mice</p>
+  <div class="site-description" itemprop="description">Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mice</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-ribbon@1/canvas-ribbon.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.1.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/three.min.js"></script>
+    <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/three-waves.min.js"></script>
+    <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/canvas_lines.min.js"></script>
+    <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/canvas_sphere.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script data-pjax>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'neutral',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

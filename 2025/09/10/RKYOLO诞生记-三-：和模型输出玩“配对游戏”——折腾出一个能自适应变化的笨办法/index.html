@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"miceworld.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="上一篇文章里，我们好不容易打赢了“数值之战”，让模型终于能看清楚东西了。我美滋滋地想，导师给的玉米穗模型部署任务，这下总该顺利了吧？ 于是，我满心期待地把模型从 COCO 的yolo11n.rknn换成了自己的MTDC-UAV.rknn。结果……程序又扑街了。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RKYOLO诞生记 (三)：和模型输出玩“配对游戏”——折腾出一个能自适应变化的笨办法">
+<meta property="og:url" content="https://miceworld.top/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E4%B8%89-%EF%BC%9A%E5%92%8C%E6%A8%A1%E5%9E%8B%E8%BE%93%E5%87%BA%E7%8E%A9%E2%80%9C%E9%85%8D%E5%AF%B9%E6%B8%B8%E6%88%8F%E2%80%9D%E2%80%94%E2%80%94%E6%8A%98%E8%85%BE%E5%87%BA%E4%B8%80%E4%B8%AA%E8%83%BD%E8%87%AA%E9%80%82%E5%BA%94%E5%8F%98%E5%8C%96%E7%9A%84%E7%AC%A8%E5%8A%9E%E6%B3%95/index.html">
+<meta property="og:site_name" content="Mice World">
+<meta property="og:description" content="上一篇文章里，我们好不容易打赢了“数值之战”，让模型终于能看清楚东西了。我美滋滋地想，导师给的玉米穗模型部署任务，这下总该顺利了吧？ 于是，我满心期待地把模型从 COCO 的yolo11n.rknn换成了自己的MTDC-UAV.rknn。结果……程序又扑街了。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-09-09T21:54:53.000Z">
+<meta property="article:modified_time" content="2025-09-27T09:56:57.631Z">
+<meta property="article:author" content="Mice">
+<meta property="article:tag" content="YOLO">
+<meta property="article:tag" content="Rust">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="嵌入式">
+<meta property="article:tag" content="系统编程">
+<meta property="article:tag" content="开源">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://miceworld.top/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E4%B8%89-%EF%BC%9A%E5%92%8C%E6%A8%A1%E5%9E%8B%E8%BE%93%E5%87%BA%E7%8E%A9%E2%80%9C%E9%85%8D%E5%AF%B9%E6%B8%B8%E6%88%8F%E2%80%9D%E2%80%94%E2%80%94%E6%8A%98%E8%85%BE%E5%87%BA%E4%B8%80%E4%B8%AA%E8%83%BD%E8%87%AA%E9%80%82%E5%BA%94%E5%8F%98%E5%8C%96%E7%9A%84%E7%AC%A8%E5%8A%9E%E6%B3%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>RKYOLO诞生记 (三)：和模型输出玩“配对游戏”——折腾出一个能自适应变化的笨办法 | Mice World</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Mice World</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">记录点滴 探索无限</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E4%B8%89-%EF%BC%9A%E5%92%8C%E6%A8%A1%E5%9E%8B%E8%BE%93%E5%87%BA%E7%8E%A9%E2%80%9C%E9%85%8D%E5%AF%B9%E6%B8%B8%E6%88%8F%E2%80%9D%E2%80%94%E2%80%94%E6%8A%98%E8%85%BE%E5%87%BA%E4%B8%80%E4%B8%AA%E8%83%BD%E8%87%AA%E9%80%82%E5%BA%94%E5%8F%98%E5%8C%96%E7%9A%84%E7%AC%A8%E5%8A%9E%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mice">
+      <meta itemprop="description" content="Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mice World">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          RKYOLO诞生记 (三)：和模型输出玩“配对游戏”——折腾出一个能自适应变化的笨办法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-09-10 05:54:53" itemprop="dateCreated datePublished" datetime="2025-09-10T05:54:53+08:00">2025-09-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-09-27 17:56:57" itemprop="dateModified" datetime="2025-09-27T17:56:57+08:00">2025-09-27</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>上一篇文章里，我们好不容易打赢了“数值之战”，让模型终于能看清楚东西了。我美滋滋地想，导师给的玉米穗模型部署任务，这下总该顺利了吧？</p>
+<p>于是，我满心期待地把模型从 COCO 的<code>yolo11n.rknn</code>换成了自己的<code>MTDC-UAV.rknn</code>。结果……程序又扑街了。</p>
+<span id="more"></span>
+
+<h4 id="新副本：从“看错”到“崩溃”"><a href="#新副本：从“看错”到“崩溃”" class="headerlink" title="新副本：从“看错”到“崩溃”"></a><strong>新副本：从“看错”到“崩溃”</strong></h4><p>这次倒不是瞎指认了，而是干脆利落的**段错误(Segmentation Fault)**——程序在推理成功后，刚进后处理函数就当场崩溃。</p>
+<p>吃一堑长一智，我第一反应就是：模型结构又作什么妖了？赶紧加日志，把模型真实的输入输出张量数量打印出来瞅瞅。果然：</p>
+<ul>
+<li>COCO <code>yolo11n.rknn</code> 模型：<strong>9 个输出</strong></li>
+<li>我的 <code>MTDC-UAV.rknn</code> 模型：<strong>7 个输出</strong></li>
+</ul>
+<p>破案了。我之前写的后处理代码，和那些 C++示例一样，天真地以为模型永远会吐出 9 个输出。当它试图去访问我模型里压根不存在的第 8、第 9 个输出张量时，就直接一头撞墙上——内存访问越界了。</p>
+<p>这时候我才算彻底明白，为啥当初 C++示例跑不通我的模型，为啥我非得折腾这个重构项目。<strong>真不是我闲得慌非要追新，是这坑就摆在这，不填平它，任务根本进行不下去啊！</strong></p>
+<h4 id="关键破局点：别猜了，让模型自己“交代”"><a href="#关键破局点：别猜了，让模型自己“交代”" class="headerlink" title="关键破局点：别猜了，让模型自己“交代”"></a><strong>关键破局点：别猜了，让模型自己“交代”</strong></h4><p>我悟了：不能再<strong>猜</strong>模型长啥样了，得写个代码让它自己<strong>交代</strong>。我需要个“模型侦察兵”，而“侦察情报”就是模型自己的元数据。</p>
+<p>我没瞎琢磨，而是干了件挺有用的事：<strong>数据驱动调试</strong>。我让程序分别加载两个模型，把它们所有输出张量的属性（维度、名称等）全打印出来。</p>
+<p><strong>情报一：YOLOv11n (COCO) 的输出张量属性</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">--- 输出张量属性诊断 ---</span><br><span class="line">- Attr 0: ... dims=[1, 64, 80, 80]  (Box @ 80x80)</span><br><span class="line">- Attr 1: ... dims=[1, 80, 80, 80]  (Score @ 80x80, 80 classes)</span><br><span class="line">... (中间省略) ...</span><br><span class="line">- Attr 8: ... dims=[1, 1, 20, 20]   (Score_sum @ 20x20)</span><br><span class="line">--------------------------</span><br></pre></td></tr></table></figure>
+
+<p><strong>情报二：YOLOv11n (玉米穗) 的输出张量属性</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">--- 输出张量属性诊断 ---</span><br><span class="line">- Attr 0: ... dims=[1, 64, 80, 80]  (Box @ 80x80)</span><br><span class="line">- Attr 1: ... dims=[1, 1, 80, 80]   (Score @ 80x80, 1 class)</span><br><span class="line">... (中间省略) ...</span><br><span class="line">- Attr 6: ... dims=[1, 64, 20, 20]  (Box @ 20x20)</span><br><span class="line">--------------------------</span><br></pre></td></tr></table></figure>
+
+<p>把这两份“情报”放一块，谜底揭晓了：</p>
+<ol>
+<li><strong>“套路”还是那个套路</strong>：虽然输出总数不同，但它们都遵循一个基本模式——在同一个空间尺寸（比如<code>80x80</code>）上，总会有一组相关的张量。</li>
+<li><strong>张量的“身份证”</strong>：我摸到一个还算靠谱的<strong>启发式规则</strong>来区分它们。负责预测框的<strong>Box 张量</strong>，其通道数<code>dims[1]</code>是个固定值（比如<code>64</code>）；而负责预测类别的<strong>Score 张量</strong>，其通道数<code>dims[1]</code>恰恰就是<strong>类别总数</strong>（COCO 是 80，玉米穗就 1 个）。</li>
+<li><strong>“被优化”了</strong>：最有趣的是，玉米穗模型在<code>20x20</code>这个尺度上，<strong>只有 Box 张量，没对应的 Score 张量</strong>！怪不得少俩输出。估计是 ONNX 转 RKNN 时，优化器觉得这小目标检测分支对我的任务没啥用，顺手就给“剪”了。</li>
+</ol>
+<h4 id="算法的演进：从“写死”到“动态配对”"><a href="#算法的演进：从“写死”到“动态配对”" class="headerlink" title="算法的演进：从“写死”到“动态配对”"></a><strong>算法的演进：从“写死”到“动态配对”</strong></h4><p>真相大白。不能依赖任何固定的输出数量或顺序，唯一可靠的，就是<strong>“相同空间尺寸的 Box 和 Score 张量是一对儿”</strong>这个基本原理。</p>
+<p>基于这，我琢磨出一个新的、能自适应的后处理算法。我不再关心总共是 7 个还是 9 个输出，我的代码现在像是在玩一个动态的“配对游戏”：</p>
+<p><strong>第一步：给所有张量发“身份证”（动态识别）</strong></p>
+<p>我遍历所有输出张量，根据刚摸清的规则，给它们贴上“身份”标签，然后塞进一个列表里。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// rkyolo-core/src/postprocess.rs</span></span><br><span class="line"><span class="meta">#[derive(Debug)]</span></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">TensorInfo</span> &#123;</span><br><span class="line">    <span class="type">Box</span> &#123; h: <span class="type">u32</span>, w: <span class="type">u32</span>, index: <span class="type">usize</span> &#125;,</span><br><span class="line">    Score &#123; h: <span class="type">u32</span>, w: w: <span class="type">u32</span>, index: <span class="type">usize</span> &#125;,</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// ... 遍历所有输出张量的属性 ...</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">c</span> = attr.dims[<span class="number">1</span>]; <span class="comment">// 通道数</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">h</span> = attr.dims[<span class="number">2</span>];</span><br><span class="line"><span class="keyword">let</span> <span class="variable">w</span> = attr.dims[<span class="number">3</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 就用通道数这个土办法，先区分看看</span></span><br><span class="line"><span class="keyword">if</span> c == <span class="number">64</span> &#123;</span><br><span class="line">    identified_tensors.<span class="title function_ invoke__">push</span>(TensorInfo::<span class="type">Box</span> &#123; h, w, index: i &#125;);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    identified_tensors.<span class="title function_ invoke__">push</span>(TensorInfo::Score &#123; h, w, index: i &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>第二步：按尺寸配对并处理（动态配对与调用）</strong></p>
+<p>接下来是核心部分。代码不再写死循环，而是遍历所有被认出是<code>Box</code>的，然后为每一个去找尺寸一模一样的<code>Score</code>。只要配上一对，就立马把它们塞给解码函数去处理。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// rkyolo-core/src/postprocess.rs</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 动态配对：遍历所有Box，给它们找对象（尺寸一样的Score）</span></span><br><span class="line"><span class="keyword">for</span> <span class="variable">tensor_info</span> <span class="keyword">in</span> &amp;identified_tensors &#123;</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> &amp;TensorInfo::<span class="type">Box</span> &#123;</span><br><span class="line">        h,</span><br><span class="line">        w,</span><br><span class="line">        index: box_idx,</span><br><span class="line">    &#125; = tensor_info</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 给它找个尺寸一样的Score</span></span><br><span class="line">        <span class="keyword">let</span> <span class="variable">paired_score_info</span> = identified_tensors.<span class="title function_ invoke__">iter</span>().<span class="title function_ invoke__">find</span>(|&amp;t| &#123;</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">let</span> &amp;TensorInfo::Score &#123; h: sh, w: sw, .. &#125; = t &#123;</span><br><span class="line">                sh == h &amp;&amp; sw == w</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="literal">false</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3. 找到了就送去解码</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> <span class="variable">Some</span>(&amp;TensorInfo::Score &#123;</span><br><span class="line">            index: score_idx, ..</span><br><span class="line">        &#125;) = paired_score_info</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// ... (这里拿到对应的数据，然后调用解码函数) ...</span></span><br><span class="line">            <span class="keyword">let</span> <span class="variable">branch_detections</span> = <span class="title function_ invoke__">decode_branch</span>(...);</span><br><span class="line">            all_detections.<span class="title function_ invoke__">extend</span>(branch_detections);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这代码妙就妙在它的<strong>描述性</strong>。它没死命令式地去“访问第 0、1、3 个……”张量，而是描述了个匹配规则：“<strong>给我找个 Box，再给它配个一样大的 Score，然后你俩一起处理去</strong>”。这么一来，张量数量变没变、顺序乱没乱，它根本不在乎。</p>
+<h4 id="小结与收获：从“搞定”到“学乖”"><a href="#小结与收获：从“搞定”到“学乖”" class="headerlink" title="小结与收获：从“搞定”到“学乖”"></a><strong>小结与收获：从“搞定”到“学乖”</strong></h4><p>当我用这套新的“动态配对”算法换掉旧的硬编码后，嘿，还真成了！</p>
+<p>无论是 9 个输出的 COCO 模型，还是被“剪枝”成 7 个输出的玉米穗模型，甚至以后别的什么妖魔鬼怪模型，我这后处理代码<strong>一个字都不用改</strong>，大概率都能蒙混过关。</p>
+<p>这次折腾下来，最大的感触就是：</p>
+<ul>
+<li><strong>别脑补，看日志</strong>：与其瞎猜，不如让数据（模型元数据）自己说话，让它指导代码该怎么写。</li>
+<li><strong>拥抱变化</strong>：写死的代码最怕变化。一个皮实的系统，得能优雅地处理各种意外（比如模型被优化了）。</li>
+<li><strong>挖到底</strong>：只有挖到问题的根上（模型输出的内在模式），才能想出“一劳永逸”的笨办法，而不是不停打补丁。</li>
+</ul>
+<p>这个过程让我学到的，不止是修好一个程序，更是对怎么写“抗造”的代码有了点感觉。算是从一个只会埋头解决问题的“码农”，朝一个能预感到变化、会写适应性代码的“码农 plus”挪了一小步吧。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/YOLO/" rel="tag"># YOLO</a>
+              <a href="/tags/Rust/" rel="tag"># Rust</a>
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/" rel="tag"># 嵌入式</a>
+              <a href="/tags/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/" rel="tag"># 系统编程</a>
+              <a href="/tags/%E5%BC%80%E6%BA%90/" rel="tag"># 开源</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E4%BA%8C-%EF%BC%9A%E6%A8%A1%E5%9E%8B%E2%80%9C%E6%8C%87%E9%B9%BF%E4%B8%BA%E9%A9%AC%E2%80%9D%EF%BC%9F%E6%88%91%E7%9A%84Bug%E4%BE%A6%E6%8E%A2%E7%AC%94%E8%AE%B0/" rel="prev" title="RKYOLO诞生记 (二)：模型“指鹿为马”？我的Bug侦探笔记">
+      <i class="fa fa-chevron-left"></i> RKYOLO诞生记 (二)：模型“指鹿为马”？我的Bug侦探笔记
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E5%9B%9B-%EF%BC%9A%E9%9B%B6%E6%8B%B7%E8%B4%9D%E8%B8%A9%E5%9D%91%E8%AE%B0-%E2%80%94%E2%80%94-%E5%92%8C%E5%86%85%E5%AD%98%E6%90%AC%E8%BF%90%E8%AF%B4%E5%86%8D%E8%A7%81/" rel="next" title="RKYOLO诞生记 (四)：零拷贝踩坑记 —— 和内存搬运说再见">
+      RKYOLO诞生记 (四)：零拷贝踩坑记 —— 和内存搬运说再见 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B0%E5%89%AF%E6%9C%AC%EF%BC%9A%E4%BB%8E%E2%80%9C%E7%9C%8B%E9%94%99%E2%80%9D%E5%88%B0%E2%80%9C%E5%B4%A9%E6%BA%83%E2%80%9D"><span class="nav-number">1.</span> <span class="nav-text">新副本：从“看错”到“崩溃”</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E7%A0%B4%E5%B1%80%E7%82%B9%EF%BC%9A%E5%88%AB%E7%8C%9C%E4%BA%86%EF%BC%8C%E8%AE%A9%E6%A8%A1%E5%9E%8B%E8%87%AA%E5%B7%B1%E2%80%9C%E4%BA%A4%E4%BB%A3%E2%80%9D"><span class="nav-number">2.</span> <span class="nav-text">关键破局点：别猜了，让模型自己“交代”</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E7%9A%84%E6%BC%94%E8%BF%9B%EF%BC%9A%E4%BB%8E%E2%80%9C%E5%86%99%E6%AD%BB%E2%80%9D%E5%88%B0%E2%80%9C%E5%8A%A8%E6%80%81%E9%85%8D%E5%AF%B9%E2%80%9D"><span class="nav-number">3.</span> <span class="nav-text">算法的演进：从“写死”到“动态配对”</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93%E4%B8%8E%E6%94%B6%E8%8E%B7%EF%BC%9A%E4%BB%8E%E2%80%9C%E6%90%9E%E5%AE%9A%E2%80%9D%E5%88%B0%E2%80%9C%E5%AD%A6%E4%B9%96%E2%80%9D"><span class="nav-number">4.</span> <span class="nav-text">小结与收获：从“搞定”到“学乖”</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mice</p>
+  <div class="site-description" itemprop="description">Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mice</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-ribbon@1/canvas-ribbon.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.1.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/three.min.js"></script>
+    <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/three-waves.min.js"></script>
+    <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/canvas_lines.min.js"></script>
+    <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/canvas_sphere.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script data-pjax>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'neutral',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
