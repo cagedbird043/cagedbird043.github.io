@@ -29,6 +29,9 @@ category_dir: categories
 code_dir: downloads/code
 i18n_dir: :lang
 skip_render:
+  - baidu_verify_*.html
+  - BingSiteAuth.xml
+  - 404.html
 
 # Writing
 new_post_name: :title.md # File name of new posts
@@ -146,24 +149,22 @@ clean_css:
     - "*.min.css"
 
 html_minifier:
-  enable: false # 禁用 HTML 压缩
-  # collapseBooleanAttributes: true
-  # collapseWhitespace: true
-  # # Ignore '<!-- more -->' https://hexo.io/docs/tag-plugins#Post-Excerpt
-  # ignoreCustomComments: [!!js/regexp /^\s*more/]
-  # removeComments: true
-  # removeEmptyAttributes: true
-  # removeScriptTypeAttributes: true
-  # removeStyleLinkTypeAttributes: true
-  # minifyJS: true
-  # minifyCSS: true
+  enable: true # 启用 HTML 压缩以提升性能
+  collapseBooleanAttributes: true
+  collapseWhitespace: true
+  # Ignore '<!-- more -->' https://hexo.io/docs/tag-plugins#Post-Excerpt
+  ignoreCustomComments: [!!js/regexp /^\s*more/]
+  removeComments: true
+  removeEmptyAttributes: true
+  removeScriptTypeAttributes: true
+  removeStyleLinkTypeAttributes: true
+  minifyJS: true
+  minifyCSS: true
 
 sitemap:
   path:
     - sitemap.xml
     - sitemap.txt
-  template: ./sitemap_template.xml
-  template_txt: ./sitemap_template.txt
   rel: false
   tags: true
   categories: true
@@ -177,11 +178,31 @@ mermaid:
     light: default
     dark: dark
 
-inject:
-  head:
-    # 自动给所有 CSS 文件加上基于时间戳的版本号
-    - <link rel="stylesheet" href="/css/style.css?v={{ version }}">
-  # 在 body 标签的末尾注入
-  body:
-    # 自动给所有 JS 文件加上基于时间戳的版本号
-    - <script src="/js/main.js?v={{ version }}"></script>
+# inject:
+#   head:
+#     # 自动给所有 CSS 文件加上基于时间戳的版本号
+#     - <link rel="stylesheet" href="/css/style.css?v={{ version }}">
+#   # 在 body 标签的末尾注入
+#   body:
+#     # 自动给所有 JS 文件加上基于时间戳的版本号
+#     - <script src="/js/main.js?v={{ version }}"></script>
+
+auto_category:
+  enable: true
+  multiple: true
+  depth:
+
+# RSS Feed
+feed:
+  enable: true
+  type: atom
+  path: atom.xml
+  limit: 20
+  hub:
+  content:
+  content_limit: 140
+  content_limit_delim: " "
+  order_by: -date
+  icon: icon.png
+  autodiscovery: true
+  template:

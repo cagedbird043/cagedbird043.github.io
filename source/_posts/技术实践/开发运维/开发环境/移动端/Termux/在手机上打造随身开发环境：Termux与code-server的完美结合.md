@@ -1,6 +1,5 @@
 ---
 title: 在手机上打造随身开发环境：Termux与code-server的完美结合
-date: 2024-10-06 04:17:35
 tags:
   - Termux
   - Chroot
@@ -9,8 +8,14 @@ tags:
   - 随身IDE
   - 集成开发环境
   - 移动开发工具
-categories: 技术教程
+categories:
+  - - 技术实践
+  - - 开发运维
+  - - 开发环境
+  - - 移动端
+  - - Termux
 cover: /img/2024/10/6/code-server.png
+date: 2024-10-06 04:17:35
 ---
 
 在使用 **Linux Deploy** 配置 Chroot 环境时，我发现虽然它提供了便利，但其长期无人维护的问题逐渐显露出来。可选的 **Linux** 发行版过于老旧，导致一些功能失效，且细节设置也不尽人意。为了解决这些问题，我决定转向 **Termux** 来配置 Chroot 环境。这样一来，我不仅能够使用更新的发行版，还能进行更加精细的设置，从而打造出一个更符合我需求的 **Chroot** 环境。
