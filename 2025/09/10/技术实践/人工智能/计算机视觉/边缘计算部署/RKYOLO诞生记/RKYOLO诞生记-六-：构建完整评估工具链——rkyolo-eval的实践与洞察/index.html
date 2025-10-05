@@ -20,7 +20,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"miceworld.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"miceworld.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="在完成了rKYOLO核心推理引擎和多种 IO 功能后，项目已经具备了完整的应用能力。然而，我深知在机器学习项目中，可靠的评估体系与高效的推理能力同等重要。为此，我构建了rkyolo-eval工具链，为项目增添了专业的模型评估能力。">
@@ -58,6 +58,15 @@
   
 
 
+  <script data-pjax>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?53c504378d31ebb49f8624d2dd23c0b9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
 
 
 
@@ -113,6 +122,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -147,11 +157,38 @@
     <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
 
   </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
     </header>
@@ -161,6 +198,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -256,7 +294,7 @@
 
 <h4 id="从直觉到量化：建立专业评估体系"><a href="#从直觉到量化：建立专业评估体系" class="headerlink" title="从直觉到量化：建立专业评估体系"></a><strong>从直觉到量化：建立专业评估体系</strong></h4><p>当模型从 FP32 精度量化到 INT8 并部署到边缘设备后，性能变化必须被精确衡量而非仅凭主观感受。我建立的评估体系包含两个核心指标：</p>
 <ul>
-<li><strong><a href="mailto:&#x6d;&#65;&#80;&#64;&#x30;&#46;&#53;">&#x6d;&#65;&#80;&#64;&#x30;&#46;&#53;</a></strong>：采用目标检测领域的黄金标准，确保评估结果与学术界和工业界标准完全兼容，为性能比较提供可靠基准</li>
+<li><strong><a href="mailto:&#x6d;&#x41;&#80;&#64;&#48;&#46;&#x35;">&#x6d;&#x41;&#80;&#64;&#48;&#46;&#x35;</a></strong>：采用目标检测领域的黄金标准，确保评估结果与学术界和工业界标准完全兼容，为性能比较提供可靠基准</li>
 <li>**R² (决定系数)**：针对实际应用场景的创新指标，专门评估模型在物体计数任务上的准确性，直接反映业务价值</li>
 </ul>
 <h4 id="高效评估架构：解耦推理与评估"><a href="#高效评估架构：解耦推理与评估" class="headerlink" title="高效评估架构：解耦推理与评估"></a><strong>高效评估架构：解耦推理与评估</strong></h4><p>通过设计<code>predictions.json</code>中间文件，实现了推理过程与评估过程的完全解耦。这种架构带来显著优势：</p>
@@ -396,6 +434,14 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cagedbird043" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;cagedbird043" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:cagedbird043@gmail.com" title="E-Mail → mailto:cagedbird043@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
 
 
 
@@ -464,6 +510,7 @@
   <script size="300" alpha="0.6" zIndex="-1" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-ribbon@1/canvas-ribbon.js"></script>
   <script src="//cdn.jsdelivr.net/npm/animejs@3.1.0/lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
 
@@ -571,6 +618,10 @@ window.addEventListener('pjax:success', () => {
   </script>
 
 
+
+
+  
+<script src="/js/local-search.js"></script>
 
 
 

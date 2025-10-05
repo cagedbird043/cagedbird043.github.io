@@ -20,7 +20,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"miceworld.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"miceworld.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="1. 什么是 U-Net？U-Net 是一种用于图像分割的卷积神经网络，最初由 Olaf Ronneberger 等人在 2015 年为医学图像分割设计。其独特的 U 形架构使其在生成高质量分割图像方面表现出色。">
@@ -59,6 +59,15 @@
   
 
 
+  <script data-pjax>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?53c504378d31ebb49f8624d2dd23c0b9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
 
 
 
@@ -114,6 +123,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -148,11 +158,38 @@
     <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
 
   </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
     </header>
@@ -162,6 +199,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -251,7 +289,7 @@
         <h2 id="1-什么是-U-Net？"><a href="#1-什么是-U-Net？" class="headerlink" title="1. 什么是 U-Net？"></a>1. 什么是 U-Net？</h2><p>U-Net 是一种用于图像分割的卷积神经网络，最初由 Olaf Ronneberger 等人在 2015 年为医学图像分割设计。其独特的 U 形架构使其在生成高质量分割图像方面表现出色。</p>
 <span id="more"></span>
 
-<h2 id="2-U-Net-模型结构"><a href="#2-U-Net-模型结构" class="headerlink" title="2. U-Net 模型结构"></a>2. U-Net 模型结构</h2><p>U-Net 的架构可以分为两个主要部分：<strong>编码器(Encoder)</strong>和<strong>解码器(Decoder)</strong>.<br><img src="/img/2024/11/16/U-Net.png" alt="U-Net" title="U-Net"></p>
+<h2 id="2-U-Net-模型结构"><a href="#2-U-Net-模型结构" class="headerlink" title="2. U-Net 模型结构"></a>2. U-Net 模型结构</h2><p>U-Net 的架构可以分为两个主要部分：<strong>编码器(Encoder)</strong>和<strong>解码器(Decoder)</strong>.<br><img data-src="/img/2024/11/16/U-Net.png" alt="U-Net" title="U-Net"></p>
 <ul>
 <li><p>编码器</p>
 <p>编码器部分由多个 <strong>卷积层</strong> 和 <strong>池化层</strong> 组成。每个卷积层后会接一个 <strong>ReLU 激活函数</strong>，并且通常在每两层卷积之后，插入一个 <strong>最大池化层</strong>，通过池化操作逐步减小空间分辨率(即进行下采样)。为了保持特征表达的丰富性，在每次下采样后，通道数通常会翻倍，从而允许网络学习更多的特征。</p>
@@ -267,7 +305,7 @@
 </li>
 </ul>
 <h2 id="3-U-Net-处理过程"><a href="#3-U-Net-处理过程" class="headerlink" title="3. U-Net 处理过程"></a>3. U-Net 处理过程</h2><p>如下图</p>
-<p><img src="/img/2024/11/16/U-Net-processing.png" alt="U-Net处理过程" title="U-Net处理过程"></p>
+<p><img data-src="/img/2024/11/16/U-Net-processing.png" alt="U-Net处理过程" title="U-Net处理过程"></p>
 <p>U-Net 的训练过程实际上是在优化人工分割图（Ground Truth）与网络生成的分割图之间的差异。通过损失函数（如交叉熵或 Dice 系数损失）来衡量这两者之间的差异，网络通过反向传播逐步调整权重，最终使得生成的分割图越来越接近人工标注的真实分割图。</p>
 <h2 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h2><p>U-Net 是一种经典的图像分割网络，其结构由编码器、瓶颈和解码器组成。编码器负责逐步提取图像特征，瓶颈部分压缩特征并提取高层次信息，而解码器则通过上采样和跳跃连接逐步恢复图像的空间分辨率，最终生成分割结果。与残差网络（ResNet）类似，U-Net 通过跳跃连接在编码器和解码器之间传递重要特征，确保细节信息在网络中不丢失。残差连接和跳跃连接都能帮助网络更有效地学习特征，减缓训练中的信息丢失问题，从而提升性能。</p>
 <h2 id="5-参考资料"><a href="#5-参考资料" class="headerlink" title="5. 参考资料"></a>5. 参考资料</h2><ol>
@@ -392,6 +430,14 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cagedbird043" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;cagedbird043" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:cagedbird043@gmail.com" title="E-Mail → mailto:cagedbird043@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
 
 
 
@@ -460,6 +506,7 @@
   <script size="300" alpha="0.6" zIndex="-1" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-ribbon@1/canvas-ribbon.js"></script>
   <script src="//cdn.jsdelivr.net/npm/animejs@3.1.0/lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
 
@@ -567,6 +614,10 @@ window.addEventListener('pjax:success', () => {
   </script>
 
 
+
+
+  
+<script src="/js/local-search.js"></script>
 
 
 

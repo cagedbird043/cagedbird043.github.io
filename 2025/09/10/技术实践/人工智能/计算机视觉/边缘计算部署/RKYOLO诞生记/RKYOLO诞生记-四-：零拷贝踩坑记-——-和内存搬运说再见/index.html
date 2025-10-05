@@ -20,7 +20,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"miceworld.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"miceworld.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="前面的文章里，我们给 RKYOLO 搭好了结实的地基——安全的 FFI 层和聪明的后处理。项目是能跑了，但作为一个爱折腾的人，我总觉得还能再抠点性能出来。 当我琢磨怎么用它来处理实时视频流时，我意识到真正的挑战来了。目标不再是“能跑”，而是得“跑得飞起”。为此，我决定去碰一碰性能优化里最硬的那块骨头——**零拷贝(Zero-Copy)**。">
@@ -61,6 +61,15 @@
   
 
 
+  <script data-pjax>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?53c504378d31ebb49f8624d2dd23c0b9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
 
 
 
@@ -116,6 +125,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -150,11 +160,38 @@
     <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
 
   </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
     </header>
@@ -164,6 +201,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -264,14 +302,14 @@
 <p>这就像有个手脚麻利的厨师（NPU），但每次做菜前，都得等一个慢悠悠的服务员（CPU）把食材从仓库（CPU 内存）搬到灶台（NPU 内存）上。厨师大部分时间都在干等，整体效率自然高不了。</p>
 <p>零拷贝就是想绕开这个服务员，让食材直接出现在厨师的灶台上，彻底省掉“搬运”这步。</p>
 <h4 id="三步搞定零拷贝：和硬件直接打交道"><a href="#三步搞定零拷贝：和硬件直接打交道" class="headerlink" title="三步搞定零拷贝：和硬件直接打交道"></a><strong>三步搞定零拷贝：和硬件直接打交道</strong></h4><p>要实现零拷贝，就不能再用现成的高级 API 了。我啃了瑞芯微的官方开发文档，总算摸清了门路。</p>
-<p><strong>(图：官方零拷贝 API 调用流程图)</strong><br><img src="/img/2025/9/10/rknn_zero_copy_flow.png" alt="图：官方零拷贝 API 调用流程图" title="瑞芯微官方文档里的零拷贝流程图，指明了rknn_create_mem和rknn_set_io_mem是关键。"><br><em>图注：瑞芯微官方文档里的零拷贝流程图，指明了<code>rknn_create_mem</code>和<code>rknn_set_io_mem</code>是关键。</em></p>
+<p><strong>(图：官方零拷贝 API 调用流程图)</strong><br><img data-src="/img/2025/9/10/rknn_zero_copy_flow.png" alt="图：官方零拷贝 API 调用流程图" title="瑞芯微官方文档里的零拷贝流程图，指明了rknn_create_mem和rknn_set_io_mem是关键。"><br><em>图注：瑞芯微官方文档里的零拷贝流程图，指明了<code>rknn_create_mem</code>和<code>rknn_set_io_mem</code>是关键。</em></p>
 <p>照着这份“地图”，我开始了零拷贝的“三步走”：</p>
 <p><strong>1. 先问问 NPU 喜欢啥样的“盘子” (<code>query_native_input_attrs</code>)</strong></p>
 <p>文档里特别强调了要查“原生”属性：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">rknn_query()</span><br><span class="line">输入:</span><br><span class="line">用RKNN_QUERY_NATIVE_INPUT_ATTR查询相关的属性（注意，不是</span><br><span class="line">RKNN_QUERY_INPUT_ATTR）. ... 该方式查询出来的是输入硬件效率最优的layout和type。</span><br></pre></td></tr></table></figure>
 
 <p>这个 <code>NATIVE</code> 版本的查询特别关键，它能告诉我 NPU 硬件<strong>原生的</strong>内存布局要求，这些要求往往很具体：</p>
-<p><strong>(图：官方零拷贝输入对齐要求)</strong><br><img src="/img/2025/9/10/rknn_zero_copy_alignment.png" alt="图：官方零拷贝输入对齐要求" title="瑞芯微官方文档里关于零拷贝输入的对齐要求。"><br><em>图注：官方文档说，在 RK3588 上，4 维输入的通道需要做 16 字节对齐。</em></p>
+<p><strong>(图：官方零拷贝输入对齐要求)</strong><br><img data-src="/img/2025/9/10/rknn_zero_copy_alignment.png" alt="图：官方零拷贝输入对齐要求" title="瑞芯微官方文档里关于零拷贝输入的对齐要求。"><br><em>图注：官方文档说，在 RK3588 上，4 维输入的通道需要做 16 字节对齐。</em></p>
 <p>这个对齐要求，最终体现在 <code>rknn_tensor_attr</code> 结构体的一个参数上——<code>w_stride</code>（行步长）。这是搞定零拷贝的第一把钥匙。</p>
 <p><strong>2. 在厨房申请个“专用灶台” (<code>rknn_create_mem</code>)</strong></p>
 <p>下一步是 <code>rknn_create_mem</code>。这个函数会在 DMA（直接内存访问）区域申请一块“专用灶台”。这块内存很神奇，CPU 和 NPU 都能直接访问。</p>
@@ -446,6 +484,14 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cagedbird043" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;cagedbird043" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:cagedbird043@gmail.com" title="E-Mail → mailto:cagedbird043@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
 
 
 
@@ -514,6 +560,7 @@
   <script size="300" alpha="0.6" zIndex="-1" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-ribbon@1/canvas-ribbon.js"></script>
   <script src="//cdn.jsdelivr.net/npm/animejs@3.1.0/lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
 
@@ -621,6 +668,10 @@ window.addEventListener('pjax:success', () => {
   </script>
 
 
+
+
+  
+<script src="/js/local-search.js"></script>
 
 
 

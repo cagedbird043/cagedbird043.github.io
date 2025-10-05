@@ -20,7 +20,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"miceworld.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"miceworld.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="上一篇文章，我们聊了为什么我选择用 Rust 来为 RKNN 库构建一个安全、独立的地基。当地基打好，我信心满满地将所有模块串联起来，加载了官方示例中那张经典的bus.jpg，期待着一次完美的推理。 程序没有崩溃，有输出了！我兴奋地将结果绘制出来，然后……我傻眼了。 案发现场：一切混乱的开始眼前的景象让我大跌眼镜。这哪里是目标检测，这简直是抽象艺术……">
@@ -63,6 +63,15 @@
   
 
 
+  <script data-pjax>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?53c504378d31ebb49f8624d2dd23c0b9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
 
 
 
@@ -118,6 +127,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -152,11 +162,38 @@
     <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
 
   </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
     </header>
@@ -166,6 +203,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -261,10 +299,10 @@
 <h4 id="案发现场：一切混乱的开始"><a href="#案发现场：一切混乱的开始" class="headerlink" title="案发现场：一切混乱的开始"></a><strong>案发现场：一切混乱的开始</strong></h4><p>眼前的景象让我大跌眼镜。这哪里是目标检测，这简直是抽象艺术……</p>
 <span id="more"></span>
 
-<p><strong>图一：最初的错乱图</strong><br><img src="/img/2025/9/10/first_messy_coco1.png" alt="图一：最初的错乱图" title="最初的推理结果，大量的框重叠、错位，甚至把远处的建筑识别成了“truck"><br><em>图注：最初的推理结果，大量的框重叠、错位，甚至把远处的建筑识别成了“truck”</em></p>
+<p><strong>图一：最初的错乱图</strong><br><img data-src="/img/2025/9/10/first_messy_coco1.png" alt="图一：最初的错乱图" title="最初的推理结果，大量的框重叠、错位，甚至把远处的建筑识别成了“truck"><br><em>图注：最初的推理结果，大量的框重叠、错位，甚至把远处的建筑识别成了“truck”</em></p>
 <p>大量的检测框毫无逻辑地堆叠在一起，置信度都低得可怜。很明显，有什么东西从根上就错了。</p>
 <h4 id="第一轮审讯：NMS-与置信度的“嫌疑”"><a href="#第一轮审讯：NMS-与置信度的“嫌疑”" class="headerlink" title="第一轮审讯：NMS 与置信度的“嫌疑”"></a><strong>第一轮审讯：NMS 与置信度的“嫌疑”</strong></h4><p>我的第一反应是：是不是后处理的参数太松了？我尝试调整 NMS（非极大值抑制）的阈值和置信度阈值，希望能过滤掉这些杂乱的框。经过一番调整，我得到了一张稍微“干净”一点的图，但问题也更清晰了：</p>
-<p><strong>图二：初步清理后的结果</strong><br><img src="/img/2025/9/10/milestone_but_bug2.png" alt="图二：初步清理后的结果" title="提高阈值后，大部分杂乱的框消失了，但暴露了两个核心问题"><br><em>提高阈值后，大部分杂乱的框消失了，但暴露了两个核心问题</em></p>
+<p><strong>图二：初步清理后的结果</strong><br><img data-src="/img/2025/9/10/milestone_but_bug2.png" alt="图二：初步清理后的结果" title="提高阈值后，大部分杂乱的框消失了，但暴露了两个核心问题"><br><em>提高阈值后，大部分杂乱的框消失了，但暴露了两个核心问题</em></p>
 <p>这张图暴露了两个致命问题：</p>
 <ol>
 <li><strong>那么大个 Bus 呢？</strong> 画面中最显眼的主体——公交车，完全没有被识别出来。</li>
@@ -272,7 +310,7 @@
 </ol>
 <p>我当时陷入了一个错误的猜想，但这个猜想推动了调查的进行：“是不是我的 NMS 算法和官方的有出入，导致它抑制错了框？比如，其实模型已经预测出了很多个完美的框，但我的 NMS 算法选了一个最差的留了下来？”</p>
 <h4 id="案情转折：一个无法忽视的线索"><a href="#案情转折：一个无法忽视的线索" class="headerlink" title="案情转折：一个无法忽视的线索"></a><strong>案情转折：一个无法忽视的线索</strong></h4><p>为了验证这个猜想，我继续调整代码，并设法让公交车的框出现了。但结果却让我更加困惑：</p>
-<p><strong>图三：公交车出现，但身份成谜</strong><br><img src="/img/2025/9/10/another_milestone_bug_still_bug3.png" alt="图三：公交车出现，但身份成谜" title="公交车终于被检测到了，但它的身份却是“truck”，且置信度低得可怜。"><br><em>图注：公交车终于被检测到了，但它的身份却是“truck”，且置信度低得可怜。</em></p>
+<p><strong>图三：公交车出现，但身份成谜</strong><br><img data-src="/img/2025/9/10/another_milestone_bug_still_bug3.png" alt="图三：公交车出现，但身份成谜" title="公交车终于被检测到了，但它的身份却是“truck”，且置信度低得可怜。"><br><em>图注：公交车终于被检测到了，但它的身份却是“truck”，且置信度低得可怜。</em></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">--- 检测结果 (4 个) ---</span><br><span class="line">类别: 0 (person), 置信度: 0.9054, ...</span><br><span class="line">类别: 0 (person), 置信度: 0.7923, ...</span><br><span class="line">类别: 0 (person), 置信度: 0.6791, ...</span><br><span class="line">类别: 7 (truck), 置信度: 0.4254, 框: BoundingBox &#123; ... &#125; &lt;-- 在这里！</span><br><span class="line">--------------------------</span><br></pre></td></tr></table></figure>
 
 <p>这个结果让我瞬间否定了之前对 NMS 的怀疑。NMS 只会抑制或保留检测框，它不可能改变一个物体的类别。<strong>公交车被识别成了卡车，这绝对不是后处理能干出来的事！</strong></p>
@@ -289,7 +327,7 @@
 <figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// rkyolo-core/src/lib.rs (重构后的位置)</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">preprocess_letterbox_quantize</span>(</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">) <span class="punctuation">-&gt;</span> <span class="type">Result</span>&lt;(<span class="type">Vec</span>&lt;<span class="type">i8</span>&gt;, LetterboxInfo), image::ImageError&gt; &#123;</span><br><span class="line">    <span class="comment">// 1. Letterbox 几何变换 (已验证无误)</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">u8_data</span> = canvas.<span class="title function_ invoke__">into_raw</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 【制胜关键】手动归一化并量化</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">i8_data</span>: <span class="type">Vec</span>&lt;<span class="type">i8</span>&gt; = u8_data</span><br><span class="line">        .<span class="title function_ invoke__">into_iter</span>()</span><br><span class="line">        .<span class="title function_ invoke__">map</span>(|val_u8| &#123;</span><br><span class="line">            <span class="comment">// 决胜一步：先将u8像素归一化到0-1的浮点数</span></span><br><span class="line">            <span class="keyword">let</span> <span class="variable">f_val</span> = val_u8 <span class="keyword">as</span> <span class="type">f32</span> / <span class="number">255.0</span>;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 再根据模型自身的参数进行量化</span></span><br><span class="line">            <span class="keyword">let</span> <span class="variable">q_val</span> = (f_val / scale + zp <span class="keyword">as</span> <span class="type">f32</span>).<span class="title function_ invoke__">round</span>() <span class="keyword">as</span> <span class="type">i32</span>;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 最后裁剪到i8范围</span></span><br><span class="line">            q_val.<span class="title function_ invoke__">clamp</span>(<span class="type">i8</span>::MIN <span class="keyword">as</span> <span class="type">i32</span>, <span class="type">i8</span>::MAX <span class="keyword">as</span> <span class="type">i32</span>) <span class="keyword">as</span> <span class="type">i8</span></span><br><span class="line">        &#125;)</span><br><span class="line">        .<span class="title function_ invoke__">collect</span>();</span><br><span class="line"></span><br><span class="line">    <span class="title function_ invoke__">Ok</span>((i8_data, info))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>当我用这套全新的预处理流程再次运行<code>bus.jpg</code>时——“王者归来”。</p>
-<p><strong>(图四：最终的正确结果)</strong><br><img src="/img/2025/9/10/the_king4.png" alt="图四：最终的正确结果" title="在修正了数值问题后，公交车被高置信度地正确识别，所有可见的人物也都被精准框出。"><br><em>图注：在修正了数值问题后，公交车被高置信度地正确识别，所有可见的人物也都被精准框出。</em></p>
+<p><strong>(图四：最终的正确结果)</strong><br><img data-src="/img/2025/9/10/the_king4.png" alt="图四：最终的正确结果" title="在修正了数值问题后，公交车被高置信度地正确识别，所有可见的人物也都被精准框出。"><br><em>图注：在修正了数值问题后，公交车被高置信度地正确识别，所有可见的人物也都被精准框出。</em></p>
 <h4 id="复盘总结"><a href="#复盘总结" class="headerlink" title="复盘总结"></a><strong>复盘总结</strong></h4><p>这次艰难的调试经历，教会了我三件事：</p>
 <ol>
 <li><strong>数据是第一原则</strong>：当代码逻辑看似无懈可击时，首先要怀疑数据的“纯净度”，尤其是在数值层面。</li>
@@ -417,6 +455,14 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cagedbird043" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;cagedbird043" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:cagedbird043@gmail.com" title="E-Mail → mailto:cagedbird043@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
 
 
 
@@ -485,6 +531,7 @@
   <script size="300" alpha="0.6" zIndex="-1" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-ribbon@1/canvas-ribbon.js"></script>
   <script src="//cdn.jsdelivr.net/npm/animejs@3.1.0/lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
 
@@ -592,6 +639,10 @@ window.addEventListener('pjax:success', () => {
   </script>
 
 
+
+
+  
+<script src="/js/local-search.js"></script>
 
 
 
