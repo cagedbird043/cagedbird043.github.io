@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"miceworld.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="在上一篇，我们用 crossterm 绘制出了一个专业的 TUI 界面。现在，是时候挑战 PIPA-rs 的真正核心了：实现 pipa-rs stat -- &lt;command&gt;，一个 perf stat 的原生替代品。 这意味着，我们要直面 perf_event_open 这个系统调用，去精确测量一个外部命令从生到死的完整生命周期。 前期的探索，虽然没有产生一行可用的代码，但却留下了一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PIPA-rs 开发手记 (三)：从 strace 开始的正确构建">
+<meta property="og:url" content="https://miceworld.top/2025/10/05/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%B8%89-%EF%BC%9A%E4%BB%8E-strace-%E5%BC%80%E5%A7%8B%E7%9A%84%E6%AD%A3%E7%A1%AE%E6%9E%84%E5%BB%BA/index.html">
+<meta property="og:site_name" content="Mice World">
+<meta property="og:description" content="在上一篇，我们用 crossterm 绘制出了一个专业的 TUI 界面。现在，是时候挑战 PIPA-rs 的真正核心了：实现 pipa-rs stat -- &lt;command&gt;，一个 perf stat 的原生替代品。 这意味着，我们要直面 perf_event_open 这个系统调用，去精确测量一个外部命令从生到死的完整生命周期。 前期的探索，虽然没有产生一行可用的代码，但却留下了一">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-10-05T11:10:11.000Z">
+<meta property="article:modified_time" content="2025-10-05T11:10:29.261Z">
+<meta property="article:author" content="Mice">
+<meta property="article:tag" content="Rust">
+<meta property="article:tag" content="系统编程">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="perf_event">
+<meta property="article:tag" content="strace">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://miceworld.top/2025/10/05/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%B8%89-%EF%BC%9A%E4%BB%8E-strace-%E5%BC%80%E5%A7%8B%E7%9A%84%E6%AD%A3%E7%A1%AE%E6%9E%84%E5%BB%BA/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>PIPA-rs 开发手记 (三)：从 strace 开始的正确构建 | Mice World</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Mice World</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">记录点滴 探索无限</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/10/05/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%B8%89-%EF%BC%9A%E4%BB%8E-strace-%E5%BC%80%E5%A7%8B%E7%9A%84%E6%AD%A3%E7%A1%AE%E6%9E%84%E5%BB%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mice">
+      <meta itemprop="description" content="Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mice World">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PIPA-rs 开发手记 (三)：从 strace 开始的正确构建
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-10-05 19:10:11 / 修改时间：19:10:29" itemprop="dateCreated datePublished" datetime="2025-10-05T19:10:11+08:00">2025-10-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">PIPA-rs 开发手记</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>在上一篇，我们用 <code>crossterm</code> 绘制出了一个专业的 TUI 界面。现在，是时候挑战 PIPA-rs 的真正核心了：实现 <code>pipa-rs stat -- &lt;command&gt;</code>，一个 <code>perf stat</code> 的原生替代品。</p>
+<p>这意味着，我们要直面 <code>perf_event_open</code> 这个系统调用，去精确测量一个外部命令从生到死的完整生命周期。</p>
+<p>前期的探索，虽然没有产生一行可用的代码，但却留下了一份极其宝贵的财富：<strong>一份详尽的“此路不通”的地图。</strong> 它用 <code>ptrace</code> 和信号的失败告诉我们，任何试图在用户态通过复杂技巧来模拟内核级同步的方案，都是在与操作系统的底层调度作对，这是一场注定会失败的战争。</p>
+<p>所以，这次我们不是在收拾烂摊子。我们怀揣着“排除法得来的宝贵知识”，进行了一次目标明确的、从零开始的正确构建。我们的任务，从“发明创造”，转变成了“<strong>探索发现</strong>”。</p>
+<span id="more"></span>
+
+<h3 id="范式转换：从“猜测”到“观察”"><a href="#范式转换：从“猜测”到“观察”" class="headerlink" title="范式转换：从“猜测”到“观察”"></a>范式转换：从“猜测”到“观察”</h3><p>既然解决方案必然存在于内核的原生能力之中，而 <code>perf</code> 工具已经完美地利用了它，那么问题就变得简单了：我们只需要“窃听” <code>perf</code> 与内核的对话。</p>
+<p><code>strace</code> 成为了我们手中最锋利的解剖刀。我执行了那个改变一切的命令：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ strace -e trace=perf_event_open perf <span class="built_in">stat</span> -- <span class="built_in">ls</span></span><br></pre></td></tr></table></figure>
+
+<p>输出的信息虽然嘈杂，但我们的目标很明确。很快，我们就有了一系列颠覆性的发现。</p>
+<p><strong>发现一：关于“事件组”的假设是错误的</strong></p>
+<p>我最初以为，<code>perf stat</code> 会创建一个“事件组”来同时监控多个性能事件。但在 <code>strace</code> 的输出中，我们看到 <code>perf</code> 为每一个事件都进行了一次独立的 <code>perf_event_open</code> 调用，并且每一次的 <code>group_fd</code> 参数**始终是 <code>-1</code>**。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">perf_event_open(&#123;..., config=PERF_COUNT_HW_CPU_CYCLES, ...&#125;, ..., group_fd=-1, ...)</span><br><span class="line">perf_event_open(&#123;..., config=PERF_COUNT_HW_INSTRUCTIONS, ...&#125;, ..., group_fd=-1, ...)</span><br></pre></td></tr></table></figure>
+
+<p>这个证据无可辩驳地证明：<code>perf stat</code> 在这种场景下，根本没有使用事件组。它用的是更简单的东西。</p>
+<p><strong>发现二：内核提供的“全自动”同步魔法</strong></p>
+<p>排除了“组”这个干扰项后，我们的焦点汇聚到了 <code>perf_event_attr</code> 结构体内部。在那里，我们看到了三个之前被忽略的、共同协作的标志位：</p>
+<ul>
+<li><code>inherit = 1</code></li>
+<li><code>disabled = 1</code></li>
+<li><code>enable_on_exec = 1</code></li>
+</ul>
+<p>那一刻，我豁然开朗。我们之前所有关于 <code>ptrace</code> 和 <code>SIGSTOP</code> 的挣扎，都是为了在一个精确的时间点“按下秒表”。而这三个标志，相当于我们直接告诉内核：</p>
+<blockquote>
+<p>“我这里有一堆秒表 (<code>fd</code>)，它们现在是关闭的 (<code>disabled=1</code>)。请把这些秒表遗传给我的所有孩子 (<code>inherit=1</code>)。最关键的是，等到任何一个孩子喊出 <code>execve</code> 的那一刻，<strong>由你来替我按下启动按钮</strong> (<code>enable_on_exec=1</code>)。”</p>
+</blockquote>
+<p>内核，作为唯一的、全知的系统调度者，是唯一能完美执行这个任务的角色。我们之前所有的努力，都是在尝试用业余的手段，去模拟内核与生俱来的能力。</p>
+<h3 id="优雅的重生：将-strace-日志翻译成-Rust-代码"><a href="#优雅的重生：将-strace-日志翻译成-Rust-代码" class="headerlink" title="优雅的重生：将 strace 日志翻译成 Rust 代码"></a>优雅的重生：将 <code>strace</code> 日志翻译成 Rust 代码</h3><p>在掌握了“标准答案”后，<code>raw_perf_events.rs</code> 模块的构建思路变得清晰无比：<strong>精确、无损地复制 <code>perf</code> 的行为</strong>。</p>
+<p>我们彻底废弃了所有与“事件组”相关的复杂逻辑，只设计了一个简单的 <code>Counter</code> 结构体。其核心函数 <code>create_counter_for_command</code> 的实现，就是对 <code>strace</code> 日志的一次忠实“代码翻译”。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// crates/pipa_collector/src/raw_perf_events.rs</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">create_counter_for_command</span>(event: PerfEvent) <span class="punctuation">-&gt;</span> <span class="type">Result</span>&lt;Counter, PipaCollectorError&gt; &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">attrs</span> = sys::bindings::perf_event_attr &#123;</span><br><span class="line">        size: std::mem::size_of::&lt;sys::bindings::perf_event_attr&gt;() <span class="keyword">as</span> <span class="type">u32</span>,</span><br><span class="line">        ..<span class="built_in">Default</span>::<span class="title function_ invoke__">default</span>()</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">// ... 设置 type 和 config ...</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 这里的每一行设置，都是对 strace 输出的直接复刻。</span></span><br><span class="line">    <span class="comment">// 我们不再有任何猜测，只有对证据的忠实转录。</span></span><br><span class="line">    attrs.<span class="title function_ invoke__">set_disabled</span>(<span class="number">1</span>);</span><br><span class="line">    attrs.<span class="title function_ invoke__">set_inherit</span>(<span class="number">1</span>);</span><br><span class="line">    attrs.<span class="title function_ invoke__">set_enable_on_exec</span>(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 参数的选择也完全基于 perf 的行为。</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">fd</span> = <span class="keyword">unsafe</span> &#123; sys::<span class="title function_ invoke__">perf_event_open</span>(&amp;<span class="keyword">mut</span> attrs, <span class="number">0</span>, -<span class="number">1</span>, -<span class="number">1</span>, <span class="number">0</span>) &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ... 错误处理和返回 ...</span></span><br><span class="line">    <span class="title function_ invoke__">Ok</span>(Counter &#123; fd &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码的简洁性，与我们之前在“同步地狱”中构想的复杂方案形成了鲜明对比，这本身就是其正确性的最好证明。</p>
+<h3 id="点睛之笔：dup-与健壮性的最后拼图"><a href="#点睛之笔：dup-与健壮性的最后拼图" class="headerlink" title="点睛之笔：dup 与健壮性的最后拼图"></a>点睛之笔：<code>dup</code> 与健壮性的最后拼图</h3><p>在核心功能实现后，我们遇到了最后一个、也是最微妙的一个问题：如何在子进程结束后，安全地从其拥有的 <code>fd</code> 中读取数据，同时不破坏我们 <code>Counter</code> 结构体的 RAII 保证。</p>
+<p>最初尝试的 <code>mem::forget</code> 是一个脆弱的魔术，它在错误路径上存在 <code>double-close</code> 的隐患。而最终的解决方案 <code>libc::dup</code>，则是一个精妙的、最符合 Unix 哲学的正道。</p>
+<p>这个方案的原理，可以用一个“<strong>配钥匙</strong>”的比喻来理解：</p>
+<p>我们的 <code>Counter</code> 结构体持有那把唯一的“原始钥匙”(<code>fd</code>)。如果直接把这把钥匙交给一个临时的 <code>File</code> 对象去读取，<code>File</code> 在被销毁时 (<code>Drop</code>) 就会把钥匙也销毁掉，导致我们的 <code>Counter</code> 无钥匙可用。</p>
+<p><code>libc::dup()</code> 则是我们的“配钥匙机”。我们用它复制一把“临时钥匙”(<code>dup_fd</code>) 交给 <code>File</code> 去用。<code>File</code> 用完后，销毁的是这把临时钥匙。而我们自己口袋里的那把原始钥匙，自始至终，安然无恙。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// crates/pipa_cli/src/main.rs -&gt; run_stat()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="variable">read_counter</span> = |counter: &amp;raw_perf_events::Counter| <span class="punctuation">-&gt;</span> <span class="type">Result</span>&lt;<span class="type">u64</span>&gt; &#123;</span><br><span class="line">    <span class="comment">// 1. 我们不触碰原始 fd，而是创建一个它的“合法副本”。</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">dup_fd</span> = <span class="keyword">unsafe</span> &#123; libc::<span class="title function_ invoke__">dup</span>(counter.<span class="title function_ invoke__">fd</span>()) &#125;;</span><br><span class="line">    <span class="keyword">if</span> dup_fd &lt; <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_ invoke__">Err</span>(io::Error::<span class="title function_ invoke__">last_os_error</span>().<span class="title function_ invoke__">into</span>());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 我们将这个“副本”的所有权，心安理得地交给 `File`。</span></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">file</span> = <span class="keyword">unsafe</span> &#123; File::<span class="title function_ invoke__">from_raw_fd</span>(dup_fd) &#125;;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">buf</span> = [<span class="number">0u8</span>; <span class="number">8</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 无论成功还是失败，`file` 离开作用域时，只会 `close(dup_fd)`。</span></span><br><span class="line">    <span class="comment">//    原始的 `counter.fd()` 始终安全。</span></span><br><span class="line">    file.<span class="title function_ invoke__">read_exact</span>(&amp;<span class="keyword">mut</span> buf)?;</span><br><span class="line"></span><br><span class="line">    <span class="title function_ invoke__">Ok</span>(<span class="type">u64</span>::<span class="title function_ invoke__">from_le_bytes</span>(buf))</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>这个方案的采纳，标志着 <code>stat</code> 子命令的构建，不仅在功能上是正确的，在健壮性和工程美学上也达到了我们所追求的高度。</p>
+<p>这趟从复杂到简约的旅程，让我深刻理解到：<strong>优秀的系统编程，很多时候不是关于如何“操纵”内核，而是关于如何“理解”并“信任”内核。</strong></p>
+<p>至此，<code>pipa-rs stat</code> 的核心逻辑终于完成。下一篇，我们将继续沿着 <code>perf_event</code> 这条路走下去，探索更复杂的采样模式，为实现 <code>perf record</code> 的功能打下基础。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Rust/" rel="tag"># Rust</a>
+              <a href="/tags/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/" rel="tag"># 系统编程</a>
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/perf-event/" rel="tag"># perf_event</a>
+              <a href="/tags/strace/" rel="tag"># strace</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/10/05/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%BA%8C-%EF%BC%9A%E4%BB%8E-proc-%E6%96%87%E4%BB%B6%E5%88%B0-TUI%EF%BC%8C%E4%B8%80%E6%AC%A1%E5%85%B3%E4%BA%8E%E2%80%9C%E5%8F%AF%E4%BF%A1%E5%BA%A6%E2%80%9D%E7%9A%84%E4%BF%AE%E8%A1%8C/" rel="prev" title="PIPA-rs 开发手记 (二)：从 /proc 文件到 TUI，一次关于“可信度”的修行">
+      <i class="fa fa-chevron-left"></i> PIPA-rs 开发手记 (二)：从 /proc 文件到 TUI，一次关于“可信度”的修行
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8C%83%E5%BC%8F%E8%BD%AC%E6%8D%A2%EF%BC%9A%E4%BB%8E%E2%80%9C%E7%8C%9C%E6%B5%8B%E2%80%9D%E5%88%B0%E2%80%9C%E8%A7%82%E5%AF%9F%E2%80%9D"><span class="nav-number">1.</span> <span class="nav-text">范式转换：从“猜测”到“观察”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E9%9B%85%E7%9A%84%E9%87%8D%E7%94%9F%EF%BC%9A%E5%B0%86-strace-%E6%97%A5%E5%BF%97%E7%BF%BB%E8%AF%91%E6%88%90-Rust-%E4%BB%A3%E7%A0%81"><span class="nav-number">2.</span> <span class="nav-text">优雅的重生：将 strace 日志翻译成 Rust 代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%82%B9%E7%9D%9B%E4%B9%8B%E7%AC%94%EF%BC%9Adup-%E4%B8%8E%E5%81%A5%E5%A3%AE%E6%80%A7%E7%9A%84%E6%9C%80%E5%90%8E%E6%8B%BC%E5%9B%BE"><span class="nav-number">3.</span> <span class="nav-text">点睛之笔：dup 与健壮性的最后拼图</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mice</p>
+  <div class="site-description" itemprop="description">Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mice</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-ribbon@1/canvas-ribbon.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.1.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/three.min.js"></script>
+    <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/three-waves.min.js"></script>
+    <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/canvas_lines.min.js"></script>
+    <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/canvas_sphere.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script data-pjax>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'neutral',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
