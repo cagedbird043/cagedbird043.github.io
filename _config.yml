@@ -29,6 +29,9 @@ category_dir: categories
 code_dir: downloads/code
 i18n_dir: :lang
 skip_render:
+  - baidu_verify_*.html
+  - BingSiteAuth.xml
+  - 404.html
 
 # Writing
 new_post_name: :title.md # File name of new posts
@@ -188,4 +191,3 @@ auto_category:
   enable: true
   multiple: true
   depth:
-
