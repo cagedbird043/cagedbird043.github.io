@@ -20,7 +20,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"miceworld.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"miceworld.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="在完成了rKYOLO核心推理引擎和多种 IO 功能后，项目已经具备了完整的应用能力。然而，我深知在机器学习项目中，可靠的评估体系与高效的推理能力同等重要。为此，我构建了rkyolo-eval工具链，为项目增添了专业的模型评估能力。">
@@ -158,9 +158,14 @@
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
-        <li class="menu-item menu-item-sitemap">
+        <li class="menu-item menu-item-schedule">
 
-    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -223,7 +228,7 @@
     <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/09/10/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E9%83%A8%E7%BD%B2/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E5%85%AD-%EF%BC%9A%E6%9E%84%E5%BB%BA%E5%AE%8C%E6%95%B4%E8%AF%84%E4%BC%B0%E5%B7%A5%E5%85%B7%E9%93%BE%E2%80%94%E2%80%94rkyolo-eval%E7%9A%84%E5%AE%9E%E8%B7%B5%E4%B8%8E%E6%B4%9E%E5%AF%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/img/Mice-avatar.png">
       <meta itemprop="name" content="Mice">
       <meta itemprop="description" content="Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。">
     </span>
@@ -301,7 +306,7 @@
 
 <h4 id="从直觉到量化：建立专业评估体系"><a href="#从直觉到量化：建立专业评估体系" class="headerlink" title="从直觉到量化：建立专业评估体系"></a><strong>从直觉到量化：建立专业评估体系</strong></h4><p>当模型从 FP32 精度量化到 INT8 并部署到边缘设备后，性能变化必须被精确衡量而非仅凭主观感受。我建立的评估体系包含两个核心指标：</p>
 <ul>
-<li><strong><a href="mailto:&#x6d;&#65;&#80;&#64;&#x30;&#46;&#x35;">&#x6d;&#65;&#80;&#64;&#x30;&#46;&#x35;</a></strong>：采用目标检测领域的黄金标准，确保评估结果与学术界和工业界标准完全兼容，为性能比较提供可靠基准</li>
+<li><strong><a href="mailto:&#x6d;&#x41;&#80;&#x40;&#48;&#x2e;&#53;">&#x6d;&#x41;&#80;&#x40;&#48;&#x2e;&#53;</a></strong>：采用目标检测领域的黄金标准，确保评估结果与学术界和工业界标准完全兼容，为性能比较提供可靠基准</li>
 <li>**R² (决定系数)**：针对实际应用场景的创新指标，专门评估模型在物体计数任务上的准确性，直接反映业务价值</li>
 </ul>
 <h4 id="高效评估架构：解耦推理与评估"><a href="#高效评估架构：解耦推理与评估" class="headerlink" title="高效评估架构：解耦推理与评估"></a><strong>高效评估架构：解耦推理与评估</strong></h4><p>通过设计<code>predictions.json</code>中间文件，实现了推理过程与评估过程的完全解耦。这种架构带来显著优势：</p>
@@ -436,7 +441,7 @@
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="Mice"
-      src="/images/avatar.gif">
+      src="/img/Mice-avatar.png">
   <p class="site-author-name" itemprop="name">Mice</p>
   <div class="site-description" itemprop="description">Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。</div>
 </div>
