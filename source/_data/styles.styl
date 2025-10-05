@@ -1,0 +1,71 @@
+// 自定义样式
+// 关于页面美化
+.about-avatar img {
+  transition: transform 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+// 改进关于页面排版
+.post-body {
+  h2 {
+    border-left: 4px solid #37c6c0;
+    padding-left: 15px;
+    margin-top: 30px;
+  }
+  
+  h3 {
+    color: #37c6c0;
+    margin-top: 25px;
+  }
+  
+  blockquote {
+    border-left: 4px solid #37c6c0;
+    background: #f8f9fe;
+    padding: 15px 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+  }
+  
+  a {
+    color: #37c6c0;
+    text-decoration: none;
+    border-bottom: 1px dotted #37c6c0;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      color: #2a9d96;
+      border-bottom: 1px solid #2a9d96;
+    }
+  }
+}
+
+// 头像动画增强
+.site-author-image {
+  transition: transform 0.3s ease;
+  
+  &:hover {
+    transform: rotate(360deg);
+  }
+}
+
+// 统计数字美化
+.stats-item {
+  display: inline-block;
+  margin: 10px 20px;
+  text-align: center;
+}
+
+.stats-number {
+  font-size: 2em;
+  font-weight: bold;
+  color: #37c6c0;
+  display: block;
+}
+
+.stats-label {
+  color: #666;
+  font-size: 0.9em;
+}
