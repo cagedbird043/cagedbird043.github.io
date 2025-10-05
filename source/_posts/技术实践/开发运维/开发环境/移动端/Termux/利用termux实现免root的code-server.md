@@ -1,14 +1,19 @@
 ---
 title: 利用termux实现免root的code-server
-date: 2024-10-15 16:29:22
 tags:
   - Termux
   - code-server
   - 随身IDE
   - 集成开发环境
   - 移动开发工具
-categories: 技术教程
+categories:
+  - - 技术实践
+  - - 开发运维
+  - - 开发环境
+  - - 移动端
+  - - Termux
 cover: /img/2024/10/15/code-server-nonroot.png
+date: 2024-10-15 16:29:22
 ---
 
 很多小伙伴由于各种原因无法在自己的安卓设备上获取 root 权限，从而无法配置 chroot 容器，不过，虽然没有 chroot 环境，但我们仍然可以配置一个 code-server,以下是配置过程。

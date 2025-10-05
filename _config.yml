@@ -162,8 +162,6 @@ sitemap:
   path:
     - sitemap.xml
     - sitemap.txt
-  template: ./sitemap_template.xml
-  template_txt: ./sitemap_template.txt
   rel: false
   tags: true
   categories: true
@@ -185,3 +183,9 @@ inject:
   body:
     # 自动给所有 JS 文件加上基于时间戳的版本号
     - <script src="/js/main.js?v={{ version }}"></script>
+
+auto_category:
+  enable: true
+  multiple: true
+  depth:
+

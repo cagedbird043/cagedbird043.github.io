@@ -1,6 +1,5 @@
 ---
 title: 我的程序为什么慢？—— Perf CPU 性能剖析
-date: 2025-09-17 14:57:27
 tags:
   - Linux
   - 性能分析
@@ -8,6 +7,12 @@ tags:
   - 开源工具
   - Linux Perf
   - perf
+categories:
+  - - 技术实践
+  - - 系统工程
+  - - 性能工程
+  - - Linux性能分析
+date: 2025-09-17 14:57:27
 ---
 
 `本次环境为Arch Linux，内核版本6.12.46-3-cachyos-lts，perf版本6.16-3`

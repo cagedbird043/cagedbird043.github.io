@@ -1,6 +1,5 @@
 ---
 title: PIPA-rs 开发手记 (三)：从 strace 开始的正确构建
-date: 2025-10-05 19:10:11
 tags:
   - Rust
   - 系统编程
@@ -8,7 +7,12 @@ tags:
   - perf_event
   - strace
 categories:
-  - PIPA-rs 开发手记
+  - - 技术实践
+  - - 系统工程
+  - - 系统编程
+  - - Rust系统编程
+  - - PIPA-rs开发手记
+date: 2025-10-05 19:10:11
 ---
 
 在上一篇，我们用 `crossterm` 绘制出了一个专业的 TUI 界面。现在，是时候挑战 PIPA-rs 的真正核心了：实现 `pipa-rs stat -- <command>`，一个 `perf stat` 的原生替代品。
