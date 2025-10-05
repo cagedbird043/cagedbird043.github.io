@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"miceworld.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本次环境为Arch Linux，内核版本6.12.46-3-cachyos-lts，perf版本6.16-3 前言：从“健康报告”到“外科手术”在上一篇文章《我的程序为什么慢？—— Perf CPU 性能剖析》中，我们学会了使用 perf stat。它就像一份体检报告，能告诉我们程序的整体健康状况——IPC 高不高、分支预测准不准。 但这还不够。如果报告说“指标异常”，我们并不知道问题出在哪个“器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="我的程序卡在哪里？—— 用火焰图精确定位性能瓶颈">
+<meta property="og:url" content="https://miceworld.top/2025/09/17/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/%E6%80%A7%E8%83%BD%E5%B7%A5%E7%A8%8B/Linux%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/%E6%88%91%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%8D%A1%E5%9C%A8%E5%93%AA%E9%87%8C%EF%BC%9F%E2%80%94%E2%80%94-%E7%94%A8%E7%81%AB%E7%84%B0%E5%9B%BE%E7%B2%BE%E7%A1%AE%E5%AE%9A%E4%BD%8D%E6%80%A7%E8%83%BD%E7%93%B6%E9%A2%88/index.html">
+<meta property="og:site_name" content="Mice World">
+<meta property="og:description" content="本次环境为Arch Linux，内核版本6.12.46-3-cachyos-lts，perf版本6.16-3 前言：从“健康报告”到“外科手术”在上一篇文章《我的程序为什么慢？—— Perf CPU 性能剖析》中，我们学会了使用 perf stat。它就像一份体检报告，能告诉我们程序的整体健康状况——IPC 高不高、分支预测准不准。 但这还不够。如果报告说“指标异常”，我们并不知道问题出在哪个“器">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://miceworld.top/img/2025/9/17/%E7%A9%BA%E7%9A%84%E7%81%AB%E7%84%B0%E5%9B%BE.png">
+<meta property="og:image" content="https://miceworld.top/img/2025/9/17/%E8%B0%83%E7%94%A8%E6%A0%88%E6%AE%8B%E7%BC%BA%E7%9A%84%E7%81%AB%E7%84%B0%E5%9B%BE.png">
+<meta property="og:image" content="https://miceworld.top/img/2025/9/17/%E5%AE%8C%E7%BE%8E%E7%9A%84%E7%81%AB%E7%84%B0%E5%9B%BE.png">
+<meta property="article:published_time" content="2025-09-17T09:51:58.000Z">
+<meta property="article:modified_time" content="2025-10-05T13:41:09.147Z">
+<meta property="article:author" content="Mice">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="性能分析">
+<meta property="article:tag" content="系统编程">
+<meta property="article:tag" content="开源工具">
+<meta property="article:tag" content="Linux Perf">
+<meta property="article:tag" content="perf">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://miceworld.top/img/2025/9/17/%E7%A9%BA%E7%9A%84%E7%81%AB%E7%84%B0%E5%9B%BE.png">
+
+<link rel="canonical" href="https://miceworld.top/2025/09/17/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/%E6%80%A7%E8%83%BD%E5%B7%A5%E7%A8%8B/Linux%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/%E6%88%91%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%8D%A1%E5%9C%A8%E5%93%AA%E9%87%8C%EF%BC%9F%E2%80%94%E2%80%94-%E7%94%A8%E7%81%AB%E7%84%B0%E5%9B%BE%E7%B2%BE%E7%A1%AE%E5%AE%9A%E4%BD%8D%E6%80%A7%E8%83%BD%E7%93%B6%E9%A2%88/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>我的程序卡在哪里？—— 用火焰图精确定位性能瓶颈 | Mice World</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Mice World</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">记录点滴 探索无限</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/09/17/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/%E6%80%A7%E8%83%BD%E5%B7%A5%E7%A8%8B/Linux%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/%E6%88%91%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%8D%A1%E5%9C%A8%E5%93%AA%E9%87%8C%EF%BC%9F%E2%80%94%E2%80%94-%E7%94%A8%E7%81%AB%E7%84%B0%E5%9B%BE%E7%B2%BE%E7%A1%AE%E5%AE%9A%E4%BD%8D%E6%80%A7%E8%83%BD%E7%93%B6%E9%A2%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mice">
+      <meta itemprop="description" content="Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mice World">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          我的程序卡在哪里？—— 用火焰图精确定位性能瓶颈
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-09-17 17:51:58" itemprop="dateCreated datePublished" datetime="2025-09-17T17:51:58+08:00">2025-09-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-10-05 21:41:09" itemprop="dateModified" datetime="2025-10-05T21:41:09+08:00">2025-10-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/" itemprop="url" rel="index"><span itemprop="name">技术实践</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">系统工程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%80%A7%E8%83%BD%E5%B7%A5%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">性能工程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/" itemprop="url" rel="index"><span itemprop="name">Linux性能分析</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><code>本次环境为Arch Linux，内核版本6.12.46-3-cachyos-lts，perf版本6.16-3</code></p>
+<h3 id="前言：从“健康报告”到“外科手术”"><a href="#前言：从“健康报告”到“外科手术”" class="headerlink" title="前言：从“健康报告”到“外科手术”"></a>前言：从“健康报告”到“外科手术”</h3><p>在上一篇文章《<a href="/2025/09/17/%E6%88%91%E7%9A%84%E7%A8%8B%E5%BA%8F%E4%B8%BA%E4%BB%80%E4%B9%88%E6%85%A2%EF%BC%9F%E2%80%94%E2%80%94-Perf-CPU-%E6%80%A7%E8%83%BD%E5%89%96%E6%9E%90/">我的程序为什么慢？—— Perf CPU 性能剖析</a>》中，我们学会了使用 <code>perf stat</code>。它就像一份体检报告，能告诉我们程序的整体健康状况——IPC 高不高、分支预测准不准。</p>
+<p>但这还不够。如果报告说“指标异常”，我们并不知道问题出在哪个“器官”。<code>perf stat</code> 告诉我们程序慢了，但它没告诉我们<strong>慢在哪里</strong>。</p>
+<span id="more"></span>
+
+<p>要回答这个问题，我们需要进行“外科手术”，精确定位到消耗 CPU 最多的“病灶”——也就是热点函数。今天的主角，就是性能分析领域的“核磁共振仪”：<code>perf record</code> 与<strong>火焰图（Flame Graph）</strong>。</p>
+<h3 id="实验准备：一个“意图明显”的性能靶子"><a href="#实验准备：一个“意图明显”的性能靶子" class="headerlink" title="实验准备：一个“意图明显”的性能靶子"></a>实验准备：一个“意图明显”的性能靶子</h3><p>为了让火焰图的效果一目了然，我们需要一个性能瓶颈足够明显的程序。下面这个 <code>test.cpp</code> 就是我们的靶子，它的意图很明显：<code>foo1</code> 会调用 <code>long_test</code> 100 次，<code>foo2</code> 调用 10 次，因此 <code>foo1</code> 的 CPU 开销应该是 <code>foo2</code> 的 10 倍左右。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">long</span> <span class="type">long</span> <span class="title">long_test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> i;</span><br><span class="line">    <span class="comment">// 注意！这里的 volatile 很关键，我们后面会讲为什么</span></span><br><span class="line">    <span class="keyword">volatile</span> <span class="type">long</span> <span class="type">long</span> j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">1000000</span>; i++) &#123;</span><br><span class="line">        j = i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> j;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">long</span> <span class="type">long</span> <span class="title">foo2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> i;</span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> total = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">        total += <span class="built_in">long_test</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> total;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">long</span> <span class="type">long</span> <span class="title">foo1</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> i;</span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> total = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">        total += <span class="built_in">long_test</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> total;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">void</span>)</span> </span>&#123;</span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> result1 = <span class="built_in">foo1</span>();</span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> result2 = <span class="built_in">foo2</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 同样关键，我们必须“使用”结果</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Result: %lld\n&quot;</span>, result1 + result2);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="探案之旅：三起谜案，揭开火焰图的真相"><a href="#探案之旅：三起谜案，揭开火焰图的真相" class="headerlink" title="探案之旅：三起谜案，揭开火焰图的真相"></a>探案之旅：三起谜案，揭开火焰图的真相</h3><p>理论是枯燥的，让我们直接动手，然后一头撞上那些新手必踩的坑。我把我的整个踩坑和破案过程记录了下来。</p>
+<h4 id="谜案一：函数的集体“蒸发”"><a href="#谜案一：函数的集体“蒸发”" class="headerlink" title="谜案一：函数的集体“蒸发”"></a>谜案一：函数的集体“蒸发”</h4><p>满怀信心，我写了最初版的代码（没有 <code>volatile</code> 和 <code>printf</code>），然后用 <code>-O2</code> 优化编译，兴冲冲地执行了全套火焰图生成命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编译</span></span><br><span class="line">g++ -O2 -g -o test-flame test.cpp</span><br><span class="line"><span class="comment"># 采样</span></span><br><span class="line"><span class="built_in">sudo</span> perf record -F 99 -g -- ./test-flame</span><br><span class="line"><span class="comment"># 生成火焰图</span></span><br><span class="line">perf script | stackcollapse-perf.pl | flamegraph.pl &gt; flame.svg</span><br></pre></td></tr></table></figure>
+
+<p>然后，我得到了这样一张图：</p>
+<p><img src="/img/2025/9/17/%E7%A9%BA%E7%9A%84%E7%81%AB%E7%84%B0%E5%9B%BE.png" alt="“空”火焰图" title="“空”火焰图"></p>
+<p>一片荒芜！我的 <code>foo1</code>, <code>foo2</code>, <code>long_test</code> 全都不见了！<code>perf</code> 只记录到了几个程序启动初期的动态链接器的样本。</p>
+<p><strong>破案</strong>：这是我遇到的第一个老师——<strong>编译器优化</strong>。编译器实在太聪明了，它检查了我的代码，发现 <code>long_test</code> 里的循环除了改变一个没人用的局部变量 <code>j</code> 之外，什么都没干。于是，它大笔一挥，执行了<strong>“死代码消除”（Dead Code Elimination）</strong>，把我的所有核心函数全都优化掉了。程序变成了一个空壳，自然瞬间执行完毕。</p>
+<p><strong>解决方案</strong>：我必须“欺骗”编译器，让它相信我的代码是有用的。</p>
+<ol>
+<li>在 <code>long_test</code> 中使用 <code>volatile</code> 关键字，这个关键字会告诉编译器：“别动这个变量，我另有他用”，从而阻止循环被优化。</li>
+<li>让函数返回计算结果，并在 <code>main</code> 函数中用 <code>printf</code> 打印出来。只要结果被使用，编译器就不敢轻易删除计算过程。</li>
+</ol>
+<h4 id="谜案二：调用栈的“破碎”"><a href="#谜案二：调用栈的“破碎”" class="headerlink" title="谜案二：调用栈的“破碎”"></a>谜案二：调用栈的“破碎”</h4><p>解决了第一个问题后，我重新生成了火焰图，得到了一张稍微好点，但依然奇怪的图：</p>
+<p><img src="/img/2025/9/17/%E8%B0%83%E7%94%A8%E6%A0%88%E6%AE%8B%E7%BC%BA%E7%9A%84%E7%81%AB%E7%84%B0%E5%9B%BE.png" alt="调用栈残缺的火焰图" title="调用栈残缺的火焰图"></p>
+<p><code>foo1</code> 出现了，但它的“孩子” <code>long_test</code> 却不见了。整个调用栈看起来像被拦腰斩断，充满了 <code>[unknown]</code>。</p>
+<p><strong>破案</strong>：第二个老师出场了——还是<strong>编译器优化</strong>。这次是<strong>“函数内联”（Function Inlining）</strong>。编译器觉得 <code>long_test</code> 函数太简单了，每次调用它都走一遍压栈、跳转的流程太麻烦。于是，它把 <code>long_test</code> 的代码直接“复制粘贴”进了 <code>foo1</code> 和 <code>foo2</code> 的循环里。</p>
+<p>所以，<code>perf</code> 采样时，CPU 确实在执行 <code>long_test</code> 的代码，但从调用栈的角度看，程序一直都“停留”在 <code>foo1</code> 函数内部，从未“进入”过 <code>long_test</code>。</p>
+<h4 id="谜案三：永不妥协的优化器"><a href="#谜案三：永不妥协的优化器" class="headerlink" title="谜案三：永不妥协的优化器"></a>谜案三：永不妥协的优化器</h4><p>我怒了，我决定正面硬刚编译器。我查到了 <code>__attribute__((noinline))</code> 这个可以建议编译器不要内联的属性，还找到了 <code>-fno-omit-frame-pointer</code> 这个可以强制保留栈帧信息的编译选项。</p>
+<p>然而，在使用 <code>-O2</code> 优化时，生成的火焰图依然不尽人意，调用栈还是残缺的。</p>
+<p><strong>破案</strong>：我终于明白了，和全力开火的优化器“搏斗”，试图去限制它的行为，是一条很艰难的路。真正的专业思路应该是反过来：<strong>让编译器尽情优化，然后用更强大的探查器（Profiler）去适应它。</strong></p>
+<h3 id="最终的“黄金组合”：让优化与观测和谐共存"><a href="#最终的“黄金组合”：让优化与观测和谐共存" class="headerlink" title="最终的“黄金组合”：让优化与观测和谐共存"></a>最终的“黄金组合”：让优化与观测和谐共存</h3><p>在经历了九九八十一难后，我终于找到了生成完美火焰图的“黄金组合”：</p>
+<p><strong>1. 专业级的编译指令：</strong><br>我们依然要开启优化，但强制保留堆栈回溯的线索。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -O2 -g -fno-omit-frame-pointer -o test-flame test.cpp</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-O2</code>: 开启优化，模拟生产环境。</li>
+<li><code>-g</code>: 保留调试符号，让火焰图显示函数名。</li>
+<li><code>-fno-omit-frame-pointer</code>: 强制保留帧指针。这是给 <code>perf</code> 堆栈回溯提供的最可靠的“路标”。</li>
+</ul>
+<p><strong>2. 专业级的 <code>perf</code> 指令：</strong><br>我们明确告诉 <code>perf</code>，使用它最强大的、基于 <code>DWARF</code> 调试信息的回溯引擎。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> perf record -F 99 --call-graph dwarf -g -- ./test-flame</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>--call-graph dwarf</code>: <strong>这才是真正的魔法</strong>。它命令 <code>perf</code> 不再依赖可能被优化掉的帧指针，而是严格根据 <code>-g</code> 生成的详细“地图”（DWARF 信息）来绘制调用栈。这种方式虽然慢一点，但无比准确。</li>
+</ul>
+<h3 id="胜利的果实：一张会说话的火焰图"><a href="#胜利的果实：一张会说话的火焰图" class="headerlink" title="胜利的果实：一张会说话的火焰图"></a>胜利的果实：一张会说话的火焰图</h3><p>在使用了“黄金组合”之后，我终于得到了这张梦寐以求的、完美的火焰图：</p>
+<p><img src="/img/2025/9/17/%E5%AE%8C%E7%BE%8E%E7%9A%84%E7%81%AB%E7%84%B0%E5%9B%BE.png" alt="完美的火焰图" title="完美的火焰图"></p>
+<p>现在，让我们来解读它：</p>
+<ol>
+<li><strong>Y 轴 - 调用栈深度</strong>：底部是 <code>_start</code> 和 <code>main</code>，顶部是 <code>long_test</code>，完美地展示了 <code>main</code> -&gt; <code>foo1</code> -&gt; <code>long_test</code> 的调用关系。</li>
+<li><strong>X 轴 - CPU 占用时间</strong>：<ul>
+<li><code>long_test</code> 构成了最宽的“平顶山”，说明它就是程序的绝对热点。</li>
+<li>它下面的 <code>foo1</code> 几乎和它一样宽，而 <code>foo2</code> 则窄到几乎看不见。这精确地反映了 <code>foo1</code> 的循环次数（100 次）远大于 <code>foo2</code>（10 次），因此绝大部分对 <code>long_test</code> 的调用都发生于 <code>foo1</code> 内部。</li>
+</ul>
+</li>
+</ol>
+<p>这张图用一种无比直观的方式，将我们程序的性能瓶颈暴露无遗。</p>
+<h3 id="结论：不只是工具，更是思想"><a href="#结论：不只是工具，更是思想" class="headerlink" title="结论：不只是工具，更是思想"></a>结论：不只是工具，更是思想</h3><p>这次火焰图的探案之旅，让我学到的远超几个命令：</p>
+<ol>
+<li><strong>永远不要低估编译器</strong>：它既是你最好的朋友，也是性能分析时最大的“捣蛋鬼”。</li>
+<li><strong>基准测试代码本身必须可靠</strong>：确保你的测试代码不会被优化器“作弊”干掉。</li>
+<li><strong>观测工具需要精调</strong>：默认参数通常不够用。理解工具（如 <code>perf</code>）的高级选项，才能应对复杂的现实世界场景。</li>
+</ol>
+<p>我们已经学会了如何找到 CPU 的瓶颈，但在真实的软件世界里，程序还会因为崩溃、内存泄漏等问题而倒下。在下一篇文章中，我们将拿起新的武器——GDB, ASAN 和 Valgrind，成为一名合格的“程序法医”。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/" rel="tag"># 性能分析</a>
+              <a href="/tags/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/" rel="tag"># 系统编程</a>
+              <a href="/tags/%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7/" rel="tag"># 开源工具</a>
+              <a href="/tags/Linux-Perf/" rel="tag"># Linux Perf</a>
+              <a href="/tags/perf/" rel="tag"># perf</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/09/17/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/%E6%80%A7%E8%83%BD%E5%B7%A5%E7%A8%8B/Linux%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/%E6%88%91%E7%9A%84%E7%A8%8B%E5%BA%8F%E4%B8%BA%E4%BB%80%E4%B9%88%E6%85%A2%EF%BC%9F%E2%80%94%E2%80%94-Perf-CPU-%E6%80%A7%E8%83%BD%E5%89%96%E6%9E%90/" rel="prev" title="我的程序为什么慢？—— Perf CPU 性能剖析">
+      <i class="fa fa-chevron-left"></i> 我的程序为什么慢？—— Perf CPU 性能剖析
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/10/05/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/Rust%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/PIPA-rs%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%B8%80-%EF%BC%9A%E4%BB%8E-Workspace-%E5%88%B0-CI%EF%BC%8C%E4%B8%80%E4%B8%AA%E2%80%9C%E8%87%AA%E5%BE%8B%E2%80%9D%E6%A1%86%E6%9E%B6%E7%9A%84%E8%AF%9E%E7%94%9F/" rel="next" title="PIPA-rs 开发手记 (一)：从 Workspace 到 CI，一个“自律”框架的诞生">
+      PIPA-rs 开发手记 (一)：从 Workspace 到 CI，一个“自律”框架的诞生 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E8%A8%80%EF%BC%9A%E4%BB%8E%E2%80%9C%E5%81%A5%E5%BA%B7%E6%8A%A5%E5%91%8A%E2%80%9D%E5%88%B0%E2%80%9C%E5%A4%96%E7%A7%91%E6%89%8B%E6%9C%AF%E2%80%9D"><span class="nav-number">1.</span> <span class="nav-text">前言：从“健康报告”到“外科手术”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E5%87%86%E5%A4%87%EF%BC%9A%E4%B8%80%E4%B8%AA%E2%80%9C%E6%84%8F%E5%9B%BE%E6%98%8E%E6%98%BE%E2%80%9D%E7%9A%84%E6%80%A7%E8%83%BD%E9%9D%B6%E5%AD%90"><span class="nav-number">2.</span> <span class="nav-text">实验准备：一个“意图明显”的性能靶子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A2%E6%A1%88%E4%B9%8B%E6%97%85%EF%BC%9A%E4%B8%89%E8%B5%B7%E8%B0%9C%E6%A1%88%EF%BC%8C%E6%8F%AD%E5%BC%80%E7%81%AB%E7%84%B0%E5%9B%BE%E7%9A%84%E7%9C%9F%E7%9B%B8"><span class="nav-number">3.</span> <span class="nav-text">探案之旅：三起谜案，揭开火焰图的真相</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%9C%E6%A1%88%E4%B8%80%EF%BC%9A%E5%87%BD%E6%95%B0%E7%9A%84%E9%9B%86%E4%BD%93%E2%80%9C%E8%92%B8%E5%8F%91%E2%80%9D"><span class="nav-number">3.1.</span> <span class="nav-text">谜案一：函数的集体“蒸发”</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%9C%E6%A1%88%E4%BA%8C%EF%BC%9A%E8%B0%83%E7%94%A8%E6%A0%88%E7%9A%84%E2%80%9C%E7%A0%B4%E7%A2%8E%E2%80%9D"><span class="nav-number">3.2.</span> <span class="nav-text">谜案二：调用栈的“破碎”</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%9C%E6%A1%88%E4%B8%89%EF%BC%9A%E6%B0%B8%E4%B8%8D%E5%A6%A5%E5%8D%8F%E7%9A%84%E4%BC%98%E5%8C%96%E5%99%A8"><span class="nav-number">3.3.</span> <span class="nav-text">谜案三：永不妥协的优化器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E7%9A%84%E2%80%9C%E9%BB%84%E9%87%91%E7%BB%84%E5%90%88%E2%80%9D%EF%BC%9A%E8%AE%A9%E4%BC%98%E5%8C%96%E4%B8%8E%E8%A7%82%E6%B5%8B%E5%92%8C%E8%B0%90%E5%85%B1%E5%AD%98"><span class="nav-number">4.</span> <span class="nav-text">最终的“黄金组合”：让优化与观测和谐共存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%9C%E5%88%A9%E7%9A%84%E6%9E%9C%E5%AE%9E%EF%BC%9A%E4%B8%80%E5%BC%A0%E4%BC%9A%E8%AF%B4%E8%AF%9D%E7%9A%84%E7%81%AB%E7%84%B0%E5%9B%BE"><span class="nav-number">5.</span> <span class="nav-text">胜利的果实：一张会说话的火焰图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA%EF%BC%9A%E4%B8%8D%E5%8F%AA%E6%98%AF%E5%B7%A5%E5%85%B7%EF%BC%8C%E6%9B%B4%E6%98%AF%E6%80%9D%E6%83%B3"><span class="nav-number">6.</span> <span class="nav-text">结论：不只是工具，更是思想</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Mice</p>
+  <div class="site-description" itemprop="description">Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mice</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-ribbon@1/canvas-ribbon.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.1.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/three.min.js"></script>
+    <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/three-waves.min.js"></script>
+    <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/canvas_lines.min.js"></script>
+    <script defer src="//cdn.jsdelivr.net/gh/theme-next/theme-next-three@1/canvas_sphere.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script data-pjax>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'neutral',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
