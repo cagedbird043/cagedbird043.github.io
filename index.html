@@ -166,6 +166,83 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/10/05/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%BA%8C-%EF%BC%9A%E4%BB%8E-proc-%E6%96%87%E4%BB%B6%E5%88%B0-TUI%EF%BC%8C%E4%B8%80%E6%AC%A1%E5%85%B3%E4%BA%8E%E2%80%9C%E5%8F%AF%E4%BF%A1%E5%BA%A6%E2%80%9D%E7%9A%84%E4%BF%AE%E8%A1%8C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Mice">
+      <meta itemprop="description" content="Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mice World">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/10/05/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%BA%8C-%EF%BC%9A%E4%BB%8E-proc-%E6%96%87%E4%BB%B6%E5%88%B0-TUI%EF%BC%8C%E4%B8%80%E6%AC%A1%E5%85%B3%E4%BA%8E%E2%80%9C%E5%8F%AF%E4%BF%A1%E5%BA%A6%E2%80%9D%E7%9A%84%E4%BF%AE%E8%A1%8C/" class="post-title-link" itemprop="url">PIPA-rs 开发手记 (二)：从 /proc 文件到 TUI，一次关于“可信度”的修行</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-10-05 18:14:59 / 修改时间：18:20:33" itemprop="dateCreated datePublished" datetime="2025-10-05T18:14:59+08:00">2025-10-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">PIPA-rs 开发手记</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>在上一篇手记中，我们为 PIPA-rs 搭建了一副坚固的“骨架”——一个自律的、自动化的工程框架。现在，是时候为这副骨架注入第一股“生命力”了。我们的目标是：深入 <code>pipa_collector</code>，从零开始实现对系统核心指标的采集，并构建一个基础的 TUI 监控工具，作为 <code>sar</code> 和 <code>top</code> 的一个微型替代品。</p>
+<p>有人可能会问，Linux 上有那么多现成的工具和 <code>crate</code>，为什么非要选择一条最“难”的路——直接去解析 <code>/proc</code> 文件系统？</p>
+<p>答案很简单，它源于 PIPA-rs 的核心理念：“零外部二进制依赖”和“超可靠”。我们不希望 PIPA-rs 的可靠性建立在对 <code>sar</code> 命令输出格式的脆弱假设上。我们希望直接与内核提供的数据源对话，并用自己的代码来保证每一次解析的健壮性。这不仅仅是重新造轮子，更是一次关于构建“可信度”的修行。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2025/10/05/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%BA%8C-%EF%BC%9A%E4%BB%8E-proc-%E6%96%87%E4%BB%B6%E5%88%B0-TUI%EF%BC%8C%E4%B8%80%E6%AC%A1%E5%85%B3%E4%BA%8E%E2%80%9C%E5%8F%AF%E4%BF%A1%E5%BA%A6%E2%80%9D%E7%9A%84%E4%BF%AE%E8%A1%8C/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/10/05/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%B8%80-%EF%BC%9A%E4%BB%8E-Workspace-%E5%88%B0-CI%EF%BC%8C%E4%B8%80%E4%B8%AA%E2%80%9C%E8%87%AA%E5%BE%8B%E2%80%9D%E6%A1%86%E6%9E%B6%E7%9A%84%E8%AF%9E%E7%94%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -822,79 +899,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E4%B8%89-%EF%BC%9A%E5%92%8C%E6%A8%A1%E5%9E%8B%E8%BE%93%E5%87%BA%E7%8E%A9%E2%80%9C%E9%85%8D%E5%AF%B9%E6%B8%B8%E6%88%8F%E2%80%9D%E2%80%94%E2%80%94%E6%8A%98%E8%85%BE%E5%87%BA%E4%B8%80%E4%B8%AA%E8%83%BD%E8%87%AA%E9%80%82%E5%BA%94%E5%8F%98%E5%8C%96%E7%9A%84%E7%AC%A8%E5%8A%9E%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mice">
-      <meta itemprop="description" content="Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Mice World">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E4%B8%89-%EF%BC%9A%E5%92%8C%E6%A8%A1%E5%9E%8B%E8%BE%93%E5%87%BA%E7%8E%A9%E2%80%9C%E9%85%8D%E5%AF%B9%E6%B8%B8%E6%88%8F%E2%80%9D%E2%80%94%E2%80%94%E6%8A%98%E8%85%BE%E5%87%BA%E4%B8%80%E4%B8%AA%E8%83%BD%E8%87%AA%E9%80%82%E5%BA%94%E5%8F%98%E5%8C%96%E7%9A%84%E7%AC%A8%E5%8A%9E%E6%B3%95/" class="post-title-link" itemprop="url">RKYOLO诞生记 (三)：和模型输出玩“配对游戏”——折腾出一个能自适应变化的笨办法</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-09-10 05:54:53" itemprop="dateCreated datePublished" datetime="2025-09-10T05:54:53+08:00">2025-09-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-09-27 17:56:57" itemprop="dateModified" datetime="2025-09-27T17:56:57+08:00">2025-09-27</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>上一篇文章里，我们好不容易打赢了“数值之战”，让模型终于能看清楚东西了。我美滋滋地想，导师给的玉米穗模型部署任务，这下总该顺利了吧？</p>
-<p>于是，我满心期待地把模型从 COCO 的<code>yolo11n.rknn</code>换成了自己的<code>MTDC-UAV.rknn</code>。结果……程序又扑街了。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E4%B8%89-%EF%BC%9A%E5%92%8C%E6%A8%A1%E5%9E%8B%E8%BE%93%E5%87%BA%E7%8E%A9%E2%80%9C%E9%85%8D%E5%AF%B9%E6%B8%B8%E6%88%8F%E2%80%9D%E2%80%94%E2%80%94%E6%8A%98%E8%85%BE%E5%87%BA%E4%B8%80%E4%B8%AA%E8%83%BD%E8%87%AA%E9%80%82%E5%BA%94%E5%8F%98%E5%8C%96%E7%9A%84%E7%AC%A8%E5%8A%9E%E6%B3%95/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -964,7 +968,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-count">19</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -977,7 +981,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-count">38</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

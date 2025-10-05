@@ -4,6 +4,39 @@
   
     
     <entry>
+      <title>PIPA-rs 开发手记 (二)：从 /proc 文件到 TUI，一次关于“可信度”的修行</title>
+      <link href="/2025/10/05/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%BA%8C-%EF%BC%9A%E4%BB%8E-proc-%E6%96%87%E4%BB%B6%E5%88%B0-TUI%EF%BC%8C%E4%B8%80%E6%AC%A1%E5%85%B3%E4%BA%8E%E2%80%9C%E5%8F%AF%E4%BF%A1%E5%BA%A6%E2%80%9D%E7%9A%84%E4%BF%AE%E8%A1%8C/"/>
+      <url>/2025/10/05/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%BA%8C-%EF%BC%9A%E4%BB%8E-proc-%E6%96%87%E4%BB%B6%E5%88%B0-TUI%EF%BC%8C%E4%B8%80%E6%AC%A1%E5%85%B3%E4%BA%8E%E2%80%9C%E5%8F%AF%E4%BF%A1%E5%BA%A6%E2%80%9D%E7%9A%84%E4%BF%AE%E8%A1%8C/</url>
+      
+        <content type="html"><![CDATA[<p>在上一篇手记中，我们为 PIPA-rs 搭建了一副坚固的“骨架”——一个自律的、自动化的工程框架。现在，是时候为这副骨架注入第一股“生命力”了。我们的目标是：深入 <code>pipa_collector</code>，从零开始实现对系统核心指标的采集，并构建一个基础的 TUI 监控工具，作为 <code>sar</code> 和 <code>top</code> 的一个微型替代品。</p><p>有人可能会问，Linux 上有那么多现成的工具和 <code>crate</code>，为什么非要选择一条最“难”的路——直接去解析 <code>/proc</code> 文件系统？</p><p>答案很简单，它源于 PIPA-rs 的核心理念：“零外部二进制依赖”和“超可靠”。我们不希望 PIPA-rs 的可靠性建立在对 <code>sar</code> 命令输出格式的脆弱假设上。我们希望直接与内核提供的数据源对话，并用自己的代码来保证每一次解析的健壮性。这不仅仅是重新造轮子，更是一次关于构建“可信度”的修行。</p><span id="more"></span><h3 id="解析-proc：为应对真实世界的混乱而设计"><a href="#解析-proc：为应对真实世界的混乱而设计" class="headerlink" title="解析 &#x2F;proc：为应对真实世界的混乱而设计"></a>解析 &#x2F;proc：为应对真实世界的混乱而设计</h3><p>我的第一个目标是解析 <code>/proc/stat</code> 和 <code>/proc/meminfo</code>。这听起来很简单，不就是读取文件、按空格分割字符串吗？但很快我就意识到，一个“玩具”解析器和一个“工业级”解析器的区别，就在于你如何处理真实世界中可能发生的各种混乱。</p><p>为了确保 <code>pipa_collector</code> 的健壮性，我从一开始就定下了一个目标：这个模块的测试覆盖率必须达到 100%。</p><p>要实现这个目标，关键在于一个经典的设计模式：<strong>将 I&#x2F;O 与逻辑解耦</strong>。</p><p>我将代码分成了两层：</p><ol><li><strong>纯粹的解析函数</strong>: 比如 <code>parse_cpu_stats_from_line(line: &amp;str)</code>，它接收一个字符串切片，返回一个 <code>Result</code>。这个函数不执行任何 I&#x2F;O，它是确定的、可预测的，因此可以被轻松地 100% 测试。</li><li><strong>负责 I&#x2F;O 的函数</strong>: 比如 <code>read_cpu_stats_from_path&lt;P: AsRef&lt;Path&gt;&gt;(path: P)</code>，它负责读取文件，然后调用上面的纯函数。</li></ol><p>这种分离让测试变得非常简单。对于解析逻辑，我可以直接喂给它各种正常和异常的字符串；对于 I&#x2F;O 函数，我可以使用 <code>tempfile</code> crate 在测试时创建一个临时的假文件。</p><p>而真正体现“为混乱而设计”思想的，是我为 <code>pipa_collector</code> 精心设计的自定义错误类型 <code>PipaCollectorError</code>。</p><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// crates/pipa_collector/src/system_stats.rs</span></span><br><span class="line"><span class="meta">#[derive(Debug)]</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">enum</span> <span class="title class_">PipaCollectorError</span> &#123;</span><br><span class="line">    <span class="title function_ invoke__">Io</span>(io::Error),</span><br><span class="line">    <span class="title function_ invoke__">Parse</span>(ParseIntError),</span><br><span class="line">    <span class="title function_ invoke__">InvalidFormat</span>(<span class="type">String</span>),</span><br><span class="line">    <span class="title function_ invoke__">MissingData</span>(<span class="type">String</span>),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>我没有简单地 <code>unwrap()</code> 或者抛出一个泛泛的 <code>io::Error</code>。我预想并用单元测试覆盖了各种 <code>/proc</code> 文件可能出现的“不完美”状态：</p><ul><li><strong>格式错误 (<code>InvalidFormat</code>)</strong>: 比如 <code>cpu</code> 字段被意外篡改 (<code>test_parse_cpu_stats_invalid_prefix</code>)。</li><li><strong>数据缺失 (<code>MissingData</code>)</strong>: 比如内核输出被截断，字段不够 (<code>test_parse_cpu_stats_not_enough_values</code>)。</li><li><strong>数据损坏 (<code>Parse</code>)</strong>: 比如 <code>meminfo</code> 中某一行的数据不是数字，但解析器不能因此崩溃，而是要能容错并继续 (<code>test_parse_memory_stats_malformed_value</code>)。</li></ul><p>正是这种对细节和边缘案例的执念，才让“100% 覆盖率”这个数字变得有意义。它代表着 <code>pipa_collector</code> 从诞生之初，就准备好了去面对一个不那么理想的真实世界。</p><h3 id="TUI-的进化：从“打印”思维到“绘制”思维"><a href="#TUI-的进化：从“打印”思维到“绘制”思维" class="headerlink" title="TUI 的进化：从“打印”思维到“绘制”思维"></a>TUI 的进化：从“打印”思维到“绘制”思维</h3><p>有了可靠的数据源，下一步就是把它呈现出来。我开始着手开发 <code>pipa-rs monitor</code> 命令，一个实时的 TUI 监视器。</p><p>我的 TUI 开发经历了一次典型的、从混乱到精确的进化：</p><ol><li><strong>V1 - “滚动日志”阶段</strong>: 最初我只是简单地用 <code>println!</code> 把数据打印出来。结果可想而知，终端被不断刷屏，污染了命令历史。</li><li><strong>V2 - “伪 TUI” 阶段</strong>: 我学聪明了一点，在每次 <code>println!</code> 之前，先打印一个 ANSI 清屏码 <code>\x1B[2J</code>。这创造了一种“原地刷新”的假象，但很快我就发现，即使我用格式化字符串费力地对齐，布局在终端缩放时依然是一片混乱。</li></ol><p>也正是这个无法解决的混乱，让我彻底停下来思考：<strong>问题的根源，或许根本不在于“怎么对齐”，而在于我从一开始就用错了方法。</strong></p><p>我一直在用“打印”的思维来解决一个“绘制”的问题。只要我还在向终端“流式地”发送字符，并期望它能正确处理换行和对齐，我就永远无法获得精确的控制。我需要的，是一个真正的“画布”和一支“画笔”。</p><p><code>crossterm</code> 库就是我找到的答案。它提供了两个核心工具，彻底改变了我的 TUI 范式：</p><ul><li><strong>备用屏幕 (<code>EnterAlternateScreen</code>)</strong>: 它为我的应用提供了一个独立的、干净的“画布”，退出时会自动恢复到之前的终端状态，解决了“污染历史”的问题。</li><li><strong>绝对光标定位 (<code>cursor::MoveTo(x, y)</code>)</strong>: 这才是解决布局问题的“银弹”。我不再关心上一个字符打印在哪，而是每次都明确地告诉终端：“把光标移动到 <code>(x, y)</code>，然后在这里画出你的内容。”</li></ul><p>这次从“流式输出”到“绝对定位”的思维跃迁，最终让我构建出了那个稳定、专业、无闪烁的 TUI 界面。</p><h3 id="被-TUI-掩盖的灵魂：计算逻辑的“可信度”"><a href="#被-TUI-掩盖的灵魂：计算逻辑的“可信度”" class="headerlink" title="被 TUI 掩盖的灵魂：计算逻辑的“可信度”"></a>被 TUI 掩盖的灵魂：计算逻辑的“可信度”</h3><p>一个分析工具，其界面的华丽是“面子”，而其内在逻辑的准确性，才是赢得用户信任的“里子”。</p><p>在 <code>pipa-rs monitor</code> 的 TUI 之下，隐藏着一个关键函数 <code>calculate_cpu_usage</code>。其中两个看似微不足道的细节，正是 PIPA-rs 可信度的基石。</p><ol><li><strong>对 <code>total_delta == 0.0</code> 的处理</strong>: 在一个极度空闲的系统上，或在一个极短的采样间隔内，<code>/proc/stat</code> 的累计值可能没有任何变化。如果没有 <code>if total_delta == 0.0</code> 这个检查，程序就会因为“除以零”而 <code>panic</code>。一个专业的性能工具，绝不能因为系统“太闲”而崩溃。这个检查，是<strong>健 robustness</strong>的体现。</li><li><strong>对 <code>iowait</code> 的归属判断</strong>: 我将 <code>iowait</code> 正确地归类为了“空闲时间”的一部分，因为它代表 CPU <strong>没有</strong>在执行任务，而是在等待 I&#x2F;O。如果错误地将其归为“繁忙时间”，就会在 I&#x2F;O 密集型场景下严重高估 CPU 使用率，误导用户去排查一个根本不存在的 CPU 瓶颈。这个判断，是<strong>accuracy</strong>的体现。</li></ol><h3 id="尾声：第一个可用的“小工具”"><a href="#尾声：第一个可用的“小工具”" class="headerlink" title="尾声：第一个可用的“小工具”"></a>尾声：第一个可用的“小工具”</h3><p>经过一番折腾，我终于可以运行 <code>pipa-rs monitor</code>，看到从我自己编写的解析器中流出的数据，最终在我自己的 TUI 上实时刷新。</p><p>那一刻的满足感是巨大的。这个从输入到输出的完整闭环，标志着 PIPA-rs 不再只是一堆库代码，它已经成为了一个有用的、看得见摸得着的“小工具”。</p><p>虽然它还很简陋，但它的内核是可靠的，它的界面是专业的，它的每一次输出都值得信赖。</p><p>当然，<code>monitor</code> 只是一个“开胃菜”。真正的硬仗还在后面。下一篇手记，我们将挑战 PIPA-rs 的核心——与 <code>perf_event_open</code> 系统调用正面交锋，去实现 <code>perf stat</code> 的核心功能。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> PIPA-rs 开发手记 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Rust </tag>
+            
+            <tag> 系统编程 </tag>
+            
+            <tag> Linux </tag>
+            
+            <tag> TUI </tag>
+            
+            <tag> 测试驱动开发 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>PIPA-rs 开发手记 (一)：从 Workspace 到 CI，一个“自律”框架的诞生</title>
       <link href="/2025/10/05/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%B8%80-%EF%BC%9A%E4%BB%8E-Workspace-%E5%88%B0-CI%EF%BC%8C%E4%B8%80%E4%B8%AA%E2%80%9C%E8%87%AA%E5%BE%8B%E2%80%9D%E6%A1%86%E6%9E%B6%E7%9A%84%E8%AF%9E%E7%94%9F/"/>
       <url>/2025/10/05/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%B8%80-%EF%BC%9A%E4%BB%8E-Workspace-%E5%88%B0-CI%EF%BC%8C%E4%B8%80%E4%B8%AA%E2%80%9C%E8%87%AA%E5%BE%8B%E2%80%9D%E6%A1%86%E6%9E%B6%E7%9A%84%E8%AF%9E%E7%94%9F/</url>
