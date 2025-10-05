@@ -13,14 +13,14 @@
 
 <link rel="stylesheet" href="/css/main.css">
 
-
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto Sans SC, Lato:300,300italic,400,400italic,700,700italic|JetBrains Mono, Fira Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
   <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"miceworld.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"miceworld.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="在完成了rKYOLO核心推理引擎和多种 IO 功能后，项目已经具备了完整的应用能力。然而，我深知在机器学习项目中，可靠的评估体系与高效的推理能力同等重要。为此，我构建了rkyolo-eval工具链，为项目增添了专业的模型评估能力。">
@@ -92,8 +92,9 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</noscript>
 
+<link rel="alternate" href="/atom.xml" title="Mice World" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -135,6 +136,11 @@
         <li class="menu-item menu-item-home">
 
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
@@ -199,6 +205,7 @@
     <span>0%</span>
   </div>
   <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 
     <main class="main">
@@ -294,7 +301,7 @@
 
 <h4 id="从直觉到量化：建立专业评估体系"><a href="#从直觉到量化：建立专业评估体系" class="headerlink" title="从直觉到量化：建立专业评估体系"></a><strong>从直觉到量化：建立专业评估体系</strong></h4><p>当模型从 FP32 精度量化到 INT8 并部署到边缘设备后，性能变化必须被精确衡量而非仅凭主观感受。我建立的评估体系包含两个核心指标：</p>
 <ul>
-<li><strong><a href="mailto:&#x6d;&#x41;&#80;&#64;&#48;&#46;&#x35;">&#x6d;&#x41;&#80;&#64;&#48;&#46;&#x35;</a></strong>：采用目标检测领域的黄金标准，确保评估结果与学术界和工业界标准完全兼容，为性能比较提供可靠基准</li>
+<li><strong><a href="mailto:&#x6d;&#65;&#80;&#64;&#x30;&#46;&#x35;">&#x6d;&#65;&#80;&#64;&#x30;&#46;&#x35;</a></strong>：采用目标检测领域的黄金标准，确保评估结果与学术界和工业界标准完全兼容，为性能比较提供可靠基准</li>
 <li>**R² (决定系数)**：针对实际应用场景的创新指标，专门评估模型在物体计数任务上的准确性，直接反映业务价值</li>
 </ul>
 <h4 id="高效评估架构：解耦推理与评估"><a href="#高效评估架构：解耦推理与评估" class="headerlink" title="高效评估架构：解耦推理与评估"></a><strong>高效评估架构：解耦推理与评估</strong></h4><p>通过设计<code>predictions.json</code>中间文件，实现了推理过程与评估过程的完全解耦。这种架构带来显著优势：</p>
@@ -320,6 +327,25 @@
     
     
     
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -356,6 +382,7 @@
 
           </div>
           
+    <div class="comments" id="gitalk-container"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -408,6 +435,8 @@
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Mice"
+      src="/images/avatar.gif">
   <p class="site-author-name" itemprop="name">Mice</p>
   <div class="site-description" itemprop="description">Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。</div>
 </div>
@@ -510,7 +539,9 @@
   <script size="300" alpha="0.6" zIndex="-1" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-ribbon@1/canvas-ribbon.js"></script>
   <script src="//cdn.jsdelivr.net/npm/animejs@3.1.0/lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
 
@@ -523,6 +554,8 @@
 
 
 <script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
 
   <script>
 var pjax = new Pjax({
@@ -652,6 +685,26 @@ if (document.querySelectorAll('pre.mermaid').length) {
   
 
   
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '',
+      clientSecret: '',
+      repo        : 'cagedbird043.github.io',
+      owner       : 'cagedbird043',
+      admin       : ['cagedbird043'],
+      id          : 'edd4524accd6f38b120e1f2b97dcf566',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
 
     </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
