@@ -9,17 +9,18 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
   <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="baidu-site-verification" content="codeva-YAvxyOpawy">
 
 <link rel="stylesheet" href="/css/main.css">
 
-
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto Sans SC, Lato:300,300italic,400,400italic,700,700italic|JetBrains Mono, Fira Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
   <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"miceworld.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"miceworld.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。">
@@ -50,6 +51,15 @@
   
 
 
+  <script data-pjax>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?53c504378d31ebb49f8624d2dd23c0b9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
 
 
 
@@ -75,8 +85,9 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</noscript>
 
+<link rel="alternate" href="/atom.xml" title="Mice World" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -105,6 +116,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -117,6 +129,11 @@
         <li class="menu-item menu-item-home">
 
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
@@ -134,16 +151,48 @@
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
-        <li class="menu-item menu-item-sitemap">
+        <li class="menu-item menu-item-schedule">
 
-    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
 
   </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
     </header>
@@ -153,6 +202,8 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 
     <main class="main">
@@ -166,10 +217,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/10/05/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%B8%89-%EF%BC%9A%E4%BB%8E-strace-%E5%BC%80%E5%A7%8B%E7%9A%84%E6%AD%A3%E7%A1%AE%E6%9E%84%E5%BB%BA/">
+    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/11/13/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E5%BC%80%E5%8F%91%E8%BF%90%E7%BB%B4/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%B8%80%E7%A7%8D%E4%BC%98%E9%9B%85%E7%9A%84%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%B4%81%E7%99%96%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-md/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/img/maodie-avatar.png">
       <meta itemprop="name" content="Mice">
       <meta itemprop="description" content="Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。">
     </span>
@@ -180,7 +231,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/10/05/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%B8%89-%EF%BC%9A%E4%BB%8E-strace-%E5%BC%80%E5%A7%8B%E7%9A%84%E6%AD%A3%E7%A1%AE%E6%9E%84%E5%BB%BA/" class="post-title-link" itemprop="url">PIPA-rs 开发手记 (三)：从 strace 开始的正确构建</a>
+            <a href="/2025/11/13/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E5%BC%80%E5%8F%91%E8%BF%90%E7%BB%B4/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%B8%80%E7%A7%8D%E4%BC%98%E9%9B%85%E7%9A%84%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%B4%81%E7%99%96%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-md/" class="post-title-link" itemprop="url">一种优雅的开发环境洁癖解决方案.md</a>
         </h2>
 
         <div class="post-meta">
@@ -191,7 +242,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2025-10-05 19:10:11 / 修改时间：19:10:29" itemprop="dateCreated datePublished" datetime="2025-10-05T19:10:11+08:00">2025-10-05</time>
+              <time title="创建时间：2025-11-13 17:38:57 / 修改时间：17:41:46" itemprop="dateCreated datePublished" datetime="2025-11-13T17:38:57+08:00">2025-11-13</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -199,7 +250,114 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">PIPA-rs 开发手记</span></a>
+                  <a href="/categories/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/" itemprop="url" rel="index"><span itemprop="name">技术实践</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BC%80%E5%8F%91%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index"><span itemprop="name">开发运维</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" itemprop="url" rel="index"><span itemprop="name">开发环境</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>我是一个有“洁癖”的工程师。我无法忍受我的源代码目录里，混杂着 <code>__pycache__</code>、<code>.pytest_cache</code>，以及各种虚拟环境工具（如 <code>.venv</code>, <code>.pixi</code>）生成的、动辄几百 MB 的“垃圾”。<code>.gitignore</code> 是一个伟大的发明，但它只是“眼不见为净”——这些文件依然物理地躺在我的项目文件夹里。</p>
+<p>这在平时没什么，但当某些场景出现时，这种“同居”状态就变得无法忍受。比如，我最近在用一个自研的 <code>snapshot</code> 工具，它是一个 Web 应用，是通过文件上传弹窗来选择项目目录用来生产 AI 可以消费的<code>snapshot.md</code>文件用于通过 ai 迅速了解一个项目的大概情况并让 ai 获悉项目的结构和细节等信息的工具，并且可以递归解析.gitignore 文件并为每个文件夹独立解析。问题来了：<strong>浏览器和 Node.js 的文件 API，根本不鸟 <code>.gitignore</code>！</strong></p>
+<p>每次为了生成一个干净的代码快照，我都必须手动地、临时地将 <code>.pixi</code> 文件夹移出去，完事后再移回来。这太蠢了，不仅麻烦，而且极易出错。我忍不了了。我必须找到一个一劳永逸的解决方案。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2025/11/13/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E5%BC%80%E5%8F%91%E8%BF%90%E7%BB%B4/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%B8%80%E7%A7%8D%E4%BC%98%E9%9B%85%E7%9A%84%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%B4%81%E7%99%96%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-md/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/10/05/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/Rust%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/PIPA-rs%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%B8%89-%EF%BC%9A%E4%BB%8E-strace-%E5%BC%80%E5%A7%8B%E7%9A%84%E6%AD%A3%E7%A1%AE%E6%9E%84%E5%BB%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/maodie-avatar.png">
+      <meta itemprop="name" content="Mice">
+      <meta itemprop="description" content="Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mice World">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/10/05/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/Rust%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/PIPA-rs%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%B8%89-%EF%BC%9A%E4%BB%8E-strace-%E5%BC%80%E5%A7%8B%E7%9A%84%E6%AD%A3%E7%A1%AE%E6%9E%84%E5%BB%BA/" class="post-title-link" itemprop="url">PIPA-rs 开发手记 (三)：从 strace 开始的正确构建</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-10-05 19:10:11" itemprop="dateCreated datePublished" datetime="2025-10-05T19:10:11+08:00">2025-10-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-10-09 11:16:26" itemprop="dateModified" datetime="2025-10-09T11:16:26+08:00">2025-10-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/" itemprop="url" rel="index"><span itemprop="name">技术实践</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">系统工程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">系统编程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Rust%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">Rust系统编程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PIPA-rs%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">PIPA-rs开发手记</span></a>
                 </span>
             </span>
 
@@ -220,7 +378,7 @@
 <p>所以，这次我们不是在收拾烂摊子。我们怀揣着“排除法得来的宝贵知识”，进行了一次目标明确的、从零开始的正确构建。我们的任务，从“发明创造”，转变成了“<strong>探索发现</strong>”。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2025/10/05/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%B8%89-%EF%BC%9A%E4%BB%8E-strace-%E5%BC%80%E5%A7%8B%E7%9A%84%E6%AD%A3%E7%A1%AE%E6%9E%84%E5%BB%BA/#more" rel="contents">
+              <a class="btn" href="/2025/10/05/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/Rust%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/PIPA-rs%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%B8%89-%EF%BC%9A%E4%BB%8E-strace-%E5%BC%80%E5%A7%8B%E7%9A%84%E6%AD%A3%E7%A1%AE%E6%9E%84%E5%BB%BA/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -244,10 +402,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/10/05/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%BA%8C-%EF%BC%9A%E4%BB%8E-proc-%E6%96%87%E4%BB%B6%E5%88%B0-TUI%EF%BC%8C%E4%B8%80%E6%AC%A1%E5%85%B3%E4%BA%8E%E2%80%9C%E5%8F%AF%E4%BF%A1%E5%BA%A6%E2%80%9D%E7%9A%84%E4%BF%AE%E8%A1%8C/">
+    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/10/05/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/Rust%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/PIPA-rs%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%BA%8C-%EF%BC%9A%E4%BB%8E-proc-%E6%96%87%E4%BB%B6%E5%88%B0-TUI%EF%BC%8C%E4%B8%80%E6%AC%A1%E5%85%B3%E4%BA%8E%E2%80%9C%E5%8F%AF%E4%BF%A1%E5%BA%A6%E2%80%9D%E7%9A%84%E4%BF%AE%E8%A1%8C/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/img/maodie-avatar.png">
       <meta itemprop="name" content="Mice">
       <meta itemprop="description" content="Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。">
     </span>
@@ -258,7 +416,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/10/05/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%BA%8C-%EF%BC%9A%E4%BB%8E-proc-%E6%96%87%E4%BB%B6%E5%88%B0-TUI%EF%BC%8C%E4%B8%80%E6%AC%A1%E5%85%B3%E4%BA%8E%E2%80%9C%E5%8F%AF%E4%BF%A1%E5%BA%A6%E2%80%9D%E7%9A%84%E4%BF%AE%E8%A1%8C/" class="post-title-link" itemprop="url">PIPA-rs 开发手记 (二)：从 /proc 文件到 TUI，一次关于“可信度”的修行</a>
+            <a href="/2025/10/05/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/Rust%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/PIPA-rs%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%BA%8C-%EF%BC%9A%E4%BB%8E-proc-%E6%96%87%E4%BB%B6%E5%88%B0-TUI%EF%BC%8C%E4%B8%80%E6%AC%A1%E5%85%B3%E4%BA%8E%E2%80%9C%E5%8F%AF%E4%BF%A1%E5%BA%A6%E2%80%9D%E7%9A%84%E4%BF%AE%E8%A1%8C/" class="post-title-link" itemprop="url">PIPA-rs 开发手记 (二)：从 /proc 文件到 TUI，一次关于“可信度”的修行</a>
         </h2>
 
         <div class="post-meta">
@@ -267,17 +425,39 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2025-10-05 18:14:59 / 修改时间：18:20:33" itemprop="dateCreated datePublished" datetime="2025-10-05T18:14:59+08:00">2025-10-05</time>
+              <time title="创建时间：2025-10-05 18:14:59" itemprop="dateCreated datePublished" datetime="2025-10-05T18:14:59+08:00">2025-10-05</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-10-09 11:16:26" itemprop="dateModified" datetime="2025-10-09T11:16:26+08:00">2025-10-09</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">PIPA-rs 开发手记</span></a>
+                  <a href="/categories/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/" itemprop="url" rel="index"><span itemprop="name">技术实践</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">系统工程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">系统编程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Rust%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">Rust系统编程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PIPA-rs%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">PIPA-rs开发手记</span></a>
                 </span>
             </span>
 
@@ -297,7 +477,7 @@
 <p>答案很简单，它源于 PIPA-rs 的核心理念：“零外部二进制依赖”和“超可靠”。我们不希望 PIPA-rs 的可靠性建立在对 <code>sar</code> 命令输出格式的脆弱假设上。我们希望直接与内核提供的数据源对话，并用自己的代码来保证每一次解析的健壮性。这不仅仅是重新造轮子，更是一次关于构建“可信度”的修行。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2025/10/05/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%BA%8C-%EF%BC%9A%E4%BB%8E-proc-%E6%96%87%E4%BB%B6%E5%88%B0-TUI%EF%BC%8C%E4%B8%80%E6%AC%A1%E5%85%B3%E4%BA%8E%E2%80%9C%E5%8F%AF%E4%BF%A1%E5%BA%A6%E2%80%9D%E7%9A%84%E4%BF%AE%E8%A1%8C/#more" rel="contents">
+              <a class="btn" href="/2025/10/05/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/Rust%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/PIPA-rs%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%BA%8C-%EF%BC%9A%E4%BB%8E-proc-%E6%96%87%E4%BB%B6%E5%88%B0-TUI%EF%BC%8C%E4%B8%80%E6%AC%A1%E5%85%B3%E4%BA%8E%E2%80%9C%E5%8F%AF%E4%BF%A1%E5%BA%A6%E2%80%9D%E7%9A%84%E4%BF%AE%E8%A1%8C/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -321,10 +501,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/10/05/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%B8%80-%EF%BC%9A%E4%BB%8E-Workspace-%E5%88%B0-CI%EF%BC%8C%E4%B8%80%E4%B8%AA%E2%80%9C%E8%87%AA%E5%BE%8B%E2%80%9D%E6%A1%86%E6%9E%B6%E7%9A%84%E8%AF%9E%E7%94%9F/">
+    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/10/05/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/Rust%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/PIPA-rs%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%B8%80-%EF%BC%9A%E4%BB%8E-Workspace-%E5%88%B0-CI%EF%BC%8C%E4%B8%80%E4%B8%AA%E2%80%9C%E8%87%AA%E5%BE%8B%E2%80%9D%E6%A1%86%E6%9E%B6%E7%9A%84%E8%AF%9E%E7%94%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/img/maodie-avatar.png">
       <meta itemprop="name" content="Mice">
       <meta itemprop="description" content="Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。">
     </span>
@@ -335,7 +515,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/10/05/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%B8%80-%EF%BC%9A%E4%BB%8E-Workspace-%E5%88%B0-CI%EF%BC%8C%E4%B8%80%E4%B8%AA%E2%80%9C%E8%87%AA%E5%BE%8B%E2%80%9D%E6%A1%86%E6%9E%B6%E7%9A%84%E8%AF%9E%E7%94%9F/" class="post-title-link" itemprop="url">PIPA-rs 开发手记 (一)：从 Workspace 到 CI，一个“自律”框架的诞生</a>
+            <a href="/2025/10/05/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/Rust%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/PIPA-rs%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%B8%80-%EF%BC%9A%E4%BB%8E-Workspace-%E5%88%B0-CI%EF%BC%8C%E4%B8%80%E4%B8%AA%E2%80%9C%E8%87%AA%E5%BE%8B%E2%80%9D%E6%A1%86%E6%9E%B6%E7%9A%84%E8%AF%9E%E7%94%9F/" class="post-title-link" itemprop="url">PIPA-rs 开发手记 (一)：从 Workspace 到 CI，一个“自律”框架的诞生</a>
         </h2>
 
         <div class="post-meta">
@@ -344,17 +524,39 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2025-10-05 17:23:46 / 修改时间：17:50:44" itemprop="dateCreated datePublished" datetime="2025-10-05T17:23:46+08:00">2025-10-05</time>
+              <time title="创建时间：2025-10-05 17:23:46" itemprop="dateCreated datePublished" datetime="2025-10-05T17:23:46+08:00">2025-10-05</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-10-09 11:16:26" itemprop="dateModified" datetime="2025-10-09T11:16:26+08:00">2025-10-09</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">PIPA-rs 开发手记</span></a>
+                  <a href="/categories/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/" itemprop="url" rel="index"><span itemprop="name">技术实践</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">系统工程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">系统编程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Rust%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">Rust系统编程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PIPA-rs%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">PIPA-rs开发手记</span></a>
                 </span>
             </span>
 
@@ -375,7 +577,7 @@
 <p>所以，这篇手记，就从我们的第一块基石开始：如何搭建一个“自律”的 Rust 项目框架，以及我们在 CI&#x2F;CD 自动化之路上，踩过的那些坑和最终找到的光。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2025/10/05/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%B8%80-%EF%BC%9A%E4%BB%8E-Workspace-%E5%88%B0-CI%EF%BC%8C%E4%B8%80%E4%B8%AA%E2%80%9C%E8%87%AA%E5%BE%8B%E2%80%9D%E6%A1%86%E6%9E%B6%E7%9A%84%E8%AF%9E%E7%94%9F/#more" rel="contents">
+              <a class="btn" href="/2025/10/05/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/Rust%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/PIPA-rs%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0/PIPA-rs-%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0-%E4%B8%80-%EF%BC%9A%E4%BB%8E-Workspace-%E5%88%B0-CI%EF%BC%8C%E4%B8%80%E4%B8%AA%E2%80%9C%E8%87%AA%E5%BE%8B%E2%80%9D%E6%A1%86%E6%9E%B6%E7%9A%84%E8%AF%9E%E7%94%9F/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -399,10 +601,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/09/17/%E6%88%91%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%8D%A1%E5%9C%A8%E5%93%AA%E9%87%8C%EF%BC%9F%E2%80%94%E2%80%94-%E7%94%A8%E7%81%AB%E7%84%B0%E5%9B%BE%E7%B2%BE%E7%A1%AE%E5%AE%9A%E4%BD%8D%E6%80%A7%E8%83%BD%E7%93%B6%E9%A2%88/">
+    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/09/17/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/%E6%80%A7%E8%83%BD%E5%B7%A5%E7%A8%8B/Linux%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/%E6%88%91%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%8D%A1%E5%9C%A8%E5%93%AA%E9%87%8C%EF%BC%9F%E2%80%94%E2%80%94-%E7%94%A8%E7%81%AB%E7%84%B0%E5%9B%BE%E7%B2%BE%E7%A1%AE%E5%AE%9A%E4%BD%8D%E6%80%A7%E8%83%BD%E7%93%B6%E9%A2%88/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/img/maodie-avatar.png">
       <meta itemprop="name" content="Mice">
       <meta itemprop="description" content="Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。">
     </span>
@@ -413,7 +615,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/09/17/%E6%88%91%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%8D%A1%E5%9C%A8%E5%93%AA%E9%87%8C%EF%BC%9F%E2%80%94%E2%80%94-%E7%94%A8%E7%81%AB%E7%84%B0%E5%9B%BE%E7%B2%BE%E7%A1%AE%E5%AE%9A%E4%BD%8D%E6%80%A7%E8%83%BD%E7%93%B6%E9%A2%88/" class="post-title-link" itemprop="url">我的程序卡在哪里？—— 用火焰图精确定位性能瓶颈</a>
+            <a href="/2025/09/17/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/%E6%80%A7%E8%83%BD%E5%B7%A5%E7%A8%8B/Linux%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/%E6%88%91%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%8D%A1%E5%9C%A8%E5%93%AA%E9%87%8C%EF%BC%9F%E2%80%94%E2%80%94-%E7%94%A8%E7%81%AB%E7%84%B0%E5%9B%BE%E7%B2%BE%E7%A1%AE%E5%AE%9A%E4%BD%8D%E6%80%A7%E8%83%BD%E7%93%B6%E9%A2%88/" class="post-title-link" itemprop="url">我的程序卡在哪里？—— 用火焰图精确定位性能瓶颈</a>
         </h2>
 
         <div class="post-meta">
@@ -430,8 +632,29 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-09-27 17:56:57" itemprop="dateModified" datetime="2025-09-27T17:56:57+08:00">2025-09-27</time>
+                <time title="修改时间：2025-10-09 11:16:26" itemprop="dateModified" datetime="2025-10-09T11:16:26+08:00">2025-10-09</time>
               </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/" itemprop="url" rel="index"><span itemprop="name">技术实践</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">系统工程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%80%A7%E8%83%BD%E5%B7%A5%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">性能工程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/" itemprop="url" rel="index"><span itemprop="name">Linux性能分析</span></a>
+                </span>
+            </span>
 
           
 
@@ -449,7 +672,7 @@
 <p>但这还不够。如果报告说“指标异常”，我们并不知道问题出在哪个“器官”。<code>perf stat</code> 告诉我们程序慢了，但它没告诉我们<strong>慢在哪里</strong>。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2025/09/17/%E6%88%91%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%8D%A1%E5%9C%A8%E5%93%AA%E9%87%8C%EF%BC%9F%E2%80%94%E2%80%94-%E7%94%A8%E7%81%AB%E7%84%B0%E5%9B%BE%E7%B2%BE%E7%A1%AE%E5%AE%9A%E4%BD%8D%E6%80%A7%E8%83%BD%E7%93%B6%E9%A2%88/#more" rel="contents">
+              <a class="btn" href="/2025/09/17/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/%E6%80%A7%E8%83%BD%E5%B7%A5%E7%A8%8B/Linux%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/%E6%88%91%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%8D%A1%E5%9C%A8%E5%93%AA%E9%87%8C%EF%BC%9F%E2%80%94%E2%80%94-%E7%94%A8%E7%81%AB%E7%84%B0%E5%9B%BE%E7%B2%BE%E7%A1%AE%E5%AE%9A%E4%BD%8D%E6%80%A7%E8%83%BD%E7%93%B6%E9%A2%88/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -473,10 +696,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/09/17/%E6%88%91%E7%9A%84%E7%A8%8B%E5%BA%8F%E4%B8%BA%E4%BB%80%E4%B9%88%E6%85%A2%EF%BC%9F%E2%80%94%E2%80%94-Perf-CPU-%E6%80%A7%E8%83%BD%E5%89%96%E6%9E%90/">
+    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/09/17/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/%E6%80%A7%E8%83%BD%E5%B7%A5%E7%A8%8B/Linux%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/%E6%88%91%E7%9A%84%E7%A8%8B%E5%BA%8F%E4%B8%BA%E4%BB%80%E4%B9%88%E6%85%A2%EF%BC%9F%E2%80%94%E2%80%94-Perf-CPU-%E6%80%A7%E8%83%BD%E5%89%96%E6%9E%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/img/maodie-avatar.png">
       <meta itemprop="name" content="Mice">
       <meta itemprop="description" content="Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。">
     </span>
@@ -487,7 +710,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/09/17/%E6%88%91%E7%9A%84%E7%A8%8B%E5%BA%8F%E4%B8%BA%E4%BB%80%E4%B9%88%E6%85%A2%EF%BC%9F%E2%80%94%E2%80%94-Perf-CPU-%E6%80%A7%E8%83%BD%E5%89%96%E6%9E%90/" class="post-title-link" itemprop="url">我的程序为什么慢？—— Perf CPU 性能剖析</a>
+            <a href="/2025/09/17/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/%E6%80%A7%E8%83%BD%E5%B7%A5%E7%A8%8B/Linux%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/%E6%88%91%E7%9A%84%E7%A8%8B%E5%BA%8F%E4%B8%BA%E4%BB%80%E4%B9%88%E6%85%A2%EF%BC%9F%E2%80%94%E2%80%94-Perf-CPU-%E6%80%A7%E8%83%BD%E5%89%96%E6%9E%90/" class="post-title-link" itemprop="url">我的程序为什么慢？—— Perf CPU 性能剖析</a>
         </h2>
 
         <div class="post-meta">
@@ -504,8 +727,29 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-09-27 17:56:57" itemprop="dateModified" datetime="2025-09-27T17:56:57+08:00">2025-09-27</time>
+                <time title="修改时间：2025-10-09 11:16:26" itemprop="dateModified" datetime="2025-10-09T11:16:26+08:00">2025-10-09</time>
               </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/" itemprop="url" rel="index"><span itemprop="name">技术实践</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">系统工程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%80%A7%E8%83%BD%E5%B7%A5%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">性能工程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/" itemprop="url" rel="index"><span itemprop="name">Linux性能分析</span></a>
+                </span>
+            </span>
 
           
 
@@ -522,7 +766,7 @@
 <h3 id="前言：为什么-perf-让人望而生畏？"><a href="#前言：为什么-perf-让人望而生畏？" class="headerlink" title="前言：为什么 perf 让人望而生畏？"></a>前言：为什么 <code>perf</code> 让人望而生畏？</h3><p><code>perf</code> 是 Linux 世界中无可争议的性能分析神器。然而，很多开发者（包括曾经的我）在第一次看到 <code>perf stat</code> 那满屏飞舞的专业术语时，都会感到一丝困惑和畏惧：<code>task-clock</code>, <code>IPC</code>, <code>stalled-cycles-frontend</code>… 这些到底意味着什么？</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2025/09/17/%E6%88%91%E7%9A%84%E7%A8%8B%E5%BA%8F%E4%B8%BA%E4%BB%80%E4%B9%88%E6%85%A2%EF%BC%9F%E2%80%94%E2%80%94-Perf-CPU-%E6%80%A7%E8%83%BD%E5%89%96%E6%9E%90/#more" rel="contents">
+              <a class="btn" href="/2025/09/17/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B/%E6%80%A7%E8%83%BD%E5%B7%A5%E7%A8%8B/Linux%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/%E6%88%91%E7%9A%84%E7%A8%8B%E5%BA%8F%E4%B8%BA%E4%BB%80%E4%B9%88%E6%85%A2%EF%BC%9F%E2%80%94%E2%80%94-Perf-CPU-%E6%80%A7%E8%83%BD%E5%89%96%E6%9E%90/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -546,10 +790,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/09/16/%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%9A%84%E5%82%B2%E6%85%A2%E4%B8%8E%E5%81%8F%E8%A7%81%EF%BC%9A%E6%88%91%E9%82%A3%E4%BB%B7%E5%80%BC2%E5%9D%97%E9%92%B1%E7%9A%84%E9%AD%94%E5%B9%BB%E4%B8%80%E5%B0%8F%E6%97%B6/">
+    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/09/16/%E5%B7%A5%E7%A8%8B%E5%B8%88%E6%BC%AB%E8%B0%88/%E8%81%8C%E4%B8%9A%E6%80%9D%E8%80%83/%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%9A%84%E5%82%B2%E6%85%A2%E4%B8%8E%E5%81%8F%E8%A7%81%EF%BC%9A%E6%88%91%E9%82%A3%E4%BB%B7%E5%80%BC2%E5%9D%97%E9%92%B1%E7%9A%84%E9%AD%94%E5%B9%BB%E4%B8%80%E5%B0%8F%E6%97%B6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/img/maodie-avatar.png">
       <meta itemprop="name" content="Mice">
       <meta itemprop="description" content="Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。">
     </span>
@@ -560,7 +804,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/09/16/%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%9A%84%E5%82%B2%E6%85%A2%E4%B8%8E%E5%81%8F%E8%A7%81%EF%BC%9A%E6%88%91%E9%82%A3%E4%BB%B7%E5%80%BC2%E5%9D%97%E9%92%B1%E7%9A%84%E9%AD%94%E5%B9%BB%E4%B8%80%E5%B0%8F%E6%97%B6/" class="post-title-link" itemprop="url">工程师的傲慢与偏见：我那价值2块钱的魔幻一小时</a>
+            <a href="/2025/09/16/%E5%B7%A5%E7%A8%8B%E5%B8%88%E6%BC%AB%E8%B0%88/%E8%81%8C%E4%B8%9A%E6%80%9D%E8%80%83/%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%9A%84%E5%82%B2%E6%85%A2%E4%B8%8E%E5%81%8F%E8%A7%81%EF%BC%9A%E6%88%91%E9%82%A3%E4%BB%B7%E5%80%BC2%E5%9D%97%E9%92%B1%E7%9A%84%E9%AD%94%E5%B9%BB%E4%B8%80%E5%B0%8F%E6%97%B6/" class="post-title-link" itemprop="url">工程师的傲慢与偏见：我那价值2块钱的魔幻一小时</a>
         </h2>
 
         <div class="post-meta">
@@ -577,8 +821,21 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-09-27 17:56:57" itemprop="dateModified" datetime="2025-09-27T17:56:57+08:00">2025-09-27</time>
+                <time title="修改时间：2025-10-09 11:16:26" itemprop="dateModified" datetime="2025-10-09T11:16:26+08:00">2025-10-09</time>
               </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A5%E7%A8%8B%E5%B8%88%E6%BC%AB%E8%B0%88/" itemprop="url" rel="index"><span itemprop="name">工程师漫谈</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%81%8C%E4%B8%9A%E6%80%9D%E8%80%83/" itemprop="url" rel="index"><span itemprop="name">职业思考</span></a>
+                </span>
+            </span>
 
           
 
@@ -595,7 +852,7 @@
 <p>上午的状态堪称完美，灵感迸发，顺手修复了团队内部工具的几个历史遗留 Bug，提交了几个赏心悦目的 PR。午饭后，我泡了杯咖啡，准备按照计划，深入学习一下性能分析领域的圣经——Brendan Gregg 的<a target="_blank" rel="noopener" href="https://www.brendangregg.com/perf.html">‘perf’教程</a>。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2025/09/16/%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%9A%84%E5%82%B2%E6%85%A2%E4%B8%8E%E5%81%8F%E8%A7%81%EF%BC%9A%E6%88%91%E9%82%A3%E4%BB%B7%E5%80%BC2%E5%9D%97%E9%92%B1%E7%9A%84%E9%AD%94%E5%B9%BB%E4%B8%80%E5%B0%8F%E6%97%B6/#more" rel="contents">
+              <a class="btn" href="/2025/09/16/%E5%B7%A5%E7%A8%8B%E5%B8%88%E6%BC%AB%E8%B0%88/%E8%81%8C%E4%B8%9A%E6%80%9D%E8%80%83/%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%9A%84%E5%82%B2%E6%85%A2%E4%B8%8E%E5%81%8F%E8%A7%81%EF%BC%9A%E6%88%91%E9%82%A3%E4%BB%B7%E5%80%BC2%E5%9D%97%E9%92%B1%E7%9A%84%E9%AD%94%E5%B9%BB%E4%B8%80%E5%B0%8F%E6%97%B6/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -619,10 +876,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E5%89%8D%E4%BC%A0-%EF%BC%9A%E4%B8%80%E5%88%87%E5%BC%80%E5%A7%8B%E4%B9%8B%E5%89%8D%E2%80%94%E2%80%94%E9%82%A3%E4%B8%89%E4%B8%AA%E5%B0%8F%E6%97%B6%E7%9A%84%E2%80%9C%E7%B3%BB%E7%BB%9F%E6%80%A5%E6%95%91/">
+    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/09/10/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E9%83%A8%E7%BD%B2/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E5%89%8D%E4%BC%A0-%EF%BC%9A%E4%B8%80%E5%88%87%E5%BC%80%E5%A7%8B%E4%B9%8B%E5%89%8D%E2%80%94%E2%80%94%E9%82%A3%E4%B8%89%E4%B8%AA%E5%B0%8F%E6%97%B6%E7%9A%84%E2%80%9C%E7%B3%BB%E7%BB%9F%E6%80%A5%E6%95%91/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/img/maodie-avatar.png">
       <meta itemprop="name" content="Mice">
       <meta itemprop="description" content="Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。">
     </span>
@@ -633,7 +890,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E5%89%8D%E4%BC%A0-%EF%BC%9A%E4%B8%80%E5%88%87%E5%BC%80%E5%A7%8B%E4%B9%8B%E5%89%8D%E2%80%94%E2%80%94%E9%82%A3%E4%B8%89%E4%B8%AA%E5%B0%8F%E6%97%B6%E7%9A%84%E2%80%9C%E7%B3%BB%E7%BB%9F%E6%80%A5%E6%95%91/" class="post-title-link" itemprop="url">RKYOLO诞生记 (前传)：一切开始之前——那三个小时的“系统急救</a>
+            <a href="/2025/09/10/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E9%83%A8%E7%BD%B2/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E5%89%8D%E4%BC%A0-%EF%BC%9A%E4%B8%80%E5%88%87%E5%BC%80%E5%A7%8B%E4%B9%8B%E5%89%8D%E2%80%94%E2%80%94%E9%82%A3%E4%B8%89%E4%B8%AA%E5%B0%8F%E6%97%B6%E7%9A%84%E2%80%9C%E7%B3%BB%E7%BB%9F%E6%80%A5%E6%95%91/" class="post-title-link" itemprop="url">RKYOLO诞生记 (前传)：一切开始之前——那三个小时的“系统急救</a>
         </h2>
 
         <div class="post-meta">
@@ -650,8 +907,33 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-09-27 17:56:57" itemprop="dateModified" datetime="2025-09-27T17:56:57+08:00">2025-09-27</time>
+                <time title="修改时间：2025-10-09 11:16:26" itemprop="dateModified" datetime="2025-10-09T11:16:26+08:00">2025-10-09</time>
               </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/" itemprop="url" rel="index"><span itemprop="name">技术实践</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/" itemprop="url" rel="index"><span itemprop="name">计算机视觉</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E9%83%A8%E7%BD%B2/" itemprop="url" rel="index"><span itemprop="name">边缘计算部署</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">RKYOLO诞生记</span></a>
+                </span>
+            </span>
 
           
 
@@ -667,7 +949,7 @@
           <p>读到这里，你已经陪我走完了 <code>rkyolo</code> 从一个想法到一个功能完备的框架的全过程。但在这个故事开始之前，还有一段小插曲。它虽然只占了大概三个小时，却为后面所有的“顺利”铺平了道路，也算是一场有惊无险的“系统急救”演练。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E5%89%8D%E4%BC%A0-%EF%BC%9A%E4%B8%80%E5%88%87%E5%BC%80%E5%A7%8B%E4%B9%8B%E5%89%8D%E2%80%94%E2%80%94%E9%82%A3%E4%B8%89%E4%B8%AA%E5%B0%8F%E6%97%B6%E7%9A%84%E2%80%9C%E7%B3%BB%E7%BB%9F%E6%80%A5%E6%95%91/#more" rel="contents">
+              <a class="btn" href="/2025/09/10/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E9%83%A8%E7%BD%B2/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E5%89%8D%E4%BC%A0-%EF%BC%9A%E4%B8%80%E5%88%87%E5%BC%80%E5%A7%8B%E4%B9%8B%E5%89%8D%E2%80%94%E2%80%94%E9%82%A3%E4%B8%89%E4%B8%AA%E5%B0%8F%E6%97%B6%E7%9A%84%E2%80%9C%E7%B3%BB%E7%BB%9F%E6%80%A5%E6%95%91/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -691,10 +973,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E4%B8%83-%EF%BC%9A%E5%B0%8F%E7%BB%93%E4%B8%8E%E5%B1%95%E6%9C%9B%E2%80%94%E2%80%94%E6%8A%98%E8%85%BE%E4%B8%8D%E6%AD%A2%EF%BC%8C%E5%BF%AB%E4%B9%90%E4%B8%8D%E6%81%AF/">
+    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/09/10/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E9%83%A8%E7%BD%B2/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E4%B8%83-%EF%BC%9A%E5%B0%8F%E7%BB%93%E4%B8%8E%E5%B1%95%E6%9C%9B%E2%80%94%E2%80%94%E6%8A%98%E8%85%BE%E4%B8%8D%E6%AD%A2%EF%BC%8C%E5%BF%AB%E4%B9%90%E4%B8%8D%E6%81%AF/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/img/maodie-avatar.png">
       <meta itemprop="name" content="Mice">
       <meta itemprop="description" content="Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。">
     </span>
@@ -705,7 +987,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E4%B8%83-%EF%BC%9A%E5%B0%8F%E7%BB%93%E4%B8%8E%E5%B1%95%E6%9C%9B%E2%80%94%E2%80%94%E6%8A%98%E8%85%BE%E4%B8%8D%E6%AD%A2%EF%BC%8C%E5%BF%AB%E4%B9%90%E4%B8%8D%E6%81%AF/" class="post-title-link" itemprop="url">RKYOLO诞生记 (七)：小结与展望——折腾不止，快乐不息</a>
+            <a href="/2025/09/10/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E9%83%A8%E7%BD%B2/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E4%B8%83-%EF%BC%9A%E5%B0%8F%E7%BB%93%E4%B8%8E%E5%B1%95%E6%9C%9B%E2%80%94%E2%80%94%E6%8A%98%E8%85%BE%E4%B8%8D%E6%AD%A2%EF%BC%8C%E5%BF%AB%E4%B9%90%E4%B8%8D%E6%81%AF/" class="post-title-link" itemprop="url">RKYOLO诞生记 (七)：小结与展望——折腾不止，快乐不息</a>
         </h2>
 
         <div class="post-meta">
@@ -722,8 +1004,33 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-09-27 17:56:57" itemprop="dateModified" datetime="2025-09-27T17:56:57+08:00">2025-09-27</time>
+                <time title="修改时间：2025-10-09 11:16:26" itemprop="dateModified" datetime="2025-10-09T11:16:26+08:00">2025-10-09</time>
               </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/" itemprop="url" rel="index"><span itemprop="name">技术实践</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/" itemprop="url" rel="index"><span itemprop="name">计算机视觉</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E9%83%A8%E7%BD%B2/" itemprop="url" rel="index"><span itemprop="name">边缘计算部署</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">RKYOLO诞生记</span></a>
+                </span>
+            </span>
 
           
 
@@ -740,7 +1047,7 @@
 <p>在这最后一篇，咱不吹牛，就唠点实在的。说说我都捣鼓了啥，还有哪些地方让我挠头，以及以后还能怎么接着玩。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E4%B8%83-%EF%BC%9A%E5%B0%8F%E7%BB%93%E4%B8%8E%E5%B1%95%E6%9C%9B%E2%80%94%E2%80%94%E6%8A%98%E8%85%BE%E4%B8%8D%E6%AD%A2%EF%BC%8C%E5%BF%AB%E4%B9%90%E4%B8%8D%E6%81%AF/#more" rel="contents">
+              <a class="btn" href="/2025/09/10/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E9%83%A8%E7%BD%B2/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E4%B8%83-%EF%BC%9A%E5%B0%8F%E7%BB%93%E4%B8%8E%E5%B1%95%E6%9C%9B%E2%80%94%E2%80%94%E6%8A%98%E8%85%BE%E4%B8%8D%E6%AD%A2%EF%BC%8C%E5%BF%AB%E4%B9%90%E4%B8%8D%E6%81%AF/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -764,10 +1071,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E5%85%AD-%EF%BC%9A%E6%9E%84%E5%BB%BA%E5%AE%8C%E6%95%B4%E8%AF%84%E4%BC%B0%E5%B7%A5%E5%85%B7%E9%93%BE%E2%80%94%E2%80%94rkyolo-eval%E7%9A%84%E5%AE%9E%E8%B7%B5%E4%B8%8E%E6%B4%9E%E5%AF%9F/">
+    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/09/10/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E9%83%A8%E7%BD%B2/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E5%85%AD-%EF%BC%9A%E6%9E%84%E5%BB%BA%E5%AE%8C%E6%95%B4%E8%AF%84%E4%BC%B0%E5%B7%A5%E5%85%B7%E9%93%BE%E2%80%94%E2%80%94rkyolo-eval%E7%9A%84%E5%AE%9E%E8%B7%B5%E4%B8%8E%E6%B4%9E%E5%AF%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/img/maodie-avatar.png">
       <meta itemprop="name" content="Mice">
       <meta itemprop="description" content="Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。">
     </span>
@@ -778,7 +1085,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E5%85%AD-%EF%BC%9A%E6%9E%84%E5%BB%BA%E5%AE%8C%E6%95%B4%E8%AF%84%E4%BC%B0%E5%B7%A5%E5%85%B7%E9%93%BE%E2%80%94%E2%80%94rkyolo-eval%E7%9A%84%E5%AE%9E%E8%B7%B5%E4%B8%8E%E6%B4%9E%E5%AF%9F/" class="post-title-link" itemprop="url">RKYOLO诞生记 (六)：构建完整评估工具链——rkyolo-eval的实践与洞察</a>
+            <a href="/2025/09/10/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E9%83%A8%E7%BD%B2/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E5%85%AD-%EF%BC%9A%E6%9E%84%E5%BB%BA%E5%AE%8C%E6%95%B4%E8%AF%84%E4%BC%B0%E5%B7%A5%E5%85%B7%E9%93%BE%E2%80%94%E2%80%94rkyolo-eval%E7%9A%84%E5%AE%9E%E8%B7%B5%E4%B8%8E%E6%B4%9E%E5%AF%9F/" class="post-title-link" itemprop="url">RKYOLO诞生记 (六)：构建完整评估工具链——rkyolo-eval的实践与洞察</a>
         </h2>
 
         <div class="post-meta">
@@ -795,8 +1102,33 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-09-27 17:56:57" itemprop="dateModified" datetime="2025-09-27T17:56:57+08:00">2025-09-27</time>
+                <time title="修改时间：2025-10-09 11:16:26" itemprop="dateModified" datetime="2025-10-09T11:16:26+08:00">2025-10-09</time>
               </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/" itemprop="url" rel="index"><span itemprop="name">技术实践</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/" itemprop="url" rel="index"><span itemprop="name">计算机视觉</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E9%83%A8%E7%BD%B2/" itemprop="url" rel="index"><span itemprop="name">边缘计算部署</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">RKYOLO诞生记</span></a>
+                </span>
+            </span>
 
           
 
@@ -812,79 +1144,7 @@
           <p>在完成了<code>rKYOLO</code>核心推理引擎和多种 IO 功能后，项目已经具备了完整的应用能力。然而，我深知在机器学习项目中，可靠的评估体系与高效的推理能力同等重要。为此，我构建了<code>rkyolo-eval</code>工具链，为项目增添了专业的模型评估能力。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E5%85%AD-%EF%BC%9A%E6%9E%84%E5%BB%BA%E5%AE%8C%E6%95%B4%E8%AF%84%E4%BC%B0%E5%B7%A5%E5%85%B7%E9%93%BE%E2%80%94%E2%80%94rkyolo-eval%E7%9A%84%E5%AE%9E%E8%B7%B5%E4%B8%8E%E6%B4%9E%E5%AF%9F/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://miceworld.top/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E4%BA%94-%EF%BC%9A%E4%BB%8E%E9%9D%99%E6%80%81%E5%9B%BE%E7%89%87%E5%88%B0%E5%AE%9E%E6%97%B6%E8%A7%86%E9%A2%91%E2%80%94%E2%80%94%E5%85%A8%E5%8A%9F%E8%83%BD%E5%BA%94%E7%94%A8%E7%9A%84%E6%9E%84%E5%BB%BA%E4%B9%8B%E6%97%85/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Mice">
-      <meta itemprop="description" content="Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Mice World">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E4%BA%94-%EF%BC%9A%E4%BB%8E%E9%9D%99%E6%80%81%E5%9B%BE%E7%89%87%E5%88%B0%E5%AE%9E%E6%97%B6%E8%A7%86%E9%A2%91%E2%80%94%E2%80%94%E5%85%A8%E5%8A%9F%E8%83%BD%E5%BA%94%E7%94%A8%E7%9A%84%E6%9E%84%E5%BB%BA%E4%B9%8B%E6%97%85/" class="post-title-link" itemprop="url">RKYOLO诞生记 (五)：从静态图片到实时视频——全功能应用的构建之旅</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-09-10 06:33:14" itemprop="dateCreated datePublished" datetime="2025-09-10T06:33:14+08:00">2025-09-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-09-27 17:56:57" itemprop="dateModified" datetime="2025-09-27T17:56:57+08:00">2025-09-27</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>在前几轮的扎实工作后，RKYOLO 的核心推理引擎已经变得相当可靠：安全、自适应且性能良好。但它当时更像一个“库”，离一个开箱即用的“工具”还有一步之遥。我的下一个目标，就是为这个强大的引擎，打造一个完整的外壳，让它能灵活地处理现实世界中的各种视觉输入。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/09/10/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E4%BA%94-%EF%BC%9A%E4%BB%8E%E9%9D%99%E6%80%81%E5%9B%BE%E7%89%87%E5%88%B0%E5%AE%9E%E6%97%B6%E8%A7%86%E9%A2%91%E2%80%94%E2%80%94%E5%85%A8%E5%8A%9F%E8%83%BD%E5%BA%94%E7%94%A8%E7%9A%84%E6%9E%84%E5%BB%BA%E4%B9%8B%E6%97%85/#more" rel="contents">
+              <a class="btn" href="/2025/09/10/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E9%83%A8%E7%BD%B2/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0/RKYOLO%E8%AF%9E%E7%94%9F%E8%AE%B0-%E5%85%AD-%EF%BC%9A%E6%9E%84%E5%BB%BA%E5%AE%8C%E6%95%B4%E8%AF%84%E4%BC%B0%E5%B7%A5%E5%85%B7%E9%93%BE%E2%80%94%E2%80%94rkyolo-eval%E7%9A%84%E5%AE%9E%E8%B7%B5%E4%B8%8E%E6%B4%9E%E5%AF%9F/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -907,7 +1167,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -965,6 +1225,8 @@
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Mice"
+      src="/img/maodie-avatar.png">
   <p class="site-author-name" itemprop="name">Mice</p>
   <div class="site-description" itemprop="description">Mice - 记录生活点滴与知识探索的博客。在这里，技术与创意交织，灵感如涌泉般涌现。追逐自由的心灵，与我一同探索无尽的可能性，愿每一个瞬间都如诗般美丽，映照出生活的光辉与智慧。</div>
 </div>
@@ -973,14 +1235,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">21</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -991,6 +1253,14 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cagedbird043" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;cagedbird043" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:cagedbird043@gmail.com" title="E-Mail → mailto:cagedbird043@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
 
 
 
@@ -1059,6 +1329,9 @@
   <script size="300" alpha="0.6" zIndex="-1" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-ribbon@1/canvas-ribbon.js"></script>
   <script src="//cdn.jsdelivr.net/npm/animejs@3.1.0/lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/velocity-animate@1/velocity.ui.min.js"></script>
 
@@ -1071,6 +1344,8 @@
 
 
 <script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
 
   <script>
 var pjax = new Pjax({
@@ -1139,8 +1414,37 @@ window.addEventListener('pjax:success', () => {
 
 
   
+  <script data-pjax>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
 
 
+
+
+  
+<script src="/js/local-search.js"></script>
 
 
 
@@ -1171,6 +1475,7 @@ if (document.querySelectorAll('pre.mermaid').length) {
   
 
   
+
 
     </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
