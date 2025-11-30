@@ -109,10 +109,10 @@ theme: next
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
-deploy:
-  type: git
-  repo: git@github.com:cagedbird043/cagedbird043.github.io.git
-  branch: main
+# deploy:
+#   type: git
+#   repo: git@github.com:cagedbird043/cagedbird043.github.io.git
+#   branch: main
 
 #envelope_comment
 #seehttps://akilar.top/posts/e2d3c450/

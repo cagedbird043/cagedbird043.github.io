@@ -29,7 +29,13 @@ jobs:
 
       # 4. 生成静态文件 (相当于 npx hexo g)
       - name: Generate Hexo Site
-        run: npx hexo generate
+        run: |
+          # 使用 sed 命令安全地将占位符替换为 GitHub Secret 的值
+          # 注意：这里的 s/占位符/替换值/g 替换必须非常精确
+          sed -i "s|__GITALK_CLIENT_SECRET__|${{ secrets.GITALK_CLIENT_SECRET }}|g" _config.next.yml
+
+          # 运行 hexo generate
+          npx hexo generate
 
       # 5. (可选) 如果你还需要 npx hexo d 部署到 GitHub Pages 等
       # 如果你只用 VPS，可以删除这一步

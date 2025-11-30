@@ -183,7 +183,7 @@ gitalk:
   github_id: cagedbird043
   repo: miceworld.top-source
   client_id: Ov23liy7tMJ5tyB8eucY
-  client_secret: cc2623b18f9fc600f15e801841d06ce9d2677718
+  client_secret: "__GITALK_CLIENT_SECRET__"
   admin_user: cagedbird043
   distraction_free_mode: true
   language: zh-CN
