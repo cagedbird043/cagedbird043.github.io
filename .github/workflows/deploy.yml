@@ -1,0 +1,52 @@
+name: Hexo Auto Deploy
+
+on:
+  push:
+    branches:
+      - main # 或者是 master，取决于你的默认分支叫什么
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1.以此拉取代码，submodules: true 是为了防止你的主题是 submodule 形式
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      # 2. 设置 Node.js 环境 (相当于你的 load_nvm)
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      # 3. 安装依赖
+      - name: Install Dependencies
+        run: npm install
+
+      # 4. 生成静态文件 (相当于 npx hexo g)
+      - name: Generate Hexo Site
+        run: npx hexo generate
+
+      # 5. (可选) 如果你还需要 npx hexo d 部署到 GitHub Pages 等
+      # 如果你只用 VPS，可以删除这一步
+      # - name: Deploy via Hexo (Optional)
+      #   run: npx hexo deploy
+      #   env:
+      #      # 如果 hexo d 需要推送到 git，这里需要配置权限，比较麻烦
+      #      # 建议只保留下面的 Rsync 部署到服务器
+
+      # 6. 部署到腾讯云服务器 (相当于你的 rsync 命令)
+      - name: Deploy to Server via Rsync
+        uses: easingthemes/ssh-deploy@v5.0.0
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          ARGS: "-avzP --delete"
+          SOURCE: "public/"
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          TARGET: "/var/www/miceworld.top/"
+          TZ: Asia/Shanghai

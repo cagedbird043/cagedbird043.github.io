@@ -1,0 +1,219 @@
+# =======================================================
+# NexT 主题个性化配置 (基于新版结构)
+# - 所有配置项都从你的旧版本迁移过来
+# - 第三方库 CDN 全部切换到 jsdelivr
+# =======================================================
+
+# ---------------------------------------------------------------
+# Theme Core Configuration Settings
+# ---------------------------------------------------------------
+# 启用本地配置覆盖主题默认配置
+cache:
+  enable: true
+
+custom_file_path:
+  # 开启自定义样式文件 (如果你之前有写 source/_data/styles.styl)
+  style: source/_data/styles.styl
+
+# ---------------------------------------------------------------
+# Scheme Settings
+# ---------------------------------------------------------------
+scheme: Gemini # 切换到 Gemini 主题
+darkmode: true # 开启暗色模式
+
+# ---------------------------------------------------------------
+# Site Information Settings
+# ---------------------------------------------------------------
+# Creative Commons 4.0 International License
+creative_commons:
+  license: by-nc-sa
+  size: small
+
+# ---------------------------------------------------------------
+# Menu Settings
+# ---------------------------------------------------------------
+menu:
+  home: / || fa fa-home
+  about: /about/ || fa fa-user
+  tags: /tags/ || fa fa-tags
+  categories: /categories/ || fa fa-th
+  archives: /archives/ || fa fa-archive
+  schedule: /schedule/ || fa fa-calendar
+  commonweal: /404/ || fa fa-heartbeat
+  # 注意：你的 sitemap 在旧配置里是被注释的，这里维持不变
+  # sitemap: /sitemap.xml || fa fa-sitemap
+menu_settings:
+  icons: true
+  badges: false
+
+# ---------------------------------------------------------------
+# Sidebar Settings
+# ---------------------------------------------------------------
+sidebar:
+  display: always # 侧边栏一直显示
+
+avatar:
+  url: /img/maodie-avatar.png
+  rounded: true
+  rotated: true
+
+site_state: true
+
+social:
+  GitHub: https://github.com/cagedbird043 || fab fa-github
+  E-Mail: mailto:cagedbird043@gmail.com || fa fa-envelope
+
+social_icons:
+  enable: true
+  icons_only: false
+  transition: false
+
+toc:
+  enable: true
+  number: true
+  wrap: false
+  expand_all: false
+  max_depth: 6
+
+# ---------------------------------------------------------------
+# Footer Settings
+# ---------------------------------------------------------------
+# 你的旧配置里没有 footer 相关的修改，这里不写入，使用主题默认。
+
+# ---------------------------------------------------------------
+# Post Settings
+# ---------------------------------------------------------------
+symbols_count_time:
+  separated_meta: true
+  item_text_total: true # 从 false 改为 true
+
+follow_me:
+  RSS: /atom.xml || fa fa-rss
+
+post_navigation: left
+
+# ---------------------------------------------------------------
+# Misc Theme Settings
+# ---------------------------------------------------------------
+codeblock:
+  theme:
+    light: default
+    dark: stackoverflow-dark
+  copy_button:
+    enable: true
+    style: flat # 从 default 改为 flat
+
+back2top:
+  enable: true
+  scrollpercent: true # 从 false 改为 true
+
+reading_progress:
+  enable: true # 从 false 改为 true
+  start_at: left
+  position: top
+  color: "#37c6c0"
+  height: 3px
+
+bookmark:
+  enable: true # 从 false 改为 true
+
+# ---------------------------------------------------------------
+# Font Settings
+# ---------------------------------------------------------------
+font:
+  enable: true
+  # host: https://fonts.googleapis.com # 使用默认，或从 CDN 加载
+  global:
+    external: true
+    family: Noto Sans SC, Lato # 你的中文和西文字体
+  codes:
+    external: true
+    family: JetBrains Mono, Fira Code # 你的代码字体
+
+# ---------------------------------------------------------------
+# SEO Settings
+# ---------------------------------------------------------------
+baidu_site_verification: codeva-YAvxyOpawy
+baidu_push: true
+
+# ---------------------------------------------------------------
+# Third Party Plugins & Services Settings
+# ---------------------------------------------------------------
+# 启用 pjax, mediumzoom, lazyload, pangu
+pjax: true
+mediumzoom: true
+lazyload: true
+pangu: true
+mermaid:
+  enable: true
+  theme:
+    light: neutral
+    dark: neutral # 原来只有 neutral，这里按新版结构补齐
+
+# ---------------------------------------------------------------
+# Animation Settings
+# ---------------------------------------------------------------
+pace:
+  enable: true
+  color: blue
+  theme: minimal # 使用 minimal 主题
+
+# canvas-ribbon 启用了
+canvas_ribbon:
+  enable: true
+  size: 300
+  alpha: 0.6
+  zIndex: -1
+
+# 你的旧配置里有 three 相关配置，但新版 Next 已经移除了 theme-next-three，
+# 如果你想保留这个效果，需要安装 hexo-next-three 插件，并手动配置。
+# 这里先暂时不写入，以免造成错误。
+
+# ---------------------------------------------------------------
+# Comments Settings
+# ---------------------------------------------------------------
+comments:
+  style: tabs
+  active: gitalk # 默认启用 Gitalk
+  storage: true
+  lazyload: true # 开启懒加载
+
+gitalk:
+  enable: true
+  github_id: cagedbird043
+  repo: miceworld.top-source
+  client_id: Ov23liy7tMJ5tyB8eucY
+  client_secret: cc2623b18f9fc600f15e801841d06ce9d2677718
+  admin_user: cagedbird043
+  distraction_free_mode: true
+  language: zh-CN
+
+# ---------------------------------------------------------------
+# Statistics and Analytics
+# ---------------------------------------------------------------
+baidu_analytics: 53c504378d31ebb49f8624d2dd23c0b9
+
+busuanzi_count:
+  enable: true # 开启不蒜子计数
+  total_visitors: true
+  total_views: true
+  post_views: true
+
+# ---------------------------------------------------------------
+# Search Services
+# ---------------------------------------------------------------
+local_search:
+  enable: true
+  preload: true # 开启预加载
+
+# ---------------------------------------------------------------
+# CDN Settings (核心优化在这里)
+# ---------------------------------------------------------------
+vendors:
+  # NexT 内部脚本：推荐 local，因为你的 CI 已经拉取了完整主题
+  internal: local
+  # 第三方插件：切换到 jsdelivr，访问速度通常比 cdnjs 快
+  plugins: jsdelivr
+
+  # Custom CDN URL (如果只想用 jsdelivr，这一项留空即可)
+  # custom_cdn_url:
