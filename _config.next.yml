@@ -124,15 +124,16 @@ font:
   enable: true
   # host: https://fonts.googleapis.com # 使用默认，或从 CDN 加载
   global:
-    external: true
+    external: false
     family: Noto Sans SC, Lato # 你的中文和西文字体
   codes:
-    external: true
+    external: false
     family: JetBrains Mono, Fira Code # 你的代码字体
 
 # ---------------------------------------------------------------
 # SEO Settings
-# ---------------------------------------------------------------
+# ------------------------------------------
+TCPing ended at:   2025-12-13 04:09:55---------------------
 baidu_site_verification: codeva-YAvxyOpawy
 baidu_push: true
 
@@ -181,7 +182,7 @@ comments:
 gitalk:
   enable: true
   github_id: cagedbird043
-  repo: miceworld.top-source
+  repo: cagedbird043.github.io
   client_id: Ov23liy7tMJ5tyB8eucY
   client_secret: "__GITALK_CLIENT_SECRET__"
   admin_user: cagedbird043
@@ -213,7 +214,7 @@ vendors:
   # NexT 内部脚本：推荐 local，因为你的 CI 已经拉取了完整主题
   internal: local
   # 第三方插件：切换到 jsdelivr，访问速度通常比 cdnjs 快
-  plugins: jsdelivr
+  plugins: local
 
   # Custom CDN URL (如果只想用 jsdelivr，这一项留空即可)
   # custom_cdn_url:
