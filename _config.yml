@@ -111,7 +111,7 @@ theme: next
 ## Docs: https://hexo.io/docs/one-command-deployment
 # deploy:
 #   type: git
-#   repo: git@github.com:cagedbird043/cagedbird043.github.io.git
+#   repo: git@github.com:cagedbird043/mice-tailor-infra.github.io.git
 #   branch: main
 
 #envelope_comment
