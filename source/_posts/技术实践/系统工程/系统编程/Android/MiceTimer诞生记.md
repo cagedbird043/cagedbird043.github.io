@@ -129,4 +129,9 @@ WakeLock = true
 
 **Mice-Tailor-Infra** 正在不断进化。下一篇，我们来聊聊如何用“空壳模块”重构你的 Android 系统组件。
 
+### 项目链接
+- **MiceTimer 核心调度器**: [GitHub - Mice-Tailor-Infra/micetimer](https://github.com/Mice-Tailor-Infra/micetimer)
+- **FCM Hosts Optimizer 任务包**: [GitHub - Mice-Tailor-Infra/fcm-hosts-ksu](https://github.com/Mice-Tailor-Infra/fcm-hosts-ksu)
+- **Infrastructure 主页**: [GitHub - Mice-Tailor-Infra](https://github.com/Mice-Tailor-Infra)
+
 Stay hungry, stay coding.

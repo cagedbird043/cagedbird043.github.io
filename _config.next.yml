@@ -180,7 +180,7 @@ comments:
 
 gitalk:
   enable: true
-  github_id: cagedbird043
+  github_id: Mice-Tailor-Infra
   repo: mice-tailor-infra.github.io
   client_id: Ov23liy7tMJ5tyB8eucY
   client_secret: "__GITALK_CLIENT_SECRET__"
