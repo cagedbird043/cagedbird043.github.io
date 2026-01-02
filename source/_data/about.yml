@@ -1,7 +1,9 @@
 - class_name: 关于页
   subtitle: 记录点滴，探索无限✨
-  avatarImg: https://q1.qlogo.cn/g?b=qq&nk=3249009505&s=640
-  avatarSkills:
+# about page data
+# See: https://github.com/theme-next/hexo-theme-next/blob/master/layout/about.njk
+avatarImg: https://github.com/cagedbird043.png
+avatarSkills:
     left:
       - 📱 技术探索爱好者
       - 🔍 分享与热心帮助
